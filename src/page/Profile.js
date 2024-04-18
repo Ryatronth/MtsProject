@@ -16,8 +16,7 @@ const Profile = () => {
     <div>
       <ProfileHeader />
       {mainUser.role === 'ADMIN' && <AdminPage />}
-      {mainUser.role === 'USER' && <ParentPage />}
-      {/* {mainUser.role === 'PARENT' && <ParentPage />} */}
+      {mainUser.role === 'PARENT' && <ParentPage />}
       {mainUser.role === 'WORKER' && <WorkerPage />}
     </div>
   );

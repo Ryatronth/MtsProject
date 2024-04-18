@@ -33,12 +33,9 @@ const ProfileHeader = observer(() => {
   };
 
   return (
-    <div style={{ padding: '0 65px', margin: '0 auto' }}>
-      <header style={{ padding: '15px 0', borderBottom: '1px solid #AFAFAF' }}>
-        <div
-          className="d-flex justify-content-between align-items-center"
-          style={{ margin: '0 59px' }}
-        >
+    <div className="reset-container">
+      <header className="reset-header">
+        <div className="d-flex justify-content-between align-items-center">
           <Image src={logo} width={106} height={75} />
           <div className="d-flex justify-center align-items-center column-gap-3">
             <Image
@@ -48,12 +45,12 @@ const ProfileHeader = observer(() => {
               style={{ borderRadius: '50%' }}
             />
             <div className="d-flex flex-column justify-center align-items-start">
-              <div style={{ fontWeight: 500, fontSize: 20 }}>
+              <p style={{ fontWeight: 500, fontSize: 20 }}>
                 {info.name} {info.surname[0]}.{info.patronymic[0]}.
-              </div>
-              <div style={{ fontWeight: 500, fontSize: 14, color: '#F48104' }}>
+              </p>
+              <p style={{ fontWeight: 500, fontSize: 14, color: '#F48104' }}>
                 {info.role}
-              </div>
+              </p>
             </div>
             <DropdownButton
               variant="outline-danger"
@@ -76,57 +73,26 @@ const ProfileHeader = observer(() => {
           height={195}
         />
         <div className="d-flex flex-column ">
-          <h2
+          <h2 className="general-header__title">ФИО:</h2>
+          <p
+            className="px-4 py-2 mt-2 general-header__text"
             style={{
-              margin: 0,
-              fontWeight: 500,
-              fontSize: 22,
-              color: '#414141',
-            }}
-          >
-            ФИО:
-          </h2>
-          <div
-            className="px-4 py-2"
-            style={{
-              marginTop: '7px',
               maxWidth: '579px',
               minWidth: '479px',
-              borderRadius: '100px',
-              border: '2px solid #F5AF61',
-              fontWeight: '400',
-              fontSize: '16px',
-              color: '#414141',
             }}
           >
             {info.name} {info.surname} {info.patronymic}
-          </div>
-          <h2
+          </p>
+          <h2 className="mt-4 general-header__title">Номер телефона:</h2>
+          <p
+            className="px-4 py-2 mt-2 general-header__text"
             style={{
-              margin: 0,
-              marginTop: '25px',
-              fontWeight: 500,
-              fontSize: 22,
-              color: '#414141',
-            }}
-          >
-            Номер телефона:
-          </h2>
-          <div
-            className="px-4 py-2"
-            style={{
-              marginTop: '7px',
               maxWidth: '230px',
               minWidth: '200px',
-              borderRadius: '100px',
-              border: '2px  solid #F5AF61',
-              fontWeight: '400',
-              fontSize: '16px',
-              color: '#414141',
             }}
           >
             {info.phone}
-          </div>
+          </p>
         </div>
       </div>
     </div>

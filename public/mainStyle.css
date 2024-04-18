@@ -1,0 +1,124 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  margin: 0;
+}
+.reset-container {
+  padding: 0 65px;
+  margin: 0 auto;
+}
+
+.reset-header {
+  padding: 15px 59px;
+  border-bottom: 1px solid #afafaf;
+}
+
+.reset-btn {
+  border-radius: 35px;
+  border: 0px;
+  font-weight: 500;
+  background-color: #87c631;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.header__btn {
+  width: 159px;
+  font-size: 24px;
+}
+
+.body {
+  width: 832px;
+  height: 720px;
+  margin-top: 257px;
+  margin-left: 65px;
+  padding-bottom: 356px;
+}
+
+.body__title {
+  font-weight: 700;
+  font-size: 58px;
+  color: #414141;
+}
+
+.body__descr {
+  font-weight: 500;
+  font-size: 32px;
+  color: #414141;
+}
+
+.body__btn {
+  width: 224px;
+  font-size: 32px;
+}
+
+/*Авторизация*/
+.auth-body {
+  width: 794px;
+  background-color: #fff;
+  padding: 99px 104px 90px;
+}
+
+.auth-body__title {
+  margin-top: 60px;
+  font-size: 48px;
+  font-weight: 500;
+  color: #414141;
+}
+
+.auth-body__input {
+  height: 90px;
+  width: 586px;
+  padding: 35px 20px;
+  border-radius: 100px;
+  background: #f48104 !important;
+  font-weight: 500;
+  font-size: 24px;
+  color: #fff !important;
+  opacity: 0.85;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.auth-body__btn {
+  width: 224px;
+  padding: 12px 0;
+  margin-top: 126px;
+  font-size: 32px;
+}
+/*-----------*/
+
+/*Общий header*/
+.general-header__title {
+  font-weight: 500;
+  font-size: 22px;
+  color: #414141;
+}
+
+.general-header__text {
+  border-radius: 100px;
+  border: 2px solid #f5af61;
+  font-weight: 400;
+  font-size: 16px;
+  color: #414141;
+}
+/*------------*/
+
+/*Страница админа*/
+.admin-body {
+  border-radius: 70px 70px 0 0;
+  height: 690px;
+}
+
+.admin-body__container {
+  padding-top: 160px;
+  row-gap: 90px;
+}
+
+.admin-body__container-btn {
+  height: 55px;
+  width: 370px;
+  font-size: 24px;
+}
+/*---------------*/
