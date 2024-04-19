@@ -11,22 +11,13 @@ const App = observer(() => {
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   check()
-  //     .then((data) => {
-  //       user.setUser(true);
-  //       user.setIsAuth(true);
-  //     })
-  //     .finally(() => setLoading(false));
-  // }, []);
-
   useEffect(() => {
     check()
       .then((data) => {
-        if (data) {
-          console.log(data);
+        if (localStorage.getItem('token')) {
           user.setUser(true);
           user.setIsAuth(true);
+          user.setTimer(data.exp - Math.floor(Date.now() / 1000));
         }
       })
       .finally(() => setLoading(false));

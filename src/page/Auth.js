@@ -25,12 +25,15 @@ const Auth = observer(() => {
       } else {
         let data;
         data = await login(email, password);
+        console.log(data);
         user.setUser(true);
         user.setIsAuth(true);
+        user.setTimer(data.exp - Math.floor(Date.now() / 1000));
         navigate(PROFILE_ROUTE);
       }
     } catch (e) {
-      alert(e.response.message);
+      console.log(e.response);
+      alert(e.response.data.message);
     }
   };
 
