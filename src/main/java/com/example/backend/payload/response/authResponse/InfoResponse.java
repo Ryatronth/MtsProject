@@ -2,9 +2,11 @@ package com.example.backend.payload.response.authResponse;
 
 import com.example.backend.entity.auth.RoleName;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class InfoResponse {
     private String name;

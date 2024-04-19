@@ -1,11 +1,15 @@
-package com.example.backend.payload.dto.userCreation;
+package com.example.backend.payload.dto;
 
 import com.example.backend.entity.user.ChildGroup;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@Builder
 public class WorkerDTO {
     private Set<ChildGroup> groups;
 }

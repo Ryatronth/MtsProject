@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB}
+    username: ${DBUser}
+    password: ${DBPassword}
+
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: postgresql
+    open-in-view: false
+
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret-key:
+    access: ${key}
+  expire:
+    access: 180000
+    refresh: 108000000
+
+
+server:
+  port: 8080
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: ${SSLPassword}
+    keyStoreType: PKCS12
+    keyAlias: tomcat

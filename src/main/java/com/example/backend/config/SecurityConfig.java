@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,14 +35,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(r -> r
                         .requestMatchers("/api/user/login").permitAll()
+                        .requestMatchers("/api/user/refresh/access").permitAll()
                         .requestMatchers("/api/user/info").hasAnyAuthority(RoleName.PARENT.name(),
                                 RoleName.ADMIN.name(),
                                 RoleName.WORKER.name())
                         .requestMatchers("/api/user/parent/**").hasAuthority(RoleName.PARENT.name())
                         .requestMatchers("/api/user/worker/**").hasAuthority(RoleName.WORKER.name())
                         .requestMatchers("/api/user/admin/**").hasAuthority(RoleName.ADMIN.name())
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -58,7 +62,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/api/user/**", configuration);
         return source;
     }
 

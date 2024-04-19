@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.payload.dto.userCreation.ChildDTO;
-import com.example.backend.payload.dto.userCreation.CreationParentDTO;
-import com.example.backend.payload.dto.userCreation.CreationWorkerDTO;
-import com.example.backend.payload.dto.userCreation.GroupDTO;
+import com.example.backend.payload.dto.ChildDTO;
+import com.example.backend.payload.dto.CreationParentDTO;
+import com.example.backend.payload.dto.CreationWorkerDTO;
+import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.service.UserCreationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

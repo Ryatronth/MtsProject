@@ -1,9 +1,13 @@
-package com.example.backend.payload.dto.userCreation;
+package com.example.backend.payload.dto;
 
 import com.example.backend.entity.user.ChildGroup;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@Builder
 public class ChildDTO {
     private String name;
 

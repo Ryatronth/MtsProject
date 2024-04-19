@@ -2,9 +2,11 @@ package com.example.backend.payload.response;
 
 import com.example.backend.entity.auth.RoleName;
 import com.example.backend.entity.user.User;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UserResponse {
     private Long id;
 

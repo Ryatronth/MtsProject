@@ -20,19 +20,18 @@ public class InitDataLoader {
     public void init() {
         Optional<User> user = userRepository.findByUsername("admin");
         if (user.isEmpty()) {
-            User newUser = new User();
+            User admin = User.builder()
+                    .name("AdminName")
+                    .surname("AdminSurname")
+                    .patronymic("AdminPatronymic")
+                    .phone("88005553535")
+                    .imageUrl(null)
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .role(RoleName.ADMIN)
+                    .build();
 
-            newUser.setUsername("admin");
-            newUser.setPassword(passwordEncoder.encode("admin"));
-            newUser.setRole(RoleName.ADMIN);
-
-            newUser.setName("AdminName");
-            newUser.setSurname("AdminSurname");
-            newUser.setPatronymic("AdminPatronymic");
-            newUser.setImageUrl(null);
-            newUser.setPhone("88005553535");
-
-            userRepository.save(newUser);
+            userRepository.save(admin);
         }
     }
 }

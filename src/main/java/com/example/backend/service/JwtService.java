@@ -17,9 +17,15 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final String SECRET_KEY;
+    private final long ACCESS_EXPIRED;
+    private final long REFRESH_EXPIRED;
 
-    public JwtService(@Value("${security.jwt.secret-key}") String SECRET_KEY) {
+    public JwtService(@Value("${jwt.secret-key.access}") String SECRET_KEY,
+                      @Value("${jwt.expire.access}") long ACCESS_EXPIRED,
+                      @Value("${jwt.expire.refresh}") long REFRESH_EXPIRED) {
         this.SECRET_KEY = SECRET_KEY;
+        this.ACCESS_EXPIRED = ACCESS_EXPIRED;
+        this.REFRESH_EXPIRED = REFRESH_EXPIRED;
     }
 
     public String extractUsername(String token) {
@@ -31,12 +37,20 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(User userDetails) {
+    public String generateAccessToken(User userDetails) {
+        return generateToken(userDetails, ACCESS_EXPIRED);
+    }
+
+    public String generateRefreshToken(User userDetails) {
+        return generateToken(userDetails, REFRESH_EXPIRED);
+    }
+
+    private String generateToken(User userDetails, long expired) {
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + expired))
                 .signWith(getSignIngKey(), SignatureAlgorithm.HS256)
                 .claim("id", userDetails.getId())
                 .claim("role", userDetails.getRole())

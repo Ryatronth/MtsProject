@@ -2,7 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.entity.user.*;
 import com.example.backend.entity.user.repository.*;
-import com.example.backend.payload.dto.userCreation.*;
+import com.example.backend.payload.dto.*;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
