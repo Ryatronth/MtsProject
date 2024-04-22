@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Context } from '../index';
 import { jwtDecode } from 'jwt-decode';
-import AdminPage from '../components/AdminPage';
-import ParentPage from '../components/ParentPage';
-import WorkerPage from '../components/WorkerPage';
-import ProfileHeader from '../components/ProfileHeader';
+import AdminPage from './AdminPage';
+import ParentPage from './ParentPage';
+import WorkerPage from './WorkerPage';
+import ProfileMainInfo from '../components/pieces/ProfileMainInfo';
 
 const Profile = () => {
   const { user } = useContext(Context);
@@ -14,7 +14,7 @@ const Profile = () => {
   const mainUser = user.user;
   return (
     <div>
-      <ProfileHeader />
+      <ProfileMainInfo />
       {mainUser.role === 'ADMIN' && <AdminPage />}
       {mainUser.role === 'PARENT' && <ParentPage />}
       {mainUser.role === 'WORKER' && <WorkerPage />}

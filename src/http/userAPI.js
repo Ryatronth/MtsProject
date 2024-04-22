@@ -17,6 +17,7 @@ export const mainInfo = async () => {
 };
 
 export const check = async () => {
+  // переделать под получении нового access токена, просто считая (при обновлении страницы), что предидущий просрочен?
   const token = localStorage.getItem('token');
   return token ? jwtDecode(token) : null;
 };

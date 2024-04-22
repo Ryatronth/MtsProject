@@ -112,13 +112,74 @@ p {
 }
 
 .admin-body__container {
-  padding-top: 160px;
+  padding-top: 110px;
   row-gap: 90px;
 }
 
 .admin-body__container-btn {
-  height: 55px;
-  width: 370px;
+  height: 408px;
+  width: 284px;
+  padding: 47px 28px 28px;
+  background-color: #fdfdfb;
   font-size: 24px;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.1);
 }
 /*---------------*/
+
+/*Кастомный input файла*/
+.input__user-img {
+  width: 195px;
+  border-radius: 50%;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.input__file {
+  display: none;
+}
+.input__uploadbtn {
+  position: absolute;
+  bottom: 7px;
+  right: 7px;
+  height: 40px;
+  width: 40px;
+  padding: 6px 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background-color: rgba(173, 172, 172, 0.8);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.6);
+}
+/*---------------------*/
+
+/*Особая кнопка""*/
+.cpecial-btn {
+  background-color: #f48104;
+}
+/*---------------*/
+
+/*Карточка ребёнка*/
+.children-card {
+  position: relative;
+  padding: 16px 32px 16px 26px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.children-card__dropdown-groups {
+  width: 263px;
+  border-radius: 35px;
+  border: 2px solid #f48104;
+  background-color: rgba(0, 0, 0, 0);
+  color: rgba(65, 65, 65, 0.5);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.add {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}
