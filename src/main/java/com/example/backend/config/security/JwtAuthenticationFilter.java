@@ -1,6 +1,6 @@
-package com.example.backend.config;
+package com.example.backend.config.security;
 
-import com.example.backend.service.JwtService;
+import com.example.backend.service.authentication.security.JwtService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

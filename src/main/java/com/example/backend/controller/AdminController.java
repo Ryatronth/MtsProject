@@ -1,17 +1,54 @@
 package com.example.backend.controller;
 
+import com.example.backend.payload.dto.ChildDTO;
+import com.example.backend.payload.dto.CreationParentDTO;
+import com.example.backend.payload.dto.GroupDTO;
+import com.example.backend.payload.dto.UserDTO;
+import com.example.backend.service.entityProcessing.entityCreation.CsvUserCreationService;
+import com.example.backend.service.entityProcessing.entityCreation.UserCreationService;
+import com.example.backend.service.entityProcessing.entityModification.UserModificationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user/admin")
 public class AdminController {
-    @GetMapping
+
+    private final CsvUserCreationService csvUserCreationService;
+    private final UserCreationService userCreationService;
+    private final UserModificationService userModificationService;
+
+    @GetMapping("/")
     public ResponseEntity<?> getAdminInfo(Principal connectedUser) {
         return ResponseEntity.ok(connectedUser.getName());
     }
+
+    @PostMapping("/create/group")
+    public ResponseEntity<?> createGroup(@RequestBody GroupDTO data) {
+        return ResponseEntity.ok(userCreationService.createGroup(data));
+    }
+
+    @PostMapping("/create/child")
+    public ResponseEntity<?> createChild(@RequestBody ChildDTO data) {
+        return ResponseEntity.ok(userCreationService.createChild(data));
+    }
+
+    @PostMapping("/create/worker")
+    public ResponseEntity<?> createWorker(@RequestBody UserDTO data) {
+        return ResponseEntity.ok(userCreationService.createUser(data));
+    }
+
+    @PostMapping("/create/parent")
+    public ResponseEntity<?> createParent(@RequestBody CreationParentDTO data) {
+        return ResponseEntity.ok(userCreationService.createParent(data));
+    }
+
+//    @PostMapping("/update/user/{userId}")
+//    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserDTO data) {
+//        return ResponseEntity.ok(userModificationService.updateUser(userId, data));
+//    }
 }

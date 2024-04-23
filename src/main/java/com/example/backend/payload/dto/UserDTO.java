@@ -1,13 +1,13 @@
 package com.example.backend.payload.dto;
 
 import com.example.backend.entity.auth.RoleName;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private String username;
 

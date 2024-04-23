@@ -13,8 +13,4 @@ import lombok.*;
 public class ChildGroup {
     @Id
     private String id;
-
-    @ManyToOne
-    @JoinColumn(name = "worker_id")
-    private Worker worker;
 }

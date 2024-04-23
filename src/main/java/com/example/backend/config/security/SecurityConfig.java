@@ -1,7 +1,7 @@
-package com.example.backend.config;
+package com.example.backend.config.security;
 
 import com.example.backend.entity.auth.RoleName;
-import com.example.backend.service.CustomUserDetailService;
+import com.example.backend.service.authentication.security.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

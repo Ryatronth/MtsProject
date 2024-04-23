@@ -1,6 +1,5 @@
 package com.example.backend.payload.dto;
 
-import com.example.backend.entity.user.ChildGroup;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +16,7 @@ public class ChildDTO {
 
     private String imageUrl;
 
-    private ChildGroup group;
+    private String groupId;
+
+    private Long parentId;
 }

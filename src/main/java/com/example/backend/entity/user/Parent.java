@@ -1,10 +1,13 @@
 package com.example.backend.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Getter
 @Builder
@@ -21,4 +24,8 @@ public class Parent {
     @JoinColumn(name = "user_id")
     @MapsId
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    private Set<Child> children;
 }

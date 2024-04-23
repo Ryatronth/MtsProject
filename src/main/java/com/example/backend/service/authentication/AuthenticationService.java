@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.authentication;
 
 import com.example.backend.entity.auth.Token;
 import com.example.backend.entity.auth.repository.TokenRepository;
@@ -9,6 +9,7 @@ import com.example.backend.payload.request.RefreshTokenRequest;
 import com.example.backend.payload.response.authResponse.TokenResponse;
 import com.example.backend.payload.response.authResponse.InfoResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.authentication.security.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

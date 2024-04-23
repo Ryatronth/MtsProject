@@ -20,14 +20,14 @@ jwt:
   secret-key:
     access: ${key}
   expire:
-    access: 180000
+    access: 1800000
     refresh: 108000000
 
 
 server:
   port: 8080
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: ${SSLPassword}
-    keyStoreType: PKCS12
-    keyAlias: tomcat
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: ${SSLPassword}
+#    keyStoreType: PKCS12
+#    keyAlias: tomcat
