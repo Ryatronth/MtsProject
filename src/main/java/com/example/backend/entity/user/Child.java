@@ -1,5 +1,6 @@
 package com.example.backend.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Child {
     @JoinColumn(name = "child_group_id")
     private ChildGroup childGroup;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
