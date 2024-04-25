@@ -1,10 +1,14 @@
 package com.example.backend.entity.order;
 
+import com.example.backend.entity.order.menu.CurrentMenu;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Getter
 @Builder
@@ -19,7 +23,11 @@ public class OrderDetails {
 
     private OrderCategory category;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @OneToMany(mappedBy = "orderDetails", cascade = CascadeType.REMOVE)
+    private Set<CurrentMenu> menu;
 }

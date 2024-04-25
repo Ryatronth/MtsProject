@@ -1,8 +1,11 @@
 package com.example.backend.entity.user;
 
+import com.example.backend.entity.order.Order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +34,8 @@ public class Child {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "child", cascade = CascadeType.REMOVE)
+    private Set<Order> orders;
 }

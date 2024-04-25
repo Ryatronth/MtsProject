@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -21,4 +23,7 @@ public class CurrentMenu {
     @ManyToOne
     @JoinColumn(name = "order_details_id")
     private OrderDetails orderDetails;
+
+    @OneToMany(mappedBy = "currentMenu")
+    private Set<Dish> dishes;
 }

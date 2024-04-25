@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -27,4 +28,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "child_id")
     private Child child;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    private Set<OrderDetails> details;
 }

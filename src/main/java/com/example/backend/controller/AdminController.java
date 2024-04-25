@@ -4,6 +4,7 @@ import com.example.backend.payload.dto.*;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.GetEntityFromDBService;
 import com.example.backend.service.entityProcessing.entityCreation.CsvUserCreationService;
 import com.example.backend.service.entityProcessing.entityCreation.UserCreationService;
@@ -22,6 +23,7 @@ public class AdminController {
     private final UserCreationService userCreationService;
     private final UserModificationService userModificationService;
     private final GetEntityFromDBService getEntityFromDBService;
+    private final DeleteEntityService deleteEntityService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/workers")
@@ -127,5 +129,21 @@ public class AdminController {
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(404).body(response);
+    }
+
+    // Удаление --------------------------------------------------------------------------------------------------------
+    @DeleteMapping("/delete/user/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(deleteEntityService.deleteUser(userId));
+    }
+
+    @DeleteMapping("/delete/child/{childId}")
+    public ResponseEntity<?> deleteChild(@PathVariable Long childId) {
+        return ResponseEntity.ok(deleteEntityService.deleteChild(childId));
+    }
+
+    @DeleteMapping("/delete/group/{groupId}")
+    public ResponseEntity<?> deleteGroup(@PathVariable String groupId) {
+        return ResponseEntity.ok(deleteEntityService.deleteGroup(groupId));
     }
 }

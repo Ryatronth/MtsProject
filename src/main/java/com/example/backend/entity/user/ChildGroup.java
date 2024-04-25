@@ -1,7 +1,10 @@
 package com.example.backend.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,4 +16,8 @@ import lombok.*;
 public class ChildGroup {
     @Id
     private String id;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "childGroup", cascade = CascadeType.REMOVE)
+    private Set<Child> children;
 }
