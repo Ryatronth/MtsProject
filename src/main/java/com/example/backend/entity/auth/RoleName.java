@@ -1,8 +1,11 @@
 package com.example.backend.entity.auth;
 
 public enum RoleName {
-    CHILD,
-    PARENT,
-    WORKER,
-    ADMIN
+    CHILD("CHILD"),
+    PARENT("PARENT"),
+    WORKER("WORKER"),
+    ADMIN("ADMIN");
+
+    RoleName(String role) {
+    }
 }

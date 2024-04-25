@@ -24,4 +24,16 @@ public class UserDTO {
     private String patronymic;
 
     private String phone;
+
+    public static ParentDTO createParentDTO(UserDTO data) {
+        return ParentDTO.builder()
+                .username(data.getUsername())
+                .password(data.getPassword())
+                .role(data.getRole())
+                .name(data.getName())
+                .surname(data.getSurname())
+                .patronymic(data.getPatronymic())
+                .phone(data.getPhone())
+                .build();
+    }
 }

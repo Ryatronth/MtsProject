@@ -1,30 +1,149 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
-import lombok.extern.log4j.Log4j2;
+import com.example.backend.entity.auth.RoleName;
+import com.example.backend.entity.user.Child;
+import com.example.backend.entity.user.ChildGroup;
+import com.example.backend.entity.user.Parent;
+import com.example.backend.entity.user.User;
+import com.example.backend.entity.user.repository.ChildRepository;
+import com.example.backend.entity.user.repository.GroupRepository;
+import com.example.backend.entity.user.repository.ParentRepository;
+import com.example.backend.payload.dto.ParentDTO;
+import com.example.backend.payload.response.ModificationResponse;
+import com.example.backend.payload.response.authResponse.ResponseStatus;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
-@Log4j2
 @Service
+@RequiredArgsConstructor
 public class EntityModifier {
-//    public <T> T modifyEntity(T entity, T newData) {
-//        Field[] entityFields = entity.getClass().getDeclaredFields();
-//        Field[] dtoFields = newData.getClass().getDeclaredFields();
-//
-//        for (Field field : dtoFields) {
-//            try {
-//                if (entityFields.)
-//                field.setAccessible(true);
-//                Object value = field.get(newData);
-//                if (value != null) {
-//                    field.set(entity, value);
-//                }
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return entity;
-//    }
+    private final ChildRepository childRepository;
+    private final ParentRepository parentRepository;
+    private final GroupRepository groupRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public <T, U, ID> ModificationResponse modifyEntity(U newData, JpaRepository<T, ID> repository, ID id) {
+        try {
+            T entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Сущность не найдена"));
+
+            Field[] dtoFields = newData.getClass().getDeclaredFields();
+            Class<?> entityClass = entity.getClass();
+
+            return changeFields(entity, newData, repository, id, dtoFields, entityClass);
+
+        } catch (EntityNotFoundException ex) {
+            return ModificationResponse.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message(ex.getMessage())
+                    .build();
+        }
+    }
+
+
+    private <T, U, ID> ModificationResponse changeFields(T entity, U newData, JpaRepository<T, ID> repository, ID id,
+                                                         Field[] dtoFields, Class<?> entityClass) {
+        Map<String, BiConsumer<T, U>> mappingFields = new HashMap<>();
+        mappingFields.put("childrenId", (e, d) -> changeChildren(e, d, id, entityClass));
+        mappingFields.put("groupId", (e, d) -> changeGroup(e, d));
+        mappingFields.put("parentId", (e, d) -> changeParent(e, d));
+
+        for (Field field : dtoFields) {
+            try {
+                mappingFields.getOrDefault(field.getName(), (e, d) -> modifyField(field, e, d)).accept(entity, newData);
+            } catch (Exception ex)  {
+                return ModificationResponse.builder()
+                        .status(ResponseStatus.ERROR)
+                        .message(ex.getMessage())
+                        .build();
+            }
+        }
+
+        repository.save(entity);
+
+        return ModificationResponse.builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Сущность успешно изменена")
+                .build();
+    }
+
+    private <T, U> void modifyField(Field field, T entity, U newData) {
+        try {
+            field.setAccessible(true);
+            Object value = field.get(newData);
+            if (value != null) {
+
+                Field entityField = entity.getClass().getDeclaredField(field.getName());
+                entityField.setAccessible(true);
+
+                if (field.getName().equals("password")) {
+                    value = passwordEncoder.encode((CharSequence) value);
+                }
+
+                entityField.set(entity, value);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    private <T, U, ID> void changeChildren(T entity, U newData, ID id, Class<?> entityClass) {
+        try {
+            if (entityClass.equals(User.class) && ((User) entity).getRole().equals(RoleName.PARENT) &&
+                    newData.getClass().equals(ParentDTO.class) && !((ParentDTO) newData).getChildrenId().isEmpty()) {
+                Parent parent = parentRepository.findById((Long) id)
+                        .orElseThrow(() -> new Exception("Родитель не найден"));
+
+                for (Child currChild : parent.getChildren()) {
+                    if (currChild != null) {
+                        currChild.setParent(null);
+                    }
+                }
+
+                for (Long childId : ((ParentDTO) newData).getChildrenId()) {
+                    Child child = childRepository.findById(childId).orElse(null);
+                    if (child != null) {
+                        child.setParent(parent);
+                        childRepository.save(child);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    private <T, U> void changeGroup(T entity, U newData) {
+        try {
+            Field field = newData.getClass().getDeclaredField("groupId");
+            field.setAccessible(true);
+            ChildGroup group = groupRepository.findById(String.valueOf(field.get(newData)))
+                    .orElseThrow(() -> new Exception("Группа не найдена"));
+
+            ((Child) entity).setChildGroup(group);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    private <T, U> void changeParent(T entity, U newData) {
+        try {
+            Field field = newData.getClass().getDeclaredField("parentId");
+            field.setAccessible(true);
+            Parent parent = parentRepository.findById((Long) field.get(newData))
+                    .orElseThrow(() -> new Exception("Родитель не найден"));
+
+            ((Child) entity).setParent(parent);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
 }

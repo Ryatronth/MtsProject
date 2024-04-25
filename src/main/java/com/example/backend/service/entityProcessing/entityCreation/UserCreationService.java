@@ -8,12 +8,10 @@ import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.ParentRepository;
 import com.example.backend.entity.user.repository.UserRepository;
-import com.example.backend.payload.dto.ChildDTO;
-import com.example.backend.payload.dto.CreationParentDTO;
-import com.example.backend.payload.dto.GroupDTO;
-import com.example.backend.payload.dto.UserDTO;
+import com.example.backend.payload.dto.*;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,7 +44,8 @@ public class UserCreationService {
                         .imageUrl(data.getImageUrl())
                         .phone(data.getPhone())
                         .build(),
-                condition -> userRepository.findByUsername(data.getUsername()).isPresent());
+                condition -> userRepository.findByUsername(data.getUsername()).isPresent(),
+                "Данный пользователь уже существует");
     }
 
     public CreationResponse createGroup(GroupDTO data) {
@@ -54,7 +53,8 @@ public class UserCreationService {
                 dto -> ChildGroup.builder()
                         .id(data.getGroupId())
                         .build(),
-                condition -> groupRepository.findById(data.getGroupId()).isPresent());
+                condition -> groupRepository.findById(data.getGroupId()).isPresent(),
+                "Данная группа уже существует");
     }
 
     public CreationResponse createChild(ChildDTO data) {
@@ -65,14 +65,17 @@ public class UserCreationService {
                         .patronymic(data.getPatronymic())
                         .childGroup(groupRepository.findById(data.getGroupId()).orElse(null))
                         .imageUrl(data.getImageUrl())
-                        .parent(parentRepository.findById(data.getParentId()).orElse(null))
+                        .parent(parentRepository.findById(data.getParentId()).orElseThrow(
+                                () -> new EntityNotFoundException("Данный родитель не найден"))
+                        )
                         .build(),
-                condition -> false);
+                condition -> false,
+                null);
     }
 
     @Transactional
-    public CreationResponse createParent(CreationParentDTO creationParentDTO) {
-        CreationResponse userResponse = createUser(creationParentDTO.getUser());
+    public CreationResponse createParent(ParentDTO data) {
+        CreationResponse userResponse = createUser(ParentDTO.createUserDTO(data));
 
         if (userResponse.getStatus() == ResponseStatus.ERROR) {
             return userResponse;
@@ -81,16 +84,19 @@ public class UserCreationService {
         User user = (User) userResponse.getObject();
 
         Set<Child> children = new HashSet<>();
-        for (Long id : creationParentDTO.getParent().getChildrenId()) {
-            children.add(childRepository.findById(id).orElse(null));
+        if (data.getChildrenId() != null) {
+            for (Long id : data.getChildrenId()) {
+                children.add(childRepository.findById(id).orElse(null));
+            }
         }
 
-        CreationResponse parentResponse = entityBuilder.createEntity(creationParentDTO.getParent(), parentRepository,
+        CreationResponse parentResponse = entityBuilder.createEntity(data, parentRepository,
                 dto -> Parent.builder()
                         .user(user)
                         .children(children)
                         .build(),
-                condition -> false);
+                condition -> false,
+                null);
 
         if (parentResponse.getStatus() == ResponseStatus.ERROR) {
             return parentResponse;

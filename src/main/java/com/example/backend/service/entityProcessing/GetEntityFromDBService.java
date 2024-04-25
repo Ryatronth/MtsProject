@@ -34,4 +34,12 @@ public class GetEntityFromDBService {
     public List<ChildGroup> getGroups() {
         return groupRepository.findAll();
     }
+
+    public List<Child> getChildWithParent(Long parentId) {
+        return childRepository.findAllByParentId(parentId);
+    }
+
+    public List<Child> getChildWithGroup(String groupId) {
+        return childRepository.findAllByChildGroupId(groupId);
+    }
 }
