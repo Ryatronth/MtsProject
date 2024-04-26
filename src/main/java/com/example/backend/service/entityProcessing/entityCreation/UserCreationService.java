@@ -58,58 +58,77 @@ public class UserCreationService {
     }
 
     public CreationResponse createChild(ChildDTO data) {
-        return entityBuilder.createEntity(data, childRepository,
-                dto -> Child.builder()
-                        .name(data.getName())
-                        .surname(data.getSurname())
-                        .patronymic(data.getPatronymic())
-                        .childGroup(groupRepository.findById(data.getGroupId()).orElse(null))
-                        .imageUrl(data.getImageUrl())
-                        .parent(parentRepository.findById(data.getParentId()).orElseThrow(
-                                () -> new EntityNotFoundException("Данный родитель не найден"))
-                        )
-                        .build(),
-                condition -> false,
-                null);
+        try {
+            Parent parent = data.getParentId() == null ? null : parentRepository.findById(data.getParentId())
+                    .orElseThrow(() -> new EntityNotFoundException("Данный родитель не найден"));
+
+            ChildGroup group = data.getGroupId() == null ? null : groupRepository.findById(data.getGroupId())
+                    .orElseThrow(() -> new EntityNotFoundException("Данная группа не найдена"));
+
+            return entityBuilder.createEntity(data, childRepository,
+                    dto -> Child.builder()
+                            .name(data.getName())
+                            .surname(data.getSurname())
+                            .patronymic(data.getPatronymic())
+                            .childGroup(group)
+                            .imageUrl(data.getImageUrl())
+                            .parent(parent)
+                            .build(),
+                    condition -> false,
+                    null);
+        } catch (Exception ex) {
+            return CreationResponse.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message(ex.getMessage())
+                    .build();
+        }
     }
 
     @Transactional
     public CreationResponse createParent(ParentDTO data) {
-        CreationResponse userResponse = createUser(ParentDTO.createUserDTO(data));
+        try {
+            CreationResponse userResponse = createUser(ParentDTO.createUserDTO(data));
 
-        if (userResponse.getStatus() == ResponseStatus.ERROR) {
-            return userResponse;
-        }
-
-        User user = (User) userResponse.getObject();
-
-        Set<Child> children = new HashSet<>();
-        if (data.getChildrenId() != null) {
-            for (Long id : data.getChildrenId()) {
-                children.add(childRepository.findById(id).orElse(null));
+            if (userResponse.getStatus() == ResponseStatus.ERROR) {
+                return userResponse;
             }
-        }
 
-        CreationResponse parentResponse = entityBuilder.createEntity(data, parentRepository,
-                dto -> Parent.builder()
-                        .user(user)
-                        .children(children)
-                        .build(),
-                condition -> false,
-                null);
+            User user = (User) userResponse.getObject();
 
-        if (parentResponse.getStatus() == ResponseStatus.ERROR) {
+            Set<Child> children = new HashSet<>();
+            if (data.getChildrenId() != null) {
+                for (Long id : data.getChildrenId()) {
+                    children.add(childRepository.findById(id)
+                            .orElseThrow(() -> new EntityNotFoundException("Ребенок не найден")));
+                }
+            }
+
+            CreationResponse parentResponse = entityBuilder.createEntity(data, parentRepository,
+                    dto -> Parent.builder()
+                            .user(user)
+                            .children(children)
+                            .build(),
+                    condition -> false,
+                    null);
+
+            if (parentResponse.getStatus() == ResponseStatus.ERROR) {
+                return parentResponse;
+            }
+
+            Parent parent = (Parent) parentResponse.getObject();
+
+            for (Child child : children) {
+                if (child != null) {
+                    child.setParent(parent);
+                }
+            }
+
             return parentResponse;
+        } catch (Exception ex) {
+            return CreationResponse.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message(ex.getMessage())
+                    .build();
         }
-
-        Parent parent = (Parent) parentResponse.getObject();
-
-        for (Child child : children) {
-            if (child != null) {
-                child.setParent(parent);
-            }
-        }
-
-        return parentResponse;
     }
 }
