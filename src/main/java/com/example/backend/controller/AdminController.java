@@ -1,6 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.payload.dto.*;
+import com.example.backend.payload.dto.ChildDTO;
+import com.example.backend.payload.dto.GroupDTO;
+import com.example.backend.payload.dto.ParentDTO;
+import com.example.backend.payload.dto.UserDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
@@ -27,33 +30,39 @@ public class AdminController {
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/workers")
-    public ResponseEntity<?> getWorkers() {
-        return ResponseEntity.ok(getEntityFromDBService.getWorkers());
+    public ResponseEntity<?> getWorkers(@RequestParam(value = "name", required = false) String name,
+                                        @RequestParam(value = "surname", required = false) String surname,
+                                        @RequestParam(value = "patronymic", required = false) String patronymic,
+                                        @RequestParam(value = "phone", required = false) String phone) {
+        return ResponseEntity.ok(getEntityFromDBService
+                .getWorkers("role", "WORKER", "name", name, "surname", surname, "patronymic", patronymic,
+                        "phone", phone));
     }
 
     @GetMapping("/get/children")
-    public ResponseEntity<?> getChild() {
-        return ResponseEntity.ok(getEntityFromDBService.getChild());
-    }
-
-    @GetMapping("/get/children/parent/{parentId}")
-    public ResponseEntity<?> getChildWithParent(@PathVariable Long parentId) {
-        return ResponseEntity.ok(getEntityFromDBService.getChildWithParent(parentId));
-    }
-
-    @GetMapping("/get/children/group/{groupId}")
-    public ResponseEntity<?> getChildWithGroup(@PathVariable String groupId) {
-        return ResponseEntity.ok(getEntityFromDBService.getChildWithGroup(groupId));
+    public ResponseEntity<?> getChild(@RequestParam(value = "name", required = false) String name,
+                                      @RequestParam(value = "surname", required = false) String surname,
+                                      @RequestParam(value = "patronymic", required = false) String patronymic,
+                                      @RequestParam(value = "groupId", required = false) String group,
+                                      @RequestParam(value = "parentId", required = false) String parentId) {
+        return ResponseEntity.ok(getEntityFromDBService
+                .getChild("name", name, "surname", surname, "patronymic", patronymic, "childGroup", group,
+                        "parent", parentId));
     }
 
     @GetMapping("/get/parents")
-    public ResponseEntity<?> getParents() {
-        return ResponseEntity.ok(getEntityFromDBService.getParents());
+    public ResponseEntity<?> getParents(@RequestParam(value = "name", required = false) String name,
+                                        @RequestParam(value = "surname", required = false) String surname,
+                                        @RequestParam(value = "patronymic", required = false) String patronymic,
+                                        @RequestParam(value = "phone", required = false) String phone) {
+        return ResponseEntity.ok(getEntityFromDBService
+                .getParents("role", "PARENT", "name", name, "surname", surname, "patronymic", patronymic,
+                        "phone", phone));
     }
 
     @GetMapping("/get/groups")
-    public ResponseEntity<?> getGroups() {
-        return ResponseEntity.ok(getEntityFromDBService.getGroups());
+    public ResponseEntity<?> getGroups(@RequestParam(value = "groupId", required = false) String group) {
+        return ResponseEntity.ok(getEntityFromDBService.getGroups("Id", group));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
