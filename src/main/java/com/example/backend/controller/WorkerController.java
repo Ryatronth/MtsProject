@@ -6,6 +6,7 @@ import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
+import com.example.backend.service.entityProcessing.entityGetting.GetEntityService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,13 @@ public class WorkerController {
     private final EntityCreationService entityCreationService;
     private final EntityModificationService entityModificationService;
     private final DeleteEntityService deleteEntityService;
+    private final GetEntityService getEntityService;
+
+    @GetMapping("/get/dishes")
+    public ResponseEntity<?> getDishes(@RequestParam(value = "name", required = false) String name,
+                                       @RequestParam(value = "type", required = false) String type) {
+        return ResponseEntity.ok(getEntityService.getDishes("name", name, "type", type));
+    }
 
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute DishDTO data) {

@@ -1,7 +1,7 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
 import com.example.backend.entity.auth.RoleName;
-import com.example.backend.entity.order.menu.Dish;
+import com.example.backend.entity.menu.Dish;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.Parent;
@@ -101,7 +101,7 @@ public class EntityModifier {
 
             byte[] bytes = image.getBytes();
 
-            String UPLOAD_DIR = "src/main/resources/dish/";
+            String UPLOAD_DIR = "../images/dish/";
 
             Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
             Files.write(path, bytes);
@@ -135,7 +135,7 @@ public class EntityModifier {
     private <T, U, ID> void changeChildren(T entity, U newData, ID id, Class<?> entityClass) {
         try {
             if (entityClass.equals(User.class) && ((User) entity).getRole().equals(RoleName.PARENT) &&
-                    newData.getClass().equals(ParentDTO.class) && !((ParentDTO) newData).getChildrenId().isEmpty()) {
+                    newData.getClass().equals(ParentDTO.class) && !((ParentDTO) newData).getChildren().isEmpty()) {
                 Parent parent = parentRepository.findById((Long) id)
                         .orElseThrow(() -> new Exception("Родитель не найден"));
 
@@ -145,7 +145,7 @@ public class EntityModifier {
                     }
                 }
 
-                for (Long childId : ((ParentDTO) newData).getChildrenId()) {
+                for (Long childId : ((ParentDTO) newData).getChildren()) {
                     Child child = childRepository.findById(childId).orElse(null);
                     if (child != null) {
                         child.setParent(parent);

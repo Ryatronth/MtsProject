@@ -1,4 +1,4 @@
-package com.example.backend.entity.order.menu;
+package com.example.backend.entity.menu;
 
 import com.example.backend.entity.order.OrderDetails;
 import jakarta.persistence.*;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -24,6 +25,17 @@ public class CurrentMenu {
     @JoinColumn(name = "order_details_id")
     private OrderDetails orderDetails;
 
-    @OneToMany(mappedBy = "currentMenu")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
+
+    @ManyToMany
+    @JoinTable(
+            name = "menu_dish",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "dish_id")
+    )
     private Set<Dish> dishes;
 }

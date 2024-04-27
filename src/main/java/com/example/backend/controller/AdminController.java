@@ -3,14 +3,13 @@ package com.example.backend.controller;
 import com.example.backend.payload.dto.ChildDTO;
 import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.payload.dto.ParentDTO;
-import com.example.backend.payload.dto.UserDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
-import com.example.backend.service.entityProcessing.GetEntityFromDBService;
 import com.example.backend.service.entityProcessing.entityCreation.CsvUserCreationService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
+import com.example.backend.service.entityProcessing.entityGetting.GetEntityService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,27 +24,17 @@ public class AdminController {
     private final CsvUserCreationService csvUserCreationService;
     private final EntityCreationService entityCreationService;
     private final EntityModificationService entityModificationService;
-    private final GetEntityFromDBService getEntityFromDBService;
+    private final GetEntityService getEntityService;
     private final DeleteEntityService deleteEntityService;
 
     // Получение -------------------------------------------------------------------------------------------------------
-    @GetMapping("/get/workers")
-    public ResponseEntity<?> getWorkers(@RequestParam(value = "name", required = false) String name,
-                                        @RequestParam(value = "surname", required = false) String surname,
-                                        @RequestParam(value = "patronymic", required = false) String patronymic,
-                                        @RequestParam(value = "phone", required = false) String phone) {
-        return ResponseEntity.ok(getEntityFromDBService
-                .getWorkers("role", "WORKER", "name", name, "surname", surname, "patronymic", patronymic,
-                        "phone", phone));
-    }
-
     @GetMapping("/get/children")
     public ResponseEntity<?> getChild(@RequestParam(value = "name", required = false) String name,
                                       @RequestParam(value = "surname", required = false) String surname,
                                       @RequestParam(value = "patronymic", required = false) String patronymic,
                                       @RequestParam(value = "groupId", required = false) String group,
                                       @RequestParam(value = "parentId", required = false) String parentId) {
-        return ResponseEntity.ok(getEntityFromDBService
+        return ResponseEntity.ok(getEntityService
                 .getChild("name", name, "surname", surname, "patronymic", patronymic, "childGroup", group,
                         "parent", parentId));
     }
@@ -55,14 +44,14 @@ public class AdminController {
                                         @RequestParam(value = "surname", required = false) String surname,
                                         @RequestParam(value = "patronymic", required = false) String patronymic,
                                         @RequestParam(value = "phone", required = false) String phone) {
-        return ResponseEntity.ok(getEntityFromDBService
+        return ResponseEntity.ok(getEntityService
                 .getParents("role", "PARENT", "name", name, "surname", surname, "patronymic", patronymic,
                         "phone", phone));
     }
 
     @GetMapping("/get/groups")
     public ResponseEntity<?> getGroups(@RequestParam(value = "groupId", required = false) String group) {
-        return ResponseEntity.ok(getEntityFromDBService.getGroups("Id", group));
+        return ResponseEntity.ok(getEntityService.getGroups("Id", group));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
@@ -84,15 +73,6 @@ public class AdminController {
         return ResponseEntity.status(400).body(response);
     }
 
-    @PostMapping("/create/worker")
-    public ResponseEntity<?> createWorker(@RequestBody UserDTO data) {
-        CreationResponse response = entityCreationService.createUser(data);
-        if (response.getStatus() == ResponseStatus.SUCCESS) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(400).body(response);
-    }
-
     @PostMapping("/create/parent")
     public ResponseEntity<?> createParent(@RequestBody ParentDTO data) {
         CreationResponse response = entityCreationService.createParent(data);
@@ -107,21 +87,12 @@ public class AdminController {
         return ResponseEntity.ok(csvUserCreationService.readFile(file, ChildDTO.class, entityCreationService::createChild));
     }
 
-    @PostMapping("/create/users/csv")
+    @PostMapping("/create/parents/csv")
     public ResponseEntity<?> createUsersFromCsv(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(csvUserCreationService.readFile(file, UserDTO.class, entityCreationService::createUser));
+        return ResponseEntity.ok(csvUserCreationService.readFile(file, ParentDTO.class, entityCreationService::createParent));
     }
 
     // Изменение -------------------------------------------------------------------------------------------------------
-    @PostMapping("/update/user/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserDTO data) {
-        ModificationResponse response = entityModificationService.updateUser(userId, data);
-        if (response.getStatus() == ResponseStatus.SUCCESS) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(400).body(response);
-    }
-
     @PostMapping("/update/parent/{parentId}")
     public ResponseEntity<?> updateParent(@PathVariable Long parentId, @RequestBody ParentDTO data) {
         ModificationResponse response = entityModificationService.updateParent(parentId, data);

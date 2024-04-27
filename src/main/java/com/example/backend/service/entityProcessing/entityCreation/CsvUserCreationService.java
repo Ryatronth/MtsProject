@@ -2,7 +2,6 @@ package com.example.backend.service.entityProcessing.entityCreation;
 
 import com.example.backend.entity.auth.RoleName;
 import com.example.backend.payload.dto.GroupDTO;
-import com.example.backend.payload.dto.UserDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +43,7 @@ public class CsvUserCreationService {
         }
     }
 
-    private <T> List<CreationResponse> processCsv(CSVParser csvParser, Class<T> type,
-                                                  Function<T, CreationResponse> creationFunction) {
+    private <T> List<CreationResponse> processCsv(CSVParser csvParser, Class<T> type, Function<T, CreationResponse> creationFunction) {
         List<CreationResponse> responses = new ArrayList<>();
 
         long index = 1;
@@ -53,10 +51,7 @@ public class CsvUserCreationService {
             try {
                 T newObject = createObjectFromRecord(csvRecord, type);
 
-                boolean checkParent = newObject instanceof UserDTO && ((UserDTO) newObject).getRole() == RoleName.PARENT;
-
-                CreationResponse response = !checkParent ? creationFunction.apply(newObject)
-                        : entityCreationService.createParent(UserDTO.createParentDTO((UserDTO) newObject));
+                CreationResponse response = creationFunction.apply(newObject);
 
                 if (response.getStatus().equals(ResponseStatus.ERROR)) {
                     response.setMessage("Ошибка при создании сущности в строке: " + index + ". " + response.getMessage());
@@ -66,8 +61,8 @@ public class CsvUserCreationService {
                 index++;
             } catch (Exception ex) {
                 responses.add(CreationResponse.builder()
-                                .status(ResponseStatus.ERROR)
-                                .message("Ошибка при создании сущности в строке: " + index + ". " + ex.getMessage())
+                        .status(ResponseStatus.ERROR)
+                        .message("Ошибка при создании сущности в строке: " + index + ". " + ex.getMessage())
                         .build());
             }
         }
@@ -81,10 +76,10 @@ public class CsvUserCreationService {
             Field[] fields = type.getDeclaredFields();
 
             Map<String, BiConsumer<T, String>> mappingFields = new HashMap<>();
-            mappingFields.put("imageUrl", (o, s) -> {});
-            mappingFields.put("parentId", this::setLongField);
+            mappingFields.put("imageUrl", (o, d) -> {});
             mappingFields.put("role", this::setRoleField);
             mappingFields.put("groupId", this::setGroupField);
+            mappingFields.put("children", this::setChildren);
 
             for (int i = 0; i <= csvRecord.size(); i++) {
                 String fieldName = fields[i].getName();
@@ -103,6 +98,18 @@ public class CsvUserCreationService {
         }
     }
 
+    private <T> void setChildren(T obj, String value) {
+        try {
+            Field field = obj.getClass().getDeclaredField("children");
+            field.setAccessible(true);
+
+            Set<Long> id = new HashSet<>(Arrays.stream(value.split(",")).map(Long::parseLong).toList());
+            field.set(obj, id);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
     private <T> void setStringField(T obj, String fieldName, String value) {
         try {
             Field field = obj.getClass().getDeclaredField(fieldName);
@@ -111,17 +118,6 @@ public class CsvUserCreationService {
             field.set(obj, value);
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage());
-        }
-    }
-
-    private <T> void setLongField(T obj, String value) {
-        try {
-            Field field = obj.getClass().getDeclaredField("parentId");
-            field.setAccessible(true);
-
-            field.set(obj, Long.parseLong(value));
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
         }
     }
 

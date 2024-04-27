@@ -1,12 +1,11 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
-import com.example.backend.entity.order.menu.repository.DishRepository;
+import com.example.backend.entity.menu.repository.DishRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.UserRepository;
 import com.example.backend.payload.dto.ChildDTO;
 import com.example.backend.payload.dto.DishDTO;
 import com.example.backend.payload.dto.ParentDTO;
-import com.example.backend.payload.dto.UserDTO;
 import com.example.backend.payload.response.ModificationResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,6 @@ public class EntityModificationService {
     private final DishRepository dishRepository;
 
     private final  EntityModifier entityModifier;
-
-    public ModificationResponse updateUser(Long userId, UserDTO newData) {
-        return entityModifier.modifyEntity(newData, userRepository, userId);
-    }
 
     public ModificationResponse updateChild(Long childId, ChildDTO newData) {
         return entityModifier.modifyEntity(newData, childRepository, childId);

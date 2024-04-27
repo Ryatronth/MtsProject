@@ -1,6 +1,6 @@
 package com.example.backend.entity.order;
 
-import com.example.backend.entity.order.menu.CurrentMenu;
+import com.example.backend.entity.menu.CurrentMenu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

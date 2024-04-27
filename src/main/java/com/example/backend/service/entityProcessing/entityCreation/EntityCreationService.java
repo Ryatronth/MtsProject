@@ -1,7 +1,7 @@
 package com.example.backend.service.entityProcessing.entityCreation;
 
-import com.example.backend.entity.order.menu.Dish;
-import com.example.backend.entity.order.menu.repository.DishRepository;
+import com.example.backend.entity.menu.Dish;
+import com.example.backend.entity.menu.repository.DishRepository;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.Parent;
@@ -66,9 +66,6 @@ public class EntityCreationService {
 
     public CreationResponse createChild(ChildDTO data) {
         try {
-            Parent parent = data.getParentId() == null ? null : parentRepository.findById(data.getParentId())
-                    .orElseThrow(() -> new EntityNotFoundException("Данный родитель не найден"));
-
             ChildGroup group = data.getGroupId() == null ? null : groupRepository.findById(data.getGroupId())
                     .orElseThrow(() -> new EntityNotFoundException("Данная группа не найдена"));
 
@@ -79,7 +76,6 @@ public class EntityCreationService {
                             .patronymic(data.getPatronymic())
                             .childGroup(group)
                             .imageUrl(data.getImageUrl())
-                            .parent(parent)
                             .build(),
                     condition -> false,
                     null);
@@ -103,8 +99,8 @@ public class EntityCreationService {
             User user = (User) userResponse.getObject();
 
             Set<Child> children = new HashSet<>();
-            if (data.getChildrenId() != null) {
-                for (Long id : data.getChildrenId()) {
+            if (data.getChildren() != null) {
+                for (Long id : data.getChildren()) {
                     children.add(childRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("Ребенок не найден")));
                 }
@@ -148,7 +144,7 @@ public class EntityCreationService {
 
             byte[] bytes = image.getBytes();
 
-            String UPLOAD_DIR = "src/main/resources/dish/";
+            String UPLOAD_DIR = "../images/dish/";
 
             Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
             Files.write(path, bytes);
@@ -157,7 +153,6 @@ public class EntityCreationService {
                     dto -> Dish.builder()
                             .name(data.getName())
                             .composition(data.getComposition())
-                            .type(data.getType())
                             .price(data.getPrice())
                             .imageUrl(path.toString())
                             .build(),

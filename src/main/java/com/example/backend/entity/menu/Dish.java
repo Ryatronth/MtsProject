@@ -1,6 +1,5 @@
-package com.example.backend.entity.order.menu;
+package com.example.backend.entity.menu;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,14 +19,7 @@ public class Dish {
 
     private String composition;
 
-    private DishType type;
-
     private Double price;
 
     private String imageUrl;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "current_menu_id")
-    private CurrentMenu currentMenu;
 }

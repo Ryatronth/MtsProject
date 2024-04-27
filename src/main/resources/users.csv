@@ -1,5 +1,4 @@
-name,surname,patronymic,username,password,role,phone
-parent2,parent2,parent2,parent2,parent2,PARENT,88005553535
-parent3,parent3,parent3,parent3,parent3,PARENT,88005553535
-worker3,worker3,worker3,worker3,worker3,WORKER,88005553535
-parent4,parent4,parent4,parent4,parent4,PARENT,88005553535
+name,surname,patronymic,username,password,role,phone,children
+parent2,parent2,parent2,parent2,parent2,PARENT,88005553535,"1,4"
+parent3,parent3,parent3,parent3,parent3,PARENT,88005553535,"2,5"
+parent4,parent4,parent4,parent4,parent4,PARENT,88005553535,"3,6"

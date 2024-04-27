@@ -17,6 +17,4 @@ public class ChildDTO {
     private String imageUrl;
 
     private String groupId;
-
-    private Long parentId;
 }

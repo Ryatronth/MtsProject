@@ -27,7 +27,7 @@ public class ParentDTO {
 
     private String phone;
 
-    private Set<Long> childrenId;
+    private Set<Long> children;
 
     public static UserDTO createUserDTO(ParentDTO data) {
         return UserDTO.builder()

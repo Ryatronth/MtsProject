@@ -18,9 +18,9 @@ public class InitDataLoader {
 
     @PostConstruct
     public void init() {
-        Optional<User> user = userRepository.findByUsername("admin");
-        if (user.isEmpty()) {
-            User admin = User.builder()
+        Optional<User> admin = userRepository.findByUsername("admin");
+        if (admin.isEmpty()) {
+            User user = User.builder()
                     .name("AdminName")
                     .surname("AdminSurname")
                     .patronymic("AdminPatronymic")
@@ -31,7 +31,23 @@ public class InitDataLoader {
                     .role(RoleName.ADMIN)
                     .build();
 
-            userRepository.save(admin);
+            userRepository.save(user);
+        }
+
+        Optional<User> worker = userRepository.findByUsername("worker");
+        if (worker.isEmpty()) {
+            User user = User.builder()
+                    .name("WorkerName")
+                    .surname("WorkerSurname")
+                    .patronymic("WorkerPatronymic")
+                    .phone("88005553535")
+                    .imageUrl(null)
+                    .username("worker")
+                    .password(passwordEncoder.encode("worker"))
+                    .role(RoleName.WORKER)
+                    .build();
+
+            userRepository.save(user);
         }
     }
 }

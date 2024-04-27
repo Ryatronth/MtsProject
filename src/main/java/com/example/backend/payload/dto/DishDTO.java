@@ -1,6 +1,5 @@
 package com.example.backend.payload.dto;
 
-import com.example.backend.entity.order.menu.DishType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +12,6 @@ public class DishDTO {
     private String name;
 
     private String composition;
-
-    private DishType type;
 
     private Double price;
 

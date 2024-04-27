@@ -1,6 +1,6 @@
-package com.example.backend.entity.order.menu.repository;
+package com.example.backend.entity.menu.repository;
 
-import com.example.backend.entity.order.menu.CurrentMenu;
+import com.example.backend.entity.menu.CurrentMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
