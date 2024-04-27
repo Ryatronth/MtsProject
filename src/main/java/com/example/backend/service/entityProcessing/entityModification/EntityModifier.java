@@ -59,9 +59,8 @@ public class EntityModifier {
     private <T, U, ID> ModificationResponse changeFields(T entity, U newData, JpaRepository<T, ID> repository, ID id,
                                                          Field[] dtoFields, Class<?> entityClass) {
         Map<String, BiConsumer<T, U>> mappingFields = new HashMap<>();
-        mappingFields.put("childrenId", (e, d) -> changeChildren(e, d, id, entityClass));
+        mappingFields.put("children", (e, d) -> changeChildren(e, d, id, entityClass));
         mappingFields.put("groupId", this::changeGroup);
-        mappingFields.put("parentId", this::changeParent);
         mappingFields.put("image", this::modifyImage);
 
         for (Field field : dtoFields) {
@@ -166,19 +165,6 @@ public class EntityModifier {
                     .orElseThrow(() -> new Exception("Группа не найдена"));
 
             ((Child) entity).setChildGroup(group);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
-
-    private <T, U> void changeParent(T entity, U newData) {
-        try {
-            Field field = newData.getClass().getDeclaredField("parentId");
-            field.setAccessible(true);
-            Parent parent = parentRepository.findById((Long) field.get(newData))
-                    .orElseThrow(() -> new Exception("Родитель не найден"));
-
-            ((Child) entity).setParent(parent);
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage());
         }
