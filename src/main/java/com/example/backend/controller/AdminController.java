@@ -10,8 +10,8 @@ import com.example.backend.payload.response.authResponse.ResponseStatus;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.GetEntityFromDBService;
 import com.example.backend.service.entityProcessing.entityCreation.CsvUserCreationService;
-import com.example.backend.service.entityProcessing.entityCreation.UserCreationService;
-import com.example.backend.service.entityProcessing.entityModification.UserModificationService;
+import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
+import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminController {
 
     private final CsvUserCreationService csvUserCreationService;
-    private final UserCreationService userCreationService;
-    private final UserModificationService userModificationService;
+    private final EntityCreationService entityCreationService;
+    private final EntityModificationService entityModificationService;
     private final GetEntityFromDBService getEntityFromDBService;
     private final DeleteEntityService deleteEntityService;
 
@@ -68,76 +68,76 @@ public class AdminController {
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/create/group")
     public ResponseEntity<?> createGroup(@RequestBody GroupDTO data) {
-        CreationResponse response = userCreationService.createGroup(data);
+        CreationResponse response = entityCreationService.createGroup(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/create/child")
     public ResponseEntity<?> createChild(@RequestBody ChildDTO data) {
-        CreationResponse response = userCreationService.createChild(data);
+        CreationResponse response = entityCreationService.createChild(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/create/worker")
     public ResponseEntity<?> createWorker(@RequestBody UserDTO data) {
-        CreationResponse response = userCreationService.createUser(data);
+        CreationResponse response = entityCreationService.createUser(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/create/parent")
     public ResponseEntity<?> createParent(@RequestBody ParentDTO data) {
-        CreationResponse response = userCreationService.createParent(data);
+        CreationResponse response = entityCreationService.createParent(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/create/child/csv")
     public ResponseEntity<?> createChildFromCsv(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(csvUserCreationService.readFile(file, ChildDTO.class, userCreationService::createChild));
+        return ResponseEntity.ok(csvUserCreationService.readFile(file, ChildDTO.class, entityCreationService::createChild));
     }
 
     @PostMapping("/create/users/csv")
     public ResponseEntity<?> createUsersFromCsv(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(csvUserCreationService.readFile(file, UserDTO.class, userCreationService::createUser));
+        return ResponseEntity.ok(csvUserCreationService.readFile(file, UserDTO.class, entityCreationService::createUser));
     }
 
     // Изменение -------------------------------------------------------------------------------------------------------
     @PostMapping("/update/user/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserDTO data) {
-        ModificationResponse response = userModificationService.updateUser(userId, data);
+        ModificationResponse response = entityModificationService.updateUser(userId, data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/update/parent/{parentId}")
     public ResponseEntity<?> updateParent(@PathVariable Long parentId, @RequestBody ParentDTO data) {
-        ModificationResponse response = userModificationService.updateParent(parentId, data);
+        ModificationResponse response = entityModificationService.updateParent(parentId, data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     @PostMapping("/update/child/{childId}")
     public ResponseEntity<?> updateChild(@PathVariable Long childId, @RequestBody ChildDTO data) {
-        ModificationResponse response = userModificationService.updateChild(childId, data);
+        ModificationResponse response = entityModificationService.updateChild(childId, data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(400).body(response);
     }
 
     // Удаление --------------------------------------------------------------------------------------------------------

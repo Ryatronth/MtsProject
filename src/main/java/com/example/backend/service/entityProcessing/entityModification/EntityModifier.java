@@ -1,6 +1,7 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
 import com.example.backend.entity.auth.RoleName;
+import com.example.backend.entity.order.menu.Dish;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.Parent;
@@ -8,6 +9,7 @@ import com.example.backend.entity.user.User;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.ParentRepository;
+import com.example.backend.payload.dto.DishDTO;
 import com.example.backend.payload.dto.ParentDTO;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
@@ -16,8 +18,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -53,8 +60,9 @@ public class EntityModifier {
                                                          Field[] dtoFields, Class<?> entityClass) {
         Map<String, BiConsumer<T, U>> mappingFields = new HashMap<>();
         mappingFields.put("childrenId", (e, d) -> changeChildren(e, d, id, entityClass));
-        mappingFields.put("groupId", (e, d) -> changeGroup(e, d));
-        mappingFields.put("parentId", (e, d) -> changeParent(e, d));
+        mappingFields.put("groupId", this::changeGroup);
+        mappingFields.put("parentId", this::changeParent);
+        mappingFields.put("image", this::modifyImage);
 
         for (Field field : dtoFields) {
             try {
@@ -75,12 +83,41 @@ public class EntityModifier {
                 .build();
     }
 
+    private <T, U> void modifyImage(T entity, U newData) {
+        try {
+            DishDTO data = (DishDTO) newData;
+
+            MultipartFile image = data.getImage();
+
+            if (image.isEmpty()){
+                return;
+            }
+
+            Field field = entity.getClass().getDeclaredField("imageUrl");
+            field.setAccessible(true);
+
+            File oldFile = new File((String) field.get(entity));
+            oldFile.delete();
+
+            byte[] bytes = image.getBytes();
+
+            String UPLOAD_DIR = "src/main/resources/dish/";
+
+            Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
+            Files.write(path, bytes);
+
+            ((Dish) entity).setImageUrl(path.toString());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
     private <T, U> void modifyField(Field field, T entity, U newData) {
         try {
             field.setAccessible(true);
             Object value = field.get(newData);
-            if (value != null) {
 
+            if (value != null && !value.equals("")) {
                 Field entityField = entity.getClass().getDeclaredField(field.getName());
                 entityField.setAccessible(true);
 

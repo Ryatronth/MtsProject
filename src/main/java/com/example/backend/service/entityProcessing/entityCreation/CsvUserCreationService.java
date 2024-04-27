@@ -25,7 +25,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class CsvUserCreationService {
 
-    private final UserCreationService userCreationService;
+    private final EntityCreationService entityCreationService;
 
     private final CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build();
 
@@ -56,7 +56,7 @@ public class CsvUserCreationService {
                 boolean checkParent = newObject instanceof UserDTO && ((UserDTO) newObject).getRole() == RoleName.PARENT;
 
                 CreationResponse response = !checkParent ? creationFunction.apply(newObject)
-                        : userCreationService.createParent(UserDTO.createParentDTO((UserDTO) newObject));
+                        : entityCreationService.createParent(UserDTO.createParentDTO((UserDTO) newObject));
 
                 if (response.getStatus().equals(ResponseStatus.ERROR)) {
                     response.setMessage("Ошибка при создании сущности в строке: " + index + ". " + response.getMessage());
@@ -82,9 +82,9 @@ public class CsvUserCreationService {
 
             Map<String, BiConsumer<T, String>> mappingFields = new HashMap<>();
             mappingFields.put("imageUrl", (o, s) -> {});
-            mappingFields.put("parentId", (o, s) -> setLongField(o, "parentId", s));
-            mappingFields.put("role", (o, s) -> setRoleField(o, "role", s));
-            mappingFields.put("groupId", (o, s) -> setGroupField(o, "groupId", s));
+            mappingFields.put("parentId", this::setLongField);
+            mappingFields.put("role", this::setRoleField);
+            mappingFields.put("groupId", this::setGroupField);
 
             for (int i = 0; i <= csvRecord.size(); i++) {
                 String fieldName = fields[i].getName();
@@ -114,9 +114,9 @@ public class CsvUserCreationService {
         }
     }
 
-    private <T> void setLongField(T obj, String fieldName, String value) {
+    private <T> void setLongField(T obj, String value) {
         try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
+            Field field = obj.getClass().getDeclaredField("parentId");
             field.setAccessible(true);
 
             field.set(obj, Long.parseLong(value));
@@ -125,9 +125,9 @@ public class CsvUserCreationService {
         }
     }
 
-    private <T> void setRoleField(T obj, String fieldName, String value) {
+    private <T> void setRoleField(T obj, String value) {
         try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
+            Field field = obj.getClass().getDeclaredField("role");
             field.setAccessible(true);
 
             field.set(obj, RoleName.valueOf(value));
@@ -136,11 +136,11 @@ public class CsvUserCreationService {
         }
     }
 
-    private <T> void setGroupField(T obj, String fieldName, String value) {
+    private <T> void setGroupField(T obj, String value) {
         try {
             createGroup(value);
 
-            Field field = obj.getClass().getDeclaredField(fieldName);
+            Field field = obj.getClass().getDeclaredField("groupId");
             field.setAccessible(true);
 
             field.set(obj, value);
@@ -151,7 +151,7 @@ public class CsvUserCreationService {
 
     private void createGroup(String group) {
         try {
-            userCreationService.createGroup(GroupDTO.builder().groupId(group).build());
+            entityCreationService.createGroup(GroupDTO.builder().groupId(group).build());
         } catch (Exception ignored) {
         }
     }

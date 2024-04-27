@@ -1,5 +1,7 @@
 package com.example.backend.service.entityProcessing.entityCreation;
 
+import com.example.backend.entity.order.menu.Dish;
+import com.example.backend.entity.order.menu.repository.DishRepository;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.Parent;
@@ -16,19 +18,24 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class UserCreationService {
+public class EntityCreationService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
     private final ParentRepository parentRepository;
     private final ChildRepository childRepository;
     private final GroupRepository groupRepository;
+    private final DishRepository dishRepository;
 
     private final EntityBuilder entityBuilder;
 
@@ -124,6 +131,39 @@ public class UserCreationService {
             }
 
             return parentResponse;
+        } catch (Exception ex) {
+            return CreationResponse.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message(ex.getMessage())
+                    .build();
+        }
+    }
+
+    public CreationResponse createDish(DishDTO data) {
+        try {
+            MultipartFile image = data.getImage();
+            if (image.isEmpty()){
+                throw new Exception("Файл пуст");
+            }
+
+            byte[] bytes = image.getBytes();
+
+            String UPLOAD_DIR = "src/main/resources/dish/";
+
+            Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
+            Files.write(path, bytes);
+
+            return entityBuilder.createEntity(data, dishRepository,
+                    dto -> Dish.builder()
+                            .name(data.getName())
+                            .composition(data.getComposition())
+                            .type(data.getType())
+                            .price(data.getPrice())
+                            .imageUrl(path.toString())
+                            .build(),
+                    condition -> dishRepository.findByName(data.getName()).isPresent(),
+                    "Данное блюдо уже существует");
+
         } catch (Exception ex) {
             return CreationResponse.builder()
                     .status(ResponseStatus.ERROR)
