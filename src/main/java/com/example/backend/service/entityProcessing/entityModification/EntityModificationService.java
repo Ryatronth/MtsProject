@@ -1,6 +1,6 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
-import com.example.backend.entity.menu.repository.DishRepository;
+import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.UserRepository;
 import com.example.backend.payload.dto.ChildDTO;

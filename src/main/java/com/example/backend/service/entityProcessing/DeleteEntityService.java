@@ -1,6 +1,6 @@
 package com.example.backend.service.entityProcessing;
 
-import com.example.backend.entity.menu.repository.DishRepository;
+import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.UserRepository;

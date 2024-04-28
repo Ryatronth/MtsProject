@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.payload.dto.DishDTO;
+import com.example.backend.payload.dto.MenuDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
@@ -23,13 +24,33 @@ public class WorkerController {
 
     @GetMapping("/get/dishes")
     public ResponseEntity<?> getDishes(@RequestParam(value = "name", required = false) String name,
-                                       @RequestParam(value = "type", required = false) String type) {
-        return ResponseEntity.ok(getEntityService.getDishes("name", name, "type", type));
+                                       @RequestParam(value = "category", required = false) String category) {
+        return ResponseEntity.ok(getEntityService.getDishes("name", name, "category", category));
+    }
+
+    @GetMapping("/get/menu")
+    public ResponseEntity<?> getMenu(@RequestParam(value = "startDate", required = false) String from,
+                                     @RequestParam(value = "endDate", required = false) String to) {
+        return ResponseEntity.ok(getEntityService.getMenu("startDate", from, "endDate", to));
+    }
+
+    @GetMapping("/get/menu/dishes")
+    public ResponseEntity<?> getMenuDishes(@RequestParam(value = "currentMenu", required = false) String id) {
+        return ResponseEntity.ok(getEntityService.getMenuDishes("currentMenu", id));
     }
 
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute DishDTO data) {
         CreationResponse response = entityCreationService.createDish(data);
+        if (response.getStatus() == ResponseStatus.SUCCESS) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(400).body(response);
+    }
+
+    @PostMapping("/create/menu")
+    public ResponseEntity<?> createDish(@RequestBody MenuDTO data) {
+        CreationResponse response = entityCreationService.createMenu(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);
         }

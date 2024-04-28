@@ -1,5 +1,6 @@
 package com.example.backend.service.entityProcessing.entityCreation;
 
+import com.example.backend.controller.exception.customException.CreationException;
 import com.example.backend.entity.auth.RoleName;
 import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.payload.response.CreationResponse;
@@ -17,7 +18,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Service
@@ -31,15 +31,15 @@ public class CsvUserCreationService {
     public <T> List<CreationResponse> readFile(MultipartFile file, Class<T> type,
                                                Function<T, CreationResponse> creationFunction) {
         if (file.isEmpty()) {
-            return Collections.singletonList(CreationResponse.builder().status(ResponseStatus.ERROR).message("Файл пуст").build());
+            throw new CreationException("Файл пуст");
         }
 
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             CSVParser csvParser = csvFormat.parse(reader);
 
             return processCsv(csvParser, type, creationFunction);
-        } catch (IOException e) {
-            throw new RuntimeException();
+        } catch (IOException ex) {
+            throw new CreationException(ex.getMessage());
         }
     }
 
@@ -58,91 +58,66 @@ public class CsvUserCreationService {
                 }
 
                 responses.add(response);
-                index++;
             } catch (Exception ex) {
                 responses.add(CreationResponse.builder()
                         .status(ResponseStatus.ERROR)
                         .message("Ошибка при создании сущности в строке: " + index + ". " + ex.getMessage())
                         .build());
             }
+            index++;
         }
 
         return responses;
     }
 
-    private <T> T createObjectFromRecord(CSVRecord csvRecord, Class<T> type) {
-        try {
-            T obj = type.getConstructor().newInstance();
-            Field[] fields = type.getDeclaredFields();
+    private <T> T createObjectFromRecord(CSVRecord csvRecord, Class<T> type) throws Exception {
+        T obj = type.getConstructor().newInstance();
+        Field[] fields = type.getDeclaredFields();
 
-            Map<String, BiConsumer<T, String>> mappingFields = new HashMap<>();
-            mappingFields.put("imageUrl", (o, d) -> {});
-            mappingFields.put("role", this::setRoleField);
-            mappingFields.put("groupId", this::setGroupField);
-            mappingFields.put("children", this::setChildren);
+        for (int i = 0; i <= csvRecord.size(); i++) {
+            String fieldName = fields[i].getName();
 
-            for (int i = 0; i <= csvRecord.size(); i++) {
-                String fieldName = fields[i].getName();
-
-                if (!csvRecord.isSet(fieldName)) {
-                    continue;
-                }
-
-                mappingFields.getOrDefault(fieldName, (o, s) -> setStringField(o, fieldName, s))
-                        .accept(obj, csvRecord.get(fieldName));
+            if (!csvRecord.isSet(fieldName)) {
+                continue;
             }
 
-            return obj;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
+            switch (fieldName) {
+                case "role" -> setRoleField(obj, csvRecord.get(fieldName));
+                case "groupId" -> setGroupField(obj, csvRecord.get(fieldName));
+                case "children" -> setChildren(obj, csvRecord.get(fieldName));
+                default -> setStringField(obj, fieldName, csvRecord.get(fieldName));
+            }
         }
+
+        return obj;
     }
 
-    private <T> void setChildren(T obj, String value) {
-        try {
-            Field field = obj.getClass().getDeclaredField("children");
-            field.setAccessible(true);
-
-            Set<Long> id = new HashSet<>(Arrays.stream(value.split(",")).map(Long::parseLong).toList());
-            field.set(obj, id);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
+    private <T> Field getFiled(T obj, String fieldName) throws Exception {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field;
     }
 
-    private <T> void setStringField(T obj, String fieldName, String value) {
-        try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-
-            field.set(obj, value);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
+    private <T> void setChildren(T obj, String value) throws Exception {
+        Field field = getFiled(obj, "children");
+        Set<Long> id = new HashSet<>(Arrays.stream(value.split(",")).map(Long::parseLong).toList());
+        field.set(obj, id);
     }
 
-    private <T> void setRoleField(T obj, String value) {
-        try {
-            Field field = obj.getClass().getDeclaredField("role");
-            field.setAccessible(true);
-
-            field.set(obj, RoleName.valueOf(value));
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
+    private <T> void setStringField(T obj, String fieldName, String value) throws Exception {
+        Field field = getFiled(obj, fieldName);
+        field.set(obj, value);
     }
 
-    private <T> void setGroupField(T obj, String value) {
-        try {
-            createGroup(value);
+    private <T> void setRoleField(T obj, String value) throws Exception {
+        Field field = getFiled(obj, "role");
+        field.set(obj, RoleName.valueOf(value));
+    }
 
-            Field field = obj.getClass().getDeclaredField("groupId");
-            field.setAccessible(true);
-
-            field.set(obj, value);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
+    private <T> void setGroupField(T obj, String value) throws Exception {
+        createGroup(value);
+        Field field = getFiled(obj, "groupId");
+        field.set(obj, value);
     }
 
     private void createGroup(String group) {

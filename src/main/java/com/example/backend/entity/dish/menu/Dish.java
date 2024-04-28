@@ -1,7 +1,11 @@
-package com.example.backend.entity.menu;
+package com.example.backend.entity.dish.menu;
 
+import com.example.backend.entity.dish.Category;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,7 +23,14 @@ public class Dish {
 
     private String composition;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     private Double price;
 
     private String imageUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dish")
+    private Set<MenuDish> menuDishes;
 }

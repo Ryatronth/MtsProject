@@ -1,21 +1,24 @@
 package com.example.backend.service.entityProcessing.entityCreation;
 
+import com.example.backend.controller.exception.customException.CreationException;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Service
 public class EntityBuilder {
-    public <T, U> CreationResponse createEntity(T data, JpaRepository<U, ?> repository, Function<T, U> entityBuilder,
-                                                EntityExistenceCondition<T> existenceCondition, String message) {
+    public <T, U> CreationResponse createEntity(T data,
+                                                JpaRepository<U, ?> repository,
+                                                Function<T, U> entityBuilder,
+                                                Predicate<T> existenceCondition,
+                                                String successMessage,
+                                                String errorMessage) {
         if (existenceCondition.test(data)) {
-            return CreationResponse.builder()
-                    .status(ResponseStatus.ERROR)
-                    .message(message)
-                    .build();
+            throw new CreationException(errorMessage);
         }
 
         U entity = entityBuilder.apply(data);
@@ -25,7 +28,7 @@ public class EntityBuilder {
         return CreationResponse.builder()
                 .status(ResponseStatus.SUCCESS)
                 .object(savedEntity)
-                .message("Сущность создана успешно")
+                .message(successMessage)
                 .build();
     }
 }

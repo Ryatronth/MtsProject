@@ -1,4 +1,4 @@
-package com.example.backend.entity.order;
+package com.example.backend.entity.dish.order;
 
 import com.example.backend.entity.user.Child;
 import jakarta.persistence.*;

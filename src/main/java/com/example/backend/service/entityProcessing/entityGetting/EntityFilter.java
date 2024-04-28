@@ -1,7 +1,6 @@
 package com.example.backend.service.entityProcessing.entityGetting;
 
-import com.example.backend.entity.user.ChildGroup;
-import com.example.backend.entity.user.Parent;
+import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.ParentRepository;
 import jakarta.persistence.EntityManager;
@@ -10,8 +9,11 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -19,6 +21,7 @@ import java.util.*;
 public class EntityFilter {
     private final GroupRepository groupRepository;
     private final ParentRepository parentRepository;
+    private final CurrentMenuRepository currentMenuRepository;
 
     private final EntityManager entityManager;
 
@@ -38,33 +41,57 @@ public class EntityFilter {
 
             if (key.equals("parent") || value != null) {
                 String lowerCaseValue = value == null ? null : value.toLowerCase();
+
                 switch (key) {
-                    case "childGroup" -> {
-                        ChildGroup group = groupRepository.findById(value).orElse(null);
-                        if (group == null) {
-                            return Collections.emptyList();
-                        }
-                        predicates.add(builder.equal(root.get(key), group));
-                    }
-                    case "parent" -> {
-                        if (value != null) {
-                            Parent parent = parentRepository.findById(Long.valueOf(value)).orElse(null);
-                            if (parent == null) {
-                                return Collections.emptyList();
-                            }
-                            predicates.add(builder.equal(root.get(key), parent));
-                        }
-                        predicates.add(builder.isNull(root.get(key)));
-                    }
-                    default -> {
-                        predicates.add(builder.like(builder.lower(root.get(key)), "%" + lowerCaseValue + "%"));
-                    }
+                    case "currentMenu" -> addEntityPredicate(predicates, root, currentMenuRepository, Long.parseLong(value), key, builder);
+                    case "childGroup" -> addEntityPredicate(predicates, root, groupRepository, value, key, builder);
+                    case "parent" -> addEntityPredicate(predicates, root, parentRepository, tryParseLong(value), key, builder);
+                    case "startDate" -> addDatePredicate(predicates, root, value, key, true, builder);
+                    case "endDate" -> addDatePredicate(predicates, root, value, key, false, builder);
+                    default -> predicates.add(builder.like(builder.lower(root.get(key)), "%" + lowerCaseValue + "%"));
                 }
             }
         }
         query.select(root).where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).getResultList();
+    }
+
+    private <T, ID> void addEntityPredicate(List<Predicate> predicates,
+                                            Root<?> root,
+                                            JpaRepository<T, ID> repository,
+                                            ID id,
+                                            String key,
+                                            CriteriaBuilder builder) {
+        if (id != null) {
+            Optional.of(repository.findById(id))
+                    .ifPresent(entity -> predicates.add(builder.equal(root.get(key), entity.orElse(null))));
+        } else {
+            predicates.add(builder.isNull(root.get(key)));
+        }
+    }
+
+    private void addDatePredicate(List<Predicate> predicates,
+                                  Root<?> root,
+                                  String value,
+                                  String key,
+                                  boolean isStart,
+                                  CriteriaBuilder builder
+    ) {
+        LocalDate date = LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyy-M-dd"));
+        if (isStart) {
+            predicates.add(builder.lessThanOrEqualTo(root.get(key), date));
+        } else {
+            predicates.add(builder.greaterThanOrEqualTo(root.get(key), date));
+        }
+    }
+
+    private Long tryParseLong(String value) {
+        try {
+            return Long.parseLong(value);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     private Map<String, String> createMap(String... pairs) {

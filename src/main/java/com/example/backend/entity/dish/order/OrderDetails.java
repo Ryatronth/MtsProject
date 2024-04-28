@@ -1,6 +1,7 @@
-package com.example.backend.entity.order;
+package com.example.backend.entity.dish.order;
 
-import com.example.backend.entity.menu.CurrentMenu;
+import com.example.backend.entity.dish.Category;
+import com.example.backend.entity.dish.menu.CurrentMenu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private OrderCategory category;
+    private Category category;
 
     @JsonIgnore
     @ManyToOne

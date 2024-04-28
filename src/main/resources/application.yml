@@ -2,6 +2,10 @@ spring:
   application:
     name: backend
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
   datasource:
     url: jdbc:postgresql://localhost:5432/${DB}
     username: ${DBUser}

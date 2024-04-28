@@ -1,6 +1,8 @@
 package com.example.backend.service.entityProcessing.entityGetting;
 
-import com.example.backend.entity.menu.Dish;
+import com.example.backend.entity.dish.menu.CurrentMenu;
+import com.example.backend.entity.dish.menu.Dish;
+import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.User;
@@ -30,5 +32,13 @@ public class GetEntityService {
         List<Dish> dishes = entityFilter.filtrate(Dish.class, pairs);
         dishes.forEach(o -> o.setImageUrl("http://localhost:8080" + o.getImageUrl().substring(2).replace("\\", "/")));
         return dishes;
+    }
+
+    public List<CurrentMenu> getMenu(String... pairs) {
+        return entityFilter.filtrate(CurrentMenu.class, pairs);
+    }
+
+    public List<MenuDish> getMenuDishes(String... pairs) {
+        return entityFilter.filtrate(MenuDish.class, pairs);
     }
 }
