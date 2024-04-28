@@ -1,4 +1,13 @@
-export const PROFILE_ROUTE = '/profile';
 export const LOGIN_ROUTE = '/login';
 export const MAIN_ROUTE = '/';
-export const CREATE_PARENT_ROUTE = '/create-parent'; // почему-то нормально не работает с profile/create-parent
+export const ADMIN_ROUTE = '/admin';
+export const ADMIN_WORK_WITH_GROUPS_ROUTE = '/work-with-groups';
+export const ADMIN_CREATE_CHILD_ROUTE = '/create-child';
+export const ADMIN_CREATE_PARENT_ROUTE = '/create-parent';
+export const ADMIN_WORK_WITH_PROFILE_ROUTE = '/work-with-profile';
+export const ADMIN_EDIT_CHILD_PROFILE_ROUTE = '/edit-child-profile';
+export const ADMIN_EDIT_PARENT_PROFILE_ROUTE = '/edit-parent-profile';
+export const PARENT_ROUTE = '/parent';
+export const WORKER_ROUTE = '/worker';
+export const ADMIN_CREATE_WORKER_ROUTE = '/create-worker';
+// export const WORKER_WORK_WITH_DISHES = '/work-with-dishes';

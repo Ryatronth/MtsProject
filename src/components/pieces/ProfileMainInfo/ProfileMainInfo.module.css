@@ -1,0 +1,12 @@
+.mainInfoTitle {
+  font-weight: 500;
+  font-size: 22px;
+  color: #414141;
+}
+.mainInfoDescr {
+  border-radius: 100px;
+  border: 2px solid #f5af61;
+  font-weight: 400;
+  font-size: 16px;
+  color: #414141;
+}

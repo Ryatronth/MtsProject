@@ -1,0 +1,34 @@
+.inputTitle {
+  margin-bottom: 21px;
+  font-weight: 500;
+  font-size: 22px;
+  color: #414141;
+}
+.inputText {
+  width: 579px;
+  height: 46px;
+  margin-bottom: 29px;
+  border-radius: 100px;
+  border: 2px solid #f5af61;
+  font-weight: 400;
+  font-size: 16px;
+  color: #414141;
+}
+.groupText {
+  width: 350px;
+  height: 46px;
+  padding: 12px 5px 12px 36px;
+  border-radius: 100px;
+  border: 2px solid #f5af61;
+  font-weight: 400;
+  font-size: 16px;
+  color: #414141;
+}
+.adminBody {
+  border-radius: 70px 70px 0 0;
+  height: 690px;
+}
+.admiContainer {
+  padding-top: 110px;
+  row-gap: 90px;
+}

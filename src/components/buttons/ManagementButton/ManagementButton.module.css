@@ -1,0 +1,14 @@
+.mainBtnSuccess {
+  height: 46px;
+  width: 200px;
+  margin-right: 45px;
+  font-weight: 400;
+  font-size: 20px;
+}
+.mainBtnCancel {
+  height: 46px;
+  width: 200px;
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 20px;
+}

@@ -1,0 +1,20 @@
+.mainContainerAdmin {
+  row-gap: 55px;
+  height: 408px;
+  width: 284px;
+  padding: 45px 44px 38px;
+  border-radius: 20px;
+  border: 0px;
+  background-color: #fdfdfb;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.adminBtn {
+  width: 237px;
+  padding: 13px 22px;
+  border-radius: 40px;
+  border: 0;
+  background-color: #87c631;
+  font-weight: 400;
+  font-size: 20px;
+}

@@ -1,0 +1,61 @@
+.mainInfo {
+  row-gap: 46px;
+  width: 1060px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 72px 33px 24px;
+  border-radius: 20px;
+  background-color: #fdfdfb;
+  z-index: 2;
+  color: #414141;
+}
+/* .mainInfo.mainInfo:last-child {
+  align-items: flex-end;
+} */
+.blur::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.descr {
+  font-weight: 700;
+  font-size: 26px;
+}
+.exit {
+  cursor: pointer;
+  position: absolute;
+  top: 19px;
+  right: 31px;
+}
+.modalDeleteCard {
+  column-gap: 40px;
+  width: 678px;
+  height: 105px;
+  padding: 9px 0 12px 50px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+  color: #414141;
+  font-weight: 500;
+  font-size: 16px;
+}
+.modalDeleteBtn {
+  align-self: flex-end;
+  padding: 10px 60px;
+  margin-top: 30px;
+  border-radius: 35px;
+  border: 0;
+  background-color: #f48104;
+  font-weight: 500;
+  font-size: 24px;
+}

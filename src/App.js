@@ -1,11 +1,12 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Spinner } from 'react-bootstrap';
 import { BrowserRouter } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '.';
-import { check } from './http/userAPI';
+import { check, mainInfo } from './http/userAPI';
 import AppRouter from './components/AppRouter';
+import { jwtDecode } from 'jwt-decode';
+import SpinnerMain from './components/loaders/SpinnerMain';
 
 const App = observer(() => {
   const { user } = useContext(Context);
@@ -14,18 +15,25 @@ const App = observer(() => {
   useEffect(() => {
     check()
       .then((data) => {
-        if (localStorage.getItem('token')) {
-          user.setUser(true);
+        if (data) {
+          user.setToken(data);
           user.setIsAuth(true);
-          user.setTimer(data.exp - Math.floor(Date.now() / 1000));
+          user.setTimer(jwtDecode(data).exp - Math.floor(Date.now() / 1000));
+          return mainInfo();
+        }
+      })
+      .then((data) => {
+        if (data) {
+          user.setUser(data);
         }
       })
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <Spinner animation={'grow'} />;
+    return <SpinnerMain />;
   }
+
   console.log(user.isAuth);
   return (
     <BrowserRouter>

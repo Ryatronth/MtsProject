@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import UserStore from './store/User.Store';
+import UserStore from './store/UserStore';
 
 export const Context = createContext(null);
 

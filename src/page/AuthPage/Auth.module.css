@@ -1,0 +1,34 @@
+.authBody {
+  width: 794px;
+  background-color: #fff;
+  padding: 99px 104px 90px;
+}
+.authImg {
+  border-radius: 50%;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+.authTitle {
+  margin-top: 60px;
+  font-size: 48px;
+  font-weight: 500;
+  color: #414141;
+}
+.authInput {
+  height: 90px;
+  width: 586px;
+  padding: 35px 20px;
+  margin-top: 60px;
+  border-radius: 100px;
+  background: #f48104 !important;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+  opacity: 0.85;
+  color: #fff !important;
+  font-weight: 500;
+  font-size: 24px;
+}
+.authBtn {
+  width: 224px;
+  padding: 12px 0;
+  margin-top: 126px;
+  font-size: 32px;
+}

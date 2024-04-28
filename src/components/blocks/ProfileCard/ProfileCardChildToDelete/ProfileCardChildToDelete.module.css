@@ -1,0 +1,16 @@
+.profileCard {
+  width: calc(100% - 62px);
+  height: 63px;
+  padding: 13px 34px 13px 32px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.2);
+}
+.mainBtnCancel {
+  box-sizing: border-box;
+  height: 35px;
+  width: 155px;
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 15px;
+}

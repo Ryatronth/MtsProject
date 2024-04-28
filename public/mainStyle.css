@@ -23,7 +23,7 @@ p {
   background-color: #87c631;
   box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
 }
-
+/* 
 .header__btn {
   width: 159px;
   font-size: 24px;
@@ -52,10 +52,10 @@ p {
 .body__btn {
   width: 224px;
   font-size: 32px;
-}
+} */
 
 /*Авторизация*/
-.auth-body {
+/* .auth-body {
   width: 794px;
   background-color: #fff;
   padding: 99px 104px 90px;
@@ -86,11 +86,11 @@ p {
   padding: 12px 0;
   margin-top: 126px;
   font-size: 32px;
-}
+} */
 /*-----------*/
 
 /*Общий header*/
-.general-header__title {
+/* .general-header__title {
   font-weight: 500;
   font-size: 22px;
   color: #414141;
@@ -102,11 +102,11 @@ p {
   font-weight: 400;
   font-size: 16px;
   color: #414141;
-}
+} */
 /*------------*/
 
 /*Страница админа*/
-.admin-body {
+/* .admin-body {
   border-radius: 70px 70px 0 0;
   height: 690px;
 }
@@ -123,7 +123,7 @@ p {
   background-color: #fdfdfb;
   font-size: 24px;
   box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.1);
-}
+} */
 /*---------------*/
 
 /*Кастомный input файла*/
@@ -162,6 +162,7 @@ p {
 /*Карточка ребёнка*/
 .children-card {
   position: relative;
+  width: 491px;
   padding: 16px 32px 16px 26px;
   border-radius: 20px;
   background-color: #f7f7f5;
@@ -171,7 +172,7 @@ p {
 .children-card__dropdown-groups {
   width: 263px;
   border-radius: 35px;
-  border: 2px solid #f48104;
+  border: 2px solid rgba(175, 175, 175, 0.55);
   background-color: rgba(0, 0, 0, 0);
   color: rgba(65, 65, 65, 0.5);
   font-weight: 400;
@@ -183,3 +184,4 @@ p {
   bottom: 12px;
   right: 12px;
 }
+/*----------------*/

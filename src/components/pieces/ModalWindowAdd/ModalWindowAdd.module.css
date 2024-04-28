@@ -1,0 +1,36 @@
+.mainInfo {
+  row-gap: 46px;
+  width: 1060px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px 27px 51px;
+  border-radius: 20px;
+  background-color: #fdfdfb;
+  z-index: 2;
+  color: #414141;
+}
+.blur::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.descr {
+  font-weight: 700;
+  font-size: 26px;
+}
+.exit {
+  cursor: pointer;
+  position: absolute;
+  top: 19px;
+  right: 31px;
+}
