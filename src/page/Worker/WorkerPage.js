@@ -1,26 +1,50 @@
 import React from 'react';
 import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
 import backgr from '../../assets/bgProfile.png';
-// import WorkerButton from '../../components/buttons/WorkerButton/WorkerButton';
+import MainButton from '../../components/buttons/MainButton/MainButton';
+import {
+  ADMIN_WORK_WITH_GROUPS_ROUTE,
+  ADMIN_CREATE_PARENT_ROUTE,
+  ADMIN_WORK_WITH_PROFILE_ROUTE,
+  WORKER_WORK_WITH_DISHES,
+} from '../../utils/consts';
+import icoWrokDish from '../../assets/worker/book.png';
+import icoWrokMenu from '../../assets/worker/list.png';
+import icoViewMenu from '../../assets/worker/icon-menu.png';
+import styles from './WorkerPage.module.css';
 
 const WorkerPage = () => {
   return (
     <>
       <ProfileMainInfo />
       <div
-        className="mt-5 admin-body"
+        className={`mt-5 ${styles.workerBody}`}
         style={{
           background: `url(${backgr}) no-repeat center center`,
         }}
       >
-        <div className="d-flex flex-column justify-content-center align-items-center admin-body__container">
+        <div
+          className={`d-flex flex-column justify-content-center align-items-center ${styles.workerContainer}`}
+        >
           <div
             style={{ width: '100%', flexWrap: 'wrap' }}
             className="d-flex justify-content-evenly align-items-center"
           >
-            {/* <WorkerButton variant="dishes" />
-            <WorkerButton variant="menu" />
-            <WorkerButton variant="view" /> */}
+            <MainButton
+              value={'Работа с блюдами'}
+              route={WORKER_WORK_WITH_DISHES}
+              ico={icoWrokDish}
+            />
+            <MainButton
+              value={'Работа с меню'}
+              route={ADMIN_CREATE_PARENT_ROUTE}
+              ico={icoWrokMenu}
+            />
+            <MainButton
+              value={'Посмотреть меню'}
+              route={ADMIN_WORK_WITH_PROFILE_ROUTE}
+              ico={icoViewMenu}
+            />
           </div>
         </div>
       </div>

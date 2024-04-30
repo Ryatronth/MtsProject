@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Image } from 'react-bootstrap';
 import ProfileHeader from '../ProfileHeader/ProfileHeader';
 import { Context } from '../../../index';
+import ico from '../../../assets/admin/ico-parentAva.png';
 import styles from './ProfileMainInfo.module.css';
 
 const ProfileMainInfo = observer(() => {
@@ -17,7 +18,7 @@ const ProfileMainInfo = observer(() => {
       >
         <Image
           style={{ borderRadius: '50%' }}
-          src={user.user.imageUrl}
+          src={user.user.imageUrl || ico}
           width={195}
           height={195}
         />

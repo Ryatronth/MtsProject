@@ -31,6 +31,11 @@ export const getChildren = async () => {
   return data;
 };
 
+export const getDishes = async () => {
+  const { data } = await $authHost.get('api/user/worker/get/dishes');
+  return data;
+};
+
 export const createGroup = async (groupId) => {
   const { data } = await $authHost.post('api/user/admin/create/group', {
     groupId,
@@ -81,26 +86,34 @@ export const createParent = async ({
   return data;
 };
 
-export const createWorker = async ({
-  username,
-  password,
-  surname,
-  name,
-  patronymic,
-  phone,
-}) => {
-  const { data } = await $authHost.post('api/user/admin/create/worker', {
-    username,
-    password,
-    surname,
-    name,
-    patronymic,
-    phone,
-    role: 'WORKER',
-    imageUrl: null,
-  });
+export const createDish = async (formData) => {
+  const { data } = await $authHost.post(
+    'api/user/worker/create/dish',
+    formData
+  );
   return data;
 };
+
+// export const createWorker = async ({
+//   username,
+//   password,
+//   surname,
+//   name,
+//   patronymic,
+//   phone,
+// }) => {
+//   const { data } = await $authHost.post('api/user/admin/create/worker', {
+//     username,
+//     password,
+//     surname,
+//     name,
+//     patronymic,
+//     phone,
+//     role: 'WORKER',
+//     imageUrl: null,
+//   });
+//   return data;
+// };
 
 export const deleteChild = async (childId) => {
   const { data } = await $authHost.delete(
@@ -118,7 +131,40 @@ export const deleteGroup = async (groupId) => {
 
 export const deleteParent = async (parentId) => {
   const { data } = await $authHost.delete(
-    `api/user/admin/delete/parent/${parentId}`
+    `api/user/admin/delete/user/${parentId}`
+  );
+  return data;
+};
+
+export const deleteDish = async (dishId) => {
+  const { data } = await $authHost.delete(
+    `api/user/worker/delete/dish/${dishId}`
+  );
+  return data;
+};
+
+export const updateChild = async (
+  childId,
+  { surname, name, patronymic, groupId, parentId, imageUrl }
+) => {
+  const { data } = await $authHost.post(
+    `api/user/admin/update/child/${childId}`,
+    {
+      surname,
+      name,
+      patronymic,
+      groupId,
+      parentId,
+      imageUrl,
+    }
+  );
+  return data;
+};
+
+export const updateDish = async (dishId, formData) => {
+  const { data } = await $authHost.post(
+    `api/user/worker/update/dish/${dishId}`,
+    formData
   );
   return data;
 };

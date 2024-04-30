@@ -19,7 +19,7 @@ const ModalWindowDelete = ({ img, text, mainFunc, setFlag, info }) => {
         />
         <p className={`text-center ${styles.descr}`}>{text}</p>
         <div className={`${styles.modalDeleteCard} d-flex align-items-center`}>
-          <Image src={img} />
+          <Image src={img || null} />
           <p>{info}</p>
         </div>
         <Button

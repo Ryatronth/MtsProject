@@ -8,7 +8,7 @@ import InputPicture from '../../../components/inputs/InputPicture/InputPicture';
 import { Button, Dropdown } from 'react-bootstrap';
 import { ADMIN_WORK_WITH_PROFILE_ROUTE } from '../../../utils/consts';
 import { observer } from 'mobx-react-lite';
-import { getGroups } from '../../../http/userAPI';
+import { getChildren, getGroups } from '../../../http/userAPI';
 import styles from './EditParentPage.module.css';
 
 const EditParentPage = observer(() => {
@@ -16,10 +16,10 @@ const EditParentPage = observer(() => {
   const navigate = useNavigate();
   const [FIO, setFIO] = useState('');
   const [phone, setPhone] = useState('');
+  const [childList, setChildList] = useState([]);
   const location = useLocation();
   const { state } = location;
   const parentData = state?.parentData;
-  const [groupList, setGroupList] = useState([]);
 
   const saveChanges = () => {
     console.log(1234); // допилить
@@ -28,6 +28,9 @@ const EditParentPage = observer(() => {
   useEffect(() => {
     setFIO(`${parentData.surname} ${parentData.name} ${parentData.patronymic}`);
     setPhone(parentData.phone);
+    getChildren().then((data) => {
+      console.log(data);
+    });
   }, []);
 
   return (

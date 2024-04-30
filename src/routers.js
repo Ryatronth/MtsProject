@@ -8,20 +8,22 @@ import {
   ADMIN_CREATE_PARENT_ROUTE,
   ADMIN_EDIT_CHILD_PROFILE_ROUTE,
   ADMIN_EDIT_PARENT_PROFILE_ROUTE,
-  PARENT_ROUTE,
   WORKER_ROUTE,
+  WORKER_WORK_WITH_DISHES,
+  PARENT_ROUTE,
 } from './utils/consts';
 import Main from './page/MainPage/Main';
 import Auth from './page/AuthPage/Auth';
 import AdminPage from './page/Admin/AdminPage';
 import WorkWithGroups from './page/Admin/WorkWithGroups/WorkWithGroups';
-import WorkerPage from './page/Worker/WorkerPage';
-import ParentPage from './page/Parent/ParentPage';
 import CreateChildPage from './page/Admin/CreateChildPage/CreateChildPage';
 import CreateParentPage from './page/Admin/CreateParentPage/CreateParentPage';
 import WorkWithProfile from './page/Admin/WorkWithProfile/WorkWithProfile';
 import EditChildPage from './page/Admin/EditChildPage/EditChildPage';
 import EditParentPage from './page/Admin/EditParentPage/EditParentPage';
+import WorkerPage from './page/Worker/WorkerPage';
+import WorkWithDishes from './page/Worker/WorkWithDishes/WorkWithDishes';
+import ParentPage from './page/Parent/ParentPage';
 
 export const publicRoutes = [
   {
@@ -76,5 +78,9 @@ export const workerRoutes = [
   {
     path: WORKER_ROUTE,
     Component: WorkerPage,
+  },
+  {
+    path: WORKER_WORK_WITH_DISHES,
+    Component: WorkWithDishes,
   },
 ];

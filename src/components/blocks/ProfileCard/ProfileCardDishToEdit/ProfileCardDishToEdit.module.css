@@ -1,0 +1,24 @@
+.profileCard {
+  width: calc(100% - 62px);
+  height: 105px;
+  padding: 13px 25px 13px 45px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.2);
+}
+.groupInfoImg {
+  margin-right: 67px;
+}
+.groupInfoText {
+  width: 545px;
+}
+.groupInfoInput {
+  width: 308px;
+  margin-right: 220px;
+  padding: 13px 10px 13px 20px;
+  border-radius: 35px;
+  border: 2px solid rgba(175, 175, 175, 0.55);
+  color: #afafaf;
+  font-weight: 500;
+  font-size: 16px;
+}

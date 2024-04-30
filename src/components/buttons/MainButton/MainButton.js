@@ -1,18 +1,17 @@
 import React from 'react';
 import { Button, Image } from 'react-bootstrap';
-import ico from '../../../assets/admin/ico-adminBtn.png';
 import { useNavigate } from 'react-router-dom';
-import styles from './AdminButton.module.css';
+import styles from './MainButton.module.css';
 
-const AdminButton = ({ value, route }) => {
+const MainButton = ({ value, route, ico }) => {
   const navigate = useNavigate();
   return (
     <div
-      className={`${styles.mainContainerAdmin} d-flex flex-column align-items-center`}
+      className={`${styles.mainContainerBtn} d-flex flex-column align-items-center`}
     >
       <Image src={ico} />
       <Button
-        className={`${styles.adminBtn}`}
+        className={`${styles.mainBtn}`}
         variant="success"
         onClick={() => navigate(route)}
       >
@@ -22,4 +21,4 @@ const AdminButton = ({ value, route }) => {
   );
 };
 
-export default AdminButton;
+export default MainButton;

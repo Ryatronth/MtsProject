@@ -54,6 +54,8 @@ const CreateParentPage = observer(() => {
           };
           const uwu = await createParent(user);
           console.log(uwu);
+          alert(uwu.message);
+          navigate(ADMIN_ROUTE);
         } else {
           alert('Выберите ребёнка');
         }

@@ -3,6 +3,7 @@ import { Context } from '../../../index';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN_ROUTE } from '../../../utils/consts';
 import logo from '../../../assets/hdLogo.png';
+import ico from '../../../assets/ico-headerAva.png';
 import { observer } from 'mobx-react-lite';
 import { Image, Dropdown, DropdownButton } from 'react-bootstrap';
 
@@ -24,7 +25,7 @@ const ProfileHeader = observer(({ info }) => {
         <Image src={logo} width={106} height={75} />
         <div className="d-flex justify-center align-items-center column-gap-3">
           <Image
-            src={info.imageUrl}
+            src={info.imageUrl || ico}
             width={69}
             height={69}
             style={{ borderRadius: '50%' }}

@@ -5,9 +5,10 @@ import {
   ADMIN_WORK_WITH_PROFILE_ROUTE,
 } from '../../utils/consts';
 import backgr from '../../assets/bgProfile.png';
-import AdminButton from '../../components/buttons/AdminButton/AdminButton';
 import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
+import ico from '../../assets/admin/ico-adminBtn.png';
 import styles from './AdminPage.module.css';
+import MainButton from '../../components/buttons/MainButton/MainButton';
 
 const AdminPage = () => {
   return (
@@ -26,17 +27,20 @@ const AdminPage = () => {
             style={{ width: '100%', flexWrap: 'wrap' }}
             className="d-flex justify-content-evenly align-items-center"
           >
-            <AdminButton
+            <MainButton
               value={'Работа с группами'}
               route={ADMIN_WORK_WITH_GROUPS_ROUTE}
+              ico={ico}
             />
-            <AdminButton
+            <MainButton
               value={'Создать профиль родителя'}
               route={ADMIN_CREATE_PARENT_ROUTE}
+              ico={ico}
             />
-            <AdminButton
+            <MainButton
               value={'Редактировать профиль'}
               route={ADMIN_WORK_WITH_PROFILE_ROUTE}
+              ico={ico}
             />
           </div>
         </div>

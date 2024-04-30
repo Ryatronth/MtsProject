@@ -1,0 +1,8 @@
+.parentBody {
+  border-radius: 70px 70px 0 0;
+  height: 690px;
+}
+.parentContainer {
+  padding-top: 110px;
+  row-gap: 90px;
+}

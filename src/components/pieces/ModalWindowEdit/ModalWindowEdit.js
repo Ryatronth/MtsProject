@@ -5,6 +5,8 @@ import styles from './ModalWindowEdit.module.css';
 import ShowChildByGroup from '../Show/ShowChildByGroup/ShowChildByGroup';
 
 const ModalWindowEdit = ({ setFlag, mainData }) => {
+  console.log(mainData);
+
   return (
     <div className={`${styles.blur}`}>
       <div

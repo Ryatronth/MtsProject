@@ -9,7 +9,7 @@ import styles from './EditChildPage.module.css';
 import { Button, Dropdown } from 'react-bootstrap';
 import { ADMIN_WORK_WITH_PROFILE_ROUTE } from '../../../utils/consts';
 import { observer } from 'mobx-react-lite';
-import { getGroups } from '../../../http/userAPI';
+import { getGroups, updateChild } from '../../../http/userAPI';
 
 const EditChildPage = observer(() => {
   const { user } = useContext(Context);
@@ -18,11 +18,31 @@ const EditChildPage = observer(() => {
   const location = useLocation();
   const { state } = location;
   const childData = state?.childData;
-  const [selectedGroup, setSelectedGroup] = useState(childData.childGroup.id);
+  console.log(childData);
+  const [selectedGroup, setSelectedGroup] = useState('');
   const [groupList, setGroupList] = useState([]);
 
-  const saveChanges = () => {
-    console.log(1234); // допилить
+  const saveChanges = async () => {
+    try {
+      if (!FIO) {
+        alert('Введите ФИО ребёнка');
+      } else {
+        const fio = FIO.split(' ');
+        const data = {
+          surname: fio[0],
+          name: fio[1],
+          patronymic: fio[2],
+          groupId: selectedGroup,
+          parentId: null,
+          imageUrl: null,
+        };
+        const uwu = await updateChild(childData.id, data);
+        console.log(uwu);
+        navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
+      }
+    } catch (e) {
+      alert(e);
+    }
   };
 
   useEffect(() => {
@@ -30,6 +50,7 @@ const EditChildPage = observer(() => {
       setGroupList(data);
       console.log(groupList);
       setFIO(`${childData.surname} ${childData.name} ${childData.patronymic}`);
+      setSelectedGroup(childData.childGroup.id);
     });
   }, []);
 
