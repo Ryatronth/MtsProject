@@ -1,8 +1,10 @@
 package com.example.backend.controller.exception;
 
 import com.example.backend.controller.exception.customException.CreationException;
+import com.example.backend.controller.exception.customException.FilterException;
 import com.example.backend.controller.exception.customException.ModificationException;
 import com.example.backend.payload.response.CreationResponse;
+import com.example.backend.payload.response.FilterExceptionResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,14 @@ public class CustomExceptionHandler {
     @ExceptionHandler(ModificationException.class)
     public ResponseEntity<?> handleModificationException(ModificationException ex) {
         return ResponseEntity.status(400).body(ModificationResponse.builder()
+                .status(ResponseStatus.ERROR)
+                .message(ex.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(FilterException.class)
+    public ResponseEntity<?> handleFilterException(FilterException ex) {
+        return ResponseEntity.status(400).body(FilterExceptionResponse.builder()
                 .status(ResponseStatus.ERROR)
                 .message(ex.getMessage())
                 .build());

@@ -8,8 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ModificationResponse {
+public class FilterExceptionResponse {
     private ResponseStatus status;
     private String message;
-    private Object object;
 }

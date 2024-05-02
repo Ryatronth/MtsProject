@@ -3,18 +3,21 @@ package com.example.backend.controller;
 import com.example.backend.payload.dto.ChildDTO;
 import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.payload.dto.ParentDTO;
+import com.example.backend.payload.dto.SearchDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.entityCreation.CsvUserCreationService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
-import com.example.backend.service.entityProcessing.entityGetting.GetEntityService;
+import com.example.backend.service.entityProcessing.entityFilter.EntityFilterService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,34 +27,23 @@ public class AdminController {
     private final CsvUserCreationService csvUserCreationService;
     private final EntityCreationService entityCreationService;
     private final EntityModificationService entityModificationService;
-    private final GetEntityService getEntityService;
+    private final EntityFilterService entityFilterService;
     private final DeleteEntityService deleteEntityService;
 
     // Получение -------------------------------------------------------------------------------------------------------
-    @GetMapping("/get/children")
-    public ResponseEntity<?> getChild(@RequestParam(value = "name", required = false) String name,
-                                      @RequestParam(value = "surname", required = false) String surname,
-                                      @RequestParam(value = "patronymic", required = false) String patronymic,
-                                      @RequestParam(value = "groupId", required = false) String group,
-                                      @RequestParam(value = "parentId", required = false) String parentId) {
-        return ResponseEntity.ok(getEntityService
-                .getChild("name", name, "surname", surname, "patronymic", patronymic, "childGroup", group,
-                        "parent", parentId));
+    @GetMapping("/get/parents")
+    public ResponseEntity<?> getParents(@RequestBody List<SearchDTO> filters) {
+        return ResponseEntity.ok(entityFilterService.getParents(filters));
     }
 
-    @GetMapping("/get/parents")
-    public ResponseEntity<?> getParents(@RequestParam(value = "name", required = false) String name,
-                                        @RequestParam(value = "surname", required = false) String surname,
-                                        @RequestParam(value = "patronymic", required = false) String patronymic,
-                                        @RequestParam(value = "phone", required = false) String phone) {
-        return ResponseEntity.ok(getEntityService
-                .getParents("role", "PARENT", "name", name, "surname", surname, "patronymic", patronymic,
-                        "phone", phone));
+    @GetMapping("/get/children")
+    public ResponseEntity<?> getChildren(@RequestBody List<SearchDTO> filters) {
+        return ResponseEntity.ok(entityFilterService.getChildren(filters));
     }
 
     @GetMapping("/get/groups")
-    public ResponseEntity<?> getGroups(@RequestParam(value = "groupId", required = false) String group) {
-        return ResponseEntity.ok(getEntityService.getGroups("Id", group));
+    public ResponseEntity<?> getGroups(@RequestBody List<SearchDTO> filters) {
+        return ResponseEntity.ok(entityFilterService.getGroups(filters));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------

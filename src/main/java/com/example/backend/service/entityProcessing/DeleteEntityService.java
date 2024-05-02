@@ -1,5 +1,6 @@
 package com.example.backend.service.entityProcessing;
 
+import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
@@ -16,6 +17,7 @@ public class DeleteEntityService {
     private final ChildRepository childRepository;
     private final GroupRepository groupRepository;
     private final DishRepository dishRepository;
+    private final CurrentMenuRepository currentMenuRepository;
 
     public DeleteResponse deleteUser(Long userId) {
         userRepository.deleteById(userId);
@@ -44,6 +46,14 @@ public class DeleteEntityService {
 
     public DeleteResponse deleteDish(Long dishId) {
         dishRepository.deleteById(dishId);
+        return DeleteResponse.builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Группа удалена")
+                .build();
+    }
+
+    public DeleteResponse deleteMenu(Long menuId) {
+        currentMenuRepository.deleteById(menuId);
         return DeleteResponse.builder()
                 .status(ResponseStatus.SUCCESS)
                 .message("Группа удалена")

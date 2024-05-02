@@ -38,10 +38,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(r -> r
                         .requestMatchers("/api/user/login").permitAll()
-                        .requestMatchers("/api/user/refresh/access").hasAnyAuthority(RoleName.PARENT.name(),
-                                RoleName.ADMIN.name(),
-                                RoleName.WORKER.name())
-                        .requestMatchers("/api/user/info").hasAnyAuthority(RoleName.PARENT.name(),
+                        .requestMatchers("/api/user/info", "/api/user/refresh/access", "/images/**")
+                        .hasAnyAuthority(RoleName.PARENT.name(),
                                 RoleName.ADMIN.name(),
                                 RoleName.WORKER.name())
                         .requestMatchers("/api/user/parent/**").hasAuthority(RoleName.PARENT.name())
@@ -60,11 +58,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/user/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

@@ -130,7 +130,8 @@ public class EntityCreationService {
 
     public CreationResponse createDish(DishDTO data) {
         String pathToImage = saveImage(data.getImage());
-        return entityBuilder.createEntity(data, dishRepository,
+
+        CreationResponse response = entityBuilder.createEntity(data, dishRepository,
                 dto -> Dish.builder()
                         .name(data.getName())
                         .composition(data.getComposition())
@@ -141,6 +142,11 @@ public class EntityCreationService {
                 condition -> dishRepository.findByName(data.getName()).isPresent(),
                 "Блюдо успешно создано",
                 "Данное блюдо уже существует");
+
+        Dish dish = (Dish) response.getObject();
+        dish.setImageUrl("http://localhost:8080" + dish.getImageUrl().substring(2).replace("\\", "/"));
+        response.setObject(dish);
+        return response;
     }
 
     private String saveImage(MultipartFile image) {
