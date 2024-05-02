@@ -3,10 +3,9 @@ import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMain
 import backgr from '../../assets/bgProfile.png';
 import MainButton from '../../components/buttons/MainButton/MainButton';
 import {
-  ADMIN_WORK_WITH_GROUPS_ROUTE,
-  ADMIN_CREATE_PARENT_ROUTE,
   ADMIN_WORK_WITH_PROFILE_ROUTE,
   WORKER_WORK_WITH_DISHES,
+  WORKER_WORK_WITH_MENU,
 } from '../../utils/consts';
 import icoWrokDish from '../../assets/worker/book.png';
 import icoWrokMenu from '../../assets/worker/list.png';
@@ -37,7 +36,7 @@ const WorkerPage = () => {
             />
             <MainButton
               value={'Работа с меню'}
-              route={ADMIN_CREATE_PARENT_ROUTE}
+              route={WORKER_WORK_WITH_MENU}
               ico={icoWrokMenu}
             />
             <MainButton

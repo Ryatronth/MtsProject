@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { deleteDish, deleteGroup } from '../../../../http/userAPI';
+import { deleteDish } from '../../../../http/userAPI';
 import { observer } from 'mobx-react-lite';
 import ModalWindowDelete from '../../../pieces/ModalWindowDelete/ModalWindowDelete';
-import ModalWindowEdit from '../../../pieces/ModalWindowEdit/ModalWindowEdit';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
 import styles from './ProfileCardDishToEdit.module.css';
 import ModalWindowEditDish from '../../../pieces/ModalWindowEditDish/ModalWindowEditDish';

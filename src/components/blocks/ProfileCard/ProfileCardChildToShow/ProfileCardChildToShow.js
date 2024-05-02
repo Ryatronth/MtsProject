@@ -3,7 +3,14 @@ import styles from './ProfileCardChildToShow.module.css';
 import ico from '../../../../assets/admin/ico-childAva-182.png';
 import { Image } from 'react-bootstrap';
 
-const ProfileCardChildToShow = ({ data, listChild, setListChild, id }) => {
+const ProfileCardChildToShow = ({
+  data,
+  listChild,
+  setListChild,
+  id,
+  allChild,
+  setAllChild,
+}) => {
   return (
     <div
       id={id}
@@ -26,6 +33,7 @@ const ProfileCardChildToShow = ({ data, listChild, setListChild, id }) => {
         className={`${styles.minus}`}
         onClick={() => {
           setListChild(listChild.filter((child) => child.id !== data.id));
+          setAllChild([...allChild, data]);
         }}
       >
         -

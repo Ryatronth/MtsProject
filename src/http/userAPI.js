@@ -17,22 +17,40 @@ export const mainInfo = async () => {
 };
 
 export const getGroups = async () => {
-  const { data } = await $authHost.get('api/user/admin/get/groups');
+  const { data } = await $authHost.post('api/user/admin/get/groups', []);
+  console.log(data);
   return data;
 };
 
-export const getParents = async () => {
-  const { data } = await $authHost.get('api/user/admin/get/parents');
+export const getParents = async (qparametr) => {
+  const { data } = await $authHost.post(
+    'api/user/admin/get/parents',
+    qparametr
+  );
   return data;
 };
 
-export const getChildren = async () => {
-  const { data } = await $authHost.get('api/user/admin/get/children');
+export const getChildren = async (qparametr) => {
+  const { data } = await $authHost.post(
+    'api/user/admin/get/children',
+    qparametr
+  );
   return data;
 };
 
-export const getDishes = async () => {
-  const { data } = await $authHost.get('api/user/worker/get/dishes');
+export const getDishes = async (qparametr) => {
+  const { data } = await $authHost.post(
+    'api/user/worker/get/dishes',
+    qparametr
+  );
+  return data;
+};
+
+export const getCurrentMenu = async (qparametr) => {
+  const { data } = await $authHost.post(
+    'api/user/worker/get/dishes',
+    qparametr
+  );
   return data;
 };
 
@@ -61,28 +79,8 @@ export const createChild = async ({
   return data;
 };
 
-export const createParent = async ({
-  username,
-  password,
-  surname,
-  name,
-  patronymic,
-  phone,
-  role,
-  imageUrl,
-  childrenId,
-}) => {
-  const { data } = await $authHost.post('api/user/admin/create/parent', {
-    username,
-    password,
-    surname,
-    name,
-    patronymic,
-    phone,
-    role,
-    imageUrl,
-    childrenId,
-  });
+export const createParent = async (user) => {
+  const { data } = await $authHost.post('api/user/admin/create/parent', user);
   return data;
 };
 
@@ -157,6 +155,14 @@ export const updateChild = async (
       parentId,
       imageUrl,
     }
+  );
+  return data;
+};
+
+export const updateParent = async (parentId, user) => {
+  const { data } = await $authHost.post(
+    `api/user/admin/update/parent/${parentId}`,
+    user
   );
   return data;
 };

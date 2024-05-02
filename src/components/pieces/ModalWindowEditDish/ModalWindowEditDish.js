@@ -13,37 +13,9 @@ const ModalWindowEditDish = observer(
     const [description, setDescription] = useState(dishData.composition);
     const [price, setPrice] = useState(dishData.price);
     const [category, setCategory] = useState(dishData.category.toLowerCase());
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(dishData.imageUrl);
 
-    useEffect(() => {
-      fetch(dishData.imageUrl, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.blob();
-          } else {
-            throw new Error('Ошибка при загрузке изображения');
-          }
-        })
-        .then((blob) => {
-          const fileName = dishData.imageUrl.split('/').pop();
-          const file = new File([blob], fileName, { type: blob.type });
-          const reader = new FileReader();
-          reader.addEventListener('load', () => {
-            document
-              .querySelector('.input__picture')
-              .setAttribute('src', reader.result);
-          });
-          reader.readAsDataURL(file);
-          setImage(file);
-        })
-        .catch((error) => {
-          console.error('Произошла ошибка:', error);
-        });
-    }, []);
+    console.log(image);
 
     const drowing = async (eve) => {
       const choosedFile = eve.target.files[0];
@@ -86,10 +58,9 @@ const ModalWindowEditDish = observer(
             const indexToUpdate = dishesList.findIndex(
               (dish) => dish.id === dishData.id
             );
-            const updateDishesList = [...dishesList];
-            updateDishesList[indexToUpdate] = data;
+            let updateDishesList = [...dishesList];
+            updateDishesList[indexToUpdate] = data.object;
             setDishesList([...updateDishesList]);
-            console.log(data);
             setFlag(false);
             document.body.style.overflow = '';
             alert(data.message);
@@ -112,7 +83,11 @@ const ModalWindowEditDish = observer(
           />
           <div className={`d-flex justify-content-start align-items-start`}>
             <div className={`${styles.inputImg} `}>
-              <Image className={`${styles.img} input__picture`} alt="" />
+              <Image
+                className={`${styles.img} input__picture`}
+                alt=""
+                src={image}
+              />
               <input
                 type="file"
                 accept="image/*, .png, .jpg, .web"

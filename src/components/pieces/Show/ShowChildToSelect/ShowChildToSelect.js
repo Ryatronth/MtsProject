@@ -6,6 +6,7 @@ import ProfileCardChildToSelect from '../../../blocks/ProfileCard/ProfileCardChi
 
 const ShowChildToSelect = ({
   childData,
+  setAllChild,
   groupData,
   listChild,
   setListChild,
@@ -64,6 +65,8 @@ const ShowChildToSelect = ({
           <ProfileCardChildToSelect
             key={data.id}
             mainData={data}
+            allChild={childData}
+            setAllChild={setAllChild}
             listChild={listChild}
             setListChild={setListChild}
             setModuleFlag={setModuleFlag}

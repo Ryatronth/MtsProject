@@ -6,6 +6,7 @@ import ShowChildToSelect from '../Show/ShowChildToSelect/ShowChildToSelect';
 
 const ModalWindowAdd = ({
   childData,
+  setAllChild,
   groupData,
   listChild,
   setListChild,
@@ -28,6 +29,7 @@ const ModalWindowAdd = ({
         <div style={{ width: '1007px' }}>
           <ShowChildToSelect
             childData={childData}
+            setAllChild={setAllChild}
             groupData={groupData}
             listChild={listChild}
             setListChild={setListChild}

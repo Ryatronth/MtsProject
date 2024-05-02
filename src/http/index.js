@@ -17,7 +17,17 @@ const authInterceptor = (config) => {
   return config;
 };
 
+const refreshInterceptor = (config) => {
+  const cookies = document.cookie
+    .split(';')
+    .map((cookie) => cookie.trim().split('='));
+  const cookieMap = Object.fromEntries(cookies);
+  const refreshToken = cookieMap['token'];
+  config.headers.Authorization = `Bearer ${refreshToken}`;
+  return config;
+};
+
 $authHost.interceptors.request.use(authInterceptor);
-$token.interceptors.request.use(authInterceptor);
+$token.interceptors.request.use(refreshInterceptor);
 
 export { $host, $authHost, $token };

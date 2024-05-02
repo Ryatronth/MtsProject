@@ -5,11 +5,14 @@ import ico from '../../../assets/admin/ico-parentAva.png';
 import backgr from '../../../assets/bgProfile.png';
 import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
 import InputPicture from '../../../components/inputs/InputPicture/InputPicture';
-import { Button, Dropdown } from 'react-bootstrap';
+import icoAdd from '../../../assets/admin/ico-addChildBtn.png';
+import { Button, Dropdown, Image } from 'react-bootstrap';
 import { ADMIN_WORK_WITH_PROFILE_ROUTE } from '../../../utils/consts';
 import { observer } from 'mobx-react-lite';
-import { getChildren, getGroups } from '../../../http/userAPI';
+import { getChildren, getGroups, updateParent } from '../../../http/userAPI';
 import styles from './EditParentPage.module.css';
+import ProfileCardChildToShow from '../../../components/blocks/ProfileCard/ProfileCardChildToShow/ProfileCardChildToShow';
+import ModalWindowAdd from '../../../components/pieces/ModalWindowAdd/ModalWindowAdd';
 
 const EditParentPage = observer(() => {
   const { user } = useContext(Context);
@@ -17,20 +20,69 @@ const EditParentPage = observer(() => {
   const [FIO, setFIO] = useState('');
   const [phone, setPhone] = useState('');
   const [childList, setChildList] = useState([]);
+  const [allChild, setAllChild] = useState([]);
+  const [allGroup, setAllGroup] = useState([]);
+  const [flagModalWindow, setFlagModalWindow] = useState(false);
   const location = useLocation();
   const { state } = location;
   const parentData = state?.parentData;
 
-  const saveChanges = () => {
-    console.log(1234); // допилить
+  const saveChanges = async () => {
+    try {
+      if (!FIO) {
+        alert('Введите ФИО ребёнка');
+      } else {
+        const fio = FIO.split(' ');
+        const data = {
+          surname: fio[0],
+          name: fio[1],
+          patronymic: fio[2],
+          phone: phone,
+          role: 'PARENT',
+          parentId: parentData.id,
+          imageUrl: null,
+          username: document.querySelector('#username').value
+            ? document.querySelector('#username').value
+            : null,
+          password: document.querySelector('#password').value
+            ? document.querySelector('#password').value
+            : null,
+          children: childList.map((child) => child.id),
+        };
+        const uwu = await updateParent(parentData.id, data);
+        console.log(uwu);
+        navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
+      }
+    } catch (e) {
+      alert(e);
+    }
   };
 
   useEffect(() => {
     setFIO(`${parentData.surname} ${parentData.name} ${parentData.patronymic}`);
     setPhone(parentData.phone);
-    getChildren().then((data) => {
+    let qparametr = [
+      {
+        key: 'parent',
+        value: parentData.id,
+        operation: 'EQUAL',
+      },
+    ];
+    getChildren(qparametr).then((data) => {
+      setChildList(data);
       console.log(data);
     });
+    qparametr = [
+      {
+        key: 'parent',
+        value: null,
+        operation: 'EQUAL',
+      },
+    ];
+    getChildren(qparametr).then((data) => {
+      setAllChild(data);
+    });
+    getGroups().then((dataG) => setAllGroup(dataG));
   }, []);
 
   return (
@@ -72,7 +124,7 @@ const EditParentPage = observer(() => {
             <div className="d-flex flex-column ">
               <h2 className={`${styles.inputTitle}`}>Логин:</h2>
               <input
-                id="inputInfo"
+                id="username"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '300px',
@@ -81,7 +133,7 @@ const EditParentPage = observer(() => {
               ></input>
               <h2 className={`${styles.inputTitle}`}>Пароль:</h2>
               <input
-                id="inputInfo"
+                id="password"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '300px',
@@ -120,9 +172,50 @@ const EditParentPage = observer(() => {
           background: `url(${backgr}) no-repeat center center`,
         }}
       >
+        <h2 className={`${styles.childTitle}`}>Дети</h2>
         <div
-          className={`${styles.admiContainer} d-flex flex-column justify-content-center align-items-center `}
-        ></div>
+          style={{ width: '100%', gap: '60px', flexWrap: 'wrap' }}
+          className={`d-flex justify-content-start align-items-center`}
+        >
+          {childList.map((data) => (
+            <ProfileCardChildToShow
+              id={data.id}
+              key={data.id}
+              allChild={allChild}
+              setAllChild={setAllChild}
+              data={data}
+              listChild={childList}
+              setListChild={setChildList}
+            />
+          ))}
+
+          <label
+            htmlFor="BTN"
+            className={`${styles.btnContainer} d-flex justify-content-center align-items-center`}
+          >
+            <Button
+              id="BTN"
+              variant="outline-success"
+              className={`reset-btn ${styles.addBtn} d-flex justify-content-center align-items-center`}
+              onClick={() => {
+                setFlagModalWindow(true);
+                document.body.style.overflow = 'hidden';
+              }}
+            >
+              <Image src={icoAdd} />
+            </Button>
+          </label>
+        </div>
+        {flagModalWindow && (
+          <ModalWindowAdd
+            childData={allChild}
+            setAllChild={setAllChild}
+            groupData={allGroup}
+            listChild={childList}
+            setListChild={setChildList}
+            setModuleFlag={setFlagModalWindow}
+          />
+        )}
       </div>
     </>
   );

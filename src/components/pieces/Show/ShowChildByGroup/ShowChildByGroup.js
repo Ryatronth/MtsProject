@@ -30,7 +30,14 @@ const ShowChildByGroup = ({ groupId }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      getChildren()
+      const qparametr = [
+        {
+          key: 'childGroup',
+          value: groupId,
+          operation: 'EQUAL',
+        },
+      ];
+      getChildren(qparametr)
         .then((data) => {
           if (data) {
             console.log(data);

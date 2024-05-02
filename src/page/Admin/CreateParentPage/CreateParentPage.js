@@ -50,7 +50,7 @@ const CreateParentPage = observer(() => {
             phone: inputs[1].value,
             role: 'PARENT',
             imageUrl: null,
-            childrenId: children,
+            children: children,
           };
           const uwu = await createParent(user);
           console.log(uwu);
@@ -66,7 +66,14 @@ const CreateParentPage = observer(() => {
   };
 
   useEffect(() => {
-    getChildren()
+    const qparametr = [
+      {
+        key: 'parent',
+        value: null,
+        operation: 'EQUAL',
+      },
+    ];
+    getChildren(qparametr)
       .then((data) => {
         if (data) {
           console.log(data);
@@ -177,6 +184,8 @@ const CreateParentPage = observer(() => {
               <ProfileCardChildToShow
                 id={data.id}
                 key={data.id}
+                allChild={allChild}
+                setAllChild={setAllChild}
                 data={data}
                 listChild={listChild}
                 setListChild={setListChild}
@@ -204,6 +213,7 @@ const CreateParentPage = observer(() => {
         {flagModalWindow && (
           <ModalWindowAdd
             childData={allChild}
+            setAllChild={setAllChild}
             groupData={allGroup}
             listChild={listChild}
             setListChild={setListChild}

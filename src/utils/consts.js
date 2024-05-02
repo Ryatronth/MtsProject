@@ -9,5 +9,6 @@ export const ADMIN_EDIT_CHILD_PROFILE_ROUTE = '/edit-child-profile';
 export const ADMIN_EDIT_PARENT_PROFILE_ROUTE = '/edit-parent-profile';
 export const WORKER_ROUTE = '/worker';
 export const WORKER_WORK_WITH_DISHES = '/work-with-dishes';
+export const WORKER_WORK_WITH_MENU = '/work-with-menu';
 export const PARENT_ROUTE = '/parent';
 export const ADMIN_CREATE_WORKER_ROUTE = '/create-worker';

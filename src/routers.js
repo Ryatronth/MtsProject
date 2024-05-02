@@ -10,6 +10,7 @@ import {
   ADMIN_EDIT_PARENT_PROFILE_ROUTE,
   WORKER_ROUTE,
   WORKER_WORK_WITH_DISHES,
+  WORKER_WORK_WITH_MENU,
   PARENT_ROUTE,
 } from './utils/consts';
 import Main from './page/MainPage/Main';
@@ -24,6 +25,7 @@ import EditParentPage from './page/Admin/EditParentPage/EditParentPage';
 import WorkerPage from './page/Worker/WorkerPage';
 import WorkWithDishes from './page/Worker/WorkWithDishes/WorkWithDishes';
 import ParentPage from './page/Parent/ParentPage';
+import WorkWithMenu from './page/Worker/WorkWithMenu/WorkWithMenu';
 
 export const publicRoutes = [
   {
@@ -67,13 +69,6 @@ export const adminRoutes = [
   },
 ];
 
-export const parentRoutes = [
-  {
-    path: PARENT_ROUTE,
-    Component: ParentPage,
-  },
-];
-
 export const workerRoutes = [
   {
     path: WORKER_ROUTE,
@@ -82,5 +77,16 @@ export const workerRoutes = [
   {
     path: WORKER_WORK_WITH_DISHES,
     Component: WorkWithDishes,
+  },
+  {
+    path: WORKER_WORK_WITH_MENU,
+    Component: WorkWithMenu,
+  },
+];
+
+export const parentRoutes = [
+  {
+    path: PARENT_ROUTE,
+    Component: ParentPage,
   },
 ];
