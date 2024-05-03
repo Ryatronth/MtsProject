@@ -2,7 +2,6 @@ package com.example.backend.controller;
 
 import com.example.backend.payload.dto.DishDTO;
 import com.example.backend.payload.dto.MenuDTO;
-import com.example.backend.payload.dto.SearchDTO;
 import com.example.backend.payload.dto.UpdateMenuDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
@@ -15,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/user/worker")
@@ -28,18 +27,27 @@ public class WorkerController {
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/dishes")
-    public ResponseEntity<?> getDishes(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getDishes(filters));
+    public ResponseEntity<?> getDishes(@RequestParam(name = "id", required = false) Long id,
+                                       @RequestParam(name = "name", required = false) String name,
+                                       @RequestParam(name = "priceFrom", required = false) Double priceFrom,
+                                       @RequestParam(name = "priceTo", required = false) Double priceTo) {
+        return ResponseEntity.ok(entityFilterService
+                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo));
     }
 
     @GetMapping("/get/menu")
-    public ResponseEntity<?> getMenu(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getMenu(filters));
+    public ResponseEntity<?> getMenu(@RequestParam(name = "id", required = false) Long id,
+                                     @RequestParam(name = "endDate", required = false) LocalDate endDate,
+                                     @RequestParam(name = "startDate", required = false) LocalDate startDate) {
+        return ResponseEntity.ok(entityFilterService
+                .getMenu("id", id, "endDate", endDate, "startDate", startDate));
     }
 
     @GetMapping("/get/menu/dishes")
-    public ResponseEntity<?> getMenuDishes(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getMenuDish(filters));
+    public ResponseEntity<?> getMenuDishes(@RequestParam(name = "id", required = false) Long id,
+                                           @RequestParam(name = "menuId", required = false) Long menuId) {
+        return ResponseEntity.ok(entityFilterService
+                .getMenuDish("id", id, "currentMenu", menuId));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------

@@ -54,7 +54,7 @@ public class ParentModifier {
                 user.setPhone(newData.getPhone());
             }
 
-            if (!newData.getChildren().isEmpty()) {
+            if (newData.getChildren() != null) {
                 changeChildren(parent, newData);
             }
 
@@ -72,6 +72,7 @@ public class ParentModifier {
 
     private void changeChildren(Parent parent, ParentDTO newData) {
         List<Child> prevChildren = childRepository.findByParentId(parent.getId());
+        System.out.println(prevChildren);
         if (!prevChildren.isEmpty()) {
             for (Child child : prevChildren) {
                 child.setParent(null);

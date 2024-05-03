@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import com.example.backend.payload.dto.ChildDTO;
 import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.payload.dto.ParentDTO;
-import com.example.backend.payload.dto.SearchDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,18 +29,31 @@ public class AdminController {
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/parents")
-    public ResponseEntity<?> getParents(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getParents(filters));
+    public ResponseEntity<?> getParents(@RequestParam(name = "id", required = false) Long id,
+                                        @RequestParam(name = "name", required = false) String name,
+                                        @RequestParam(name = "surname", required = false) String surname,
+                                        @RequestParam(name = "patronymic", required = false) String patronymic,
+                                        @RequestParam(name = "phone", required = false) String phone) {
+        return ResponseEntity.ok(entityFilterService
+                .getParents("id", id, "name", name, "surname", surname, "patronymic", patronymic, "phone", phone));
     }
 
     @GetMapping("/get/children")
-    public ResponseEntity<?> getChildren(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getChildren(filters));
+    public ResponseEntity<?> getChildren(@RequestParam(name = "id", required = false) Long id,
+                                         @RequestParam(name = "name", required = false) String name,
+                                         @RequestParam(name = "surname", required = false) String surname,
+                                         @RequestParam(name = "patronymic", required = false) String patronymic,
+                                         @RequestParam(name = "groupId", required = false) String group,
+                                         @RequestParam(name = "parentId", required = false) Long parent,
+                                         @RequestParam(name = "unlinked", required = false) String unlinked) {
+        return ResponseEntity.ok(entityFilterService
+                .getChildren("id", id, "name", name, "surname", surname, "patronymic", patronymic,
+                        "childGroup", group, "parent", parent, "unlinked", unlinked));
     }
 
     @GetMapping("/get/groups")
-    public ResponseEntity<?> getGroups(@RequestBody List<SearchDTO> filters) {
-        return ResponseEntity.ok(entityFilterService.getGroups(filters));
+    public ResponseEntity<?> getGroups(@RequestParam(name = "id", required = false) String group) {
+        return ResponseEntity.ok(entityFilterService.getGroups("id", group));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
