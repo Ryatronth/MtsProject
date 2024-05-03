@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.entity.auth.RoleName;
 import com.example.backend.payload.dto.ChildDTO;
 import com.example.backend.payload.dto.GroupDTO;
 import com.example.backend.payload.dto.ParentDTO;
@@ -35,7 +36,8 @@ public class AdminController {
                                         @RequestParam(name = "patronymic", required = false) String patronymic,
                                         @RequestParam(name = "phone", required = false) String phone) {
         return ResponseEntity.ok(entityFilterService
-                .getParents("id", id, "name", name, "surname", surname, "patronymic", patronymic, "phone", phone));
+                .getParents("id", id, "name", name, "surname", surname, "patronymic", patronymic, "phone", phone,
+                        "role", RoleName.PARENT));
     }
 
     @GetMapping("/get/children")
