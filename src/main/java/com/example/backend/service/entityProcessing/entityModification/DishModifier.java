@@ -21,7 +21,7 @@ public class DishModifier {
     private final DishRepository dishRepository;
     public ModificationResponse modify(Long id, DishDTO newData) {
         try {
-            Dish dish = dishRepository.findById(id).orElseThrow(() -> new ModificationException("Ребенок не найден"));
+            Dish dish = dishRepository.findById(id).orElseThrow(() -> new ModificationException("Блюдо не найдено"));
 
             if (newData.getName() != null) {
                 dish.setName(newData.getName());
@@ -49,7 +49,7 @@ public class DishModifier {
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)
-                    .message("Ребенок изменен успешно")
+                    .message("Блюдо изменено успешно")
                     .object(dish)
                     .build();
         } catch (Exception ex) {

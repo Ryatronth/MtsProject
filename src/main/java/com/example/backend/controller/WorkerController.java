@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/api/user/worker")
@@ -30,9 +31,10 @@ public class WorkerController {
     public ResponseEntity<?> getDishes(@RequestParam(name = "id", required = false) Long id,
                                        @RequestParam(name = "name", required = false) String name,
                                        @RequestParam(name = "priceFrom", required = false) Double priceFrom,
-                                       @RequestParam(name = "priceTo", required = false) Double priceTo) {
+                                       @RequestParam(name = "priceTo", required = false) Double priceTo,
+                                       @RequestParam(name = "exclude", required = false) HashSet<Long> indexes) {
         return ResponseEntity.ok(entityFilterService
-                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo));
+                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo, "exclude", indexes));
     }
 
     @GetMapping("/get/menu")

@@ -28,9 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -169,15 +166,9 @@ public class EntityCreationService {
     }
 
     public CreationResponse createMenu(MenuDTO data) {
-        LocalDate dateFrom = LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("M/dd/yyyy")),
-                DateTimeFormatter.ofPattern("M/dd/yyyy"));
-
-        LocalDate dateTo = LocalDate.parse(dateFrom.toString(), DateTimeFormatter.ofPattern("yyyy-M-dd"))
-                .with(TemporalAdjusters.lastDayOfMonth());
-
         CurrentMenu currentMenu = CurrentMenu.builder()
-                .startDate(dateFrom)
-                .endDate(dateTo)
+                .startDate(data.getStartDate())
+                .endDate(data.getEndDate())
                 .build();
 
         List<MenuDish> menuDishes = processDishes(currentMenu, data.getDishes());
