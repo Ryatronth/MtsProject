@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -70,7 +71,9 @@ public class DishModifier {
         byte[] bytes = newData.getImage().getBytes();
         String UPLOAD_DIR = "../images/dish/";
 
-        Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
+        String filename = UUID.randomUUID().toString();
+
+        Path path = Paths.get(UPLOAD_DIR + filename);
         Files.write(path, bytes);
 
         dish.setImageUrl(path.toString());

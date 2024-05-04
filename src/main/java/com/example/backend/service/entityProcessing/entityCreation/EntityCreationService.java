@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -162,7 +159,9 @@ public class EntityCreationService {
 
             String UPLOAD_DIR = "../images/dish/";
 
-            Path path = Paths.get(UPLOAD_DIR + image.getOriginalFilename());
+            String filename = UUID.randomUUID().toString();
+
+            Path path = Paths.get(UPLOAD_DIR + filename);
             Files.write(path, bytes);
 
             return path.toString();
@@ -172,6 +171,11 @@ public class EntityCreationService {
     }
 
     public CreationResponse createMenu(MenuDTO data) {
+        Set<CurrentMenu> menus = currentMenuRepository.findOverlappingMenus(data.getStartDate(), data.getEndDate());
+        if (!menus.isEmpty()) {
+            throw new CreationException("Меню на данные даты уже создано");
+        }
+
         CurrentMenu currentMenu = CurrentMenu.builder()
                 .startDate(data.getStartDate())
                 .endDate(data.getEndDate())
