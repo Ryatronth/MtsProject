@@ -7,6 +7,10 @@ import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
+import com.example.backend.entity.dish.order.Order;
+import com.example.backend.entity.dish.order.OrderMenu;
+import com.example.backend.entity.dish.order.repository.OrderMenuRepository;
+import com.example.backend.entity.dish.order.repository.OrderRepository;
 import com.example.backend.entity.user.Child;
 import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.Parent;
@@ -45,6 +49,8 @@ public class EntityCreationService {
     private final DishRepository dishRepository;
     private final CurrentMenuRepository currentMenuRepository;
     private final MenuDishRepository menuDishRepository;
+    private final OrderRepository orderRepository;
+    private final OrderMenuRepository orderMenuRepository;
 
     private final EntityBuilder entityBuilder;
 
@@ -194,5 +200,58 @@ public class EntityCreationService {
             menuDishes.add(menuDish);
         }
         return menuDishes;
+    }
+
+    private CreationResponse createOrder(OrderDTO data) {
+        if (orderRepository.existsByDateAndChildId(data.getDate(), data.getChildId())) {
+            throw new CreationException("Для данного ребенка уже составлено меню на " + data.getDate());
+        }
+
+        Child child = childRepository.findById(data.getChildId()).orElseThrow(() -> new CreationException("Ребенок не найден"));
+
+        Set<OrderMenu> orderMenus = new HashSet<>();
+
+        Order order = orderRepository.save(
+                Order.builder()
+                        .date(data.getDate())
+                        .child(child)
+                        .build());
+
+        double totalPrice = 0;
+
+        long menuId = data.getMenuId();
+        for (long menuDishId : data.getMenuDishes()) {
+            MenuDish menuDish = menuDishRepository.findByCurrentMenuIdAndDishId(menuId, menuDishId)
+                    .orElseThrow(() -> new CreationException("Блюдо не найдено"));
+
+            OrderMenu orderMenu = orderMenuRepository.save(
+                    OrderMenu.builder()
+                            .order(order)
+                            .menuDish(menuDish)
+                            .build());
+
+            totalPrice += menuDish.getDish().getPrice();
+
+            orderMenus.add(orderMenu);
+        }
+
+        order.setTotalPrice(totalPrice);
+        order.setDetails(orderMenus);
+
+        orderRepository.save(order);
+        return CreationResponse.builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Меню для ребенка успешно создано")
+                .object(order)
+                .build();
+    }
+
+    @Transactional
+    public List<CreationResponse> createOrders(Set<OrderDTO> data) {
+        List<CreationResponse> responses = new ArrayList<>();
+        for (OrderDTO orderDTO : data) {
+            responses.add(createOrder(orderDTO));
+        }
+        return responses;
     }
 }

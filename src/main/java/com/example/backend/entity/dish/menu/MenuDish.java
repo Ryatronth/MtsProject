@@ -1,8 +1,11 @@
 package com.example.backend.entity.dish.menu;
 
+import com.example.backend.entity.dish.order.OrderMenu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,4 +27,8 @@ public class MenuDish {
     @ManyToOne
     @JoinColumn(name = "current_menu_id")
     private CurrentMenu currentMenu;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "menuDish")
+    private Set<OrderMenu> orderMenu;
 }

@@ -1,6 +1,5 @@
 package com.example.backend.entity.dish.menu;
 
-import com.example.backend.entity.dish.order.OrderDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,11 +24,6 @@ public class CurrentMenu {
 
     @Temporal(TemporalType.DATE)
     private LocalDate endDate;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "order_details_id")
-    private OrderDetails orderDetails;
 
     @JsonIgnore
     @OneToMany(mappedBy = "currentMenu", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

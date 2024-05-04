@@ -26,12 +26,12 @@ public class MenuModifier {
         try {
             CurrentMenu currentMenu = currentMenuRepository.findById(id).orElseThrow(() -> new ModificationException("Меню не найдено"));
 
-            if (!newData.getToAdd().isEmpty()) {
-                addDishes(currentMenu, newData.getToAdd());
-            }
-
             if (!newData.getToDelete().isEmpty()) {
                 deleteDishes(currentMenu , newData.getToDelete());
+            }
+
+            if (!newData.getToAdd().isEmpty()) {
+                addDishes(currentMenu, newData.getToAdd());
             }
 
             currentMenuRepository.save(currentMenu);

@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface MenuDishRepository extends JpaRepository<MenuDish, Long>, JpaSpecificationExecutor<MenuDish> {
     Optional<MenuDish> findByCurrentMenuAndDish(CurrentMenu menu, Dish dishId);
+    Optional<MenuDish> findByCurrentMenuIdAndDishId(Long menuId, Long dishId);
 }

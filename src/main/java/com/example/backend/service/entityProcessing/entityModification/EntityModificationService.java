@@ -1,9 +1,6 @@
 package com.example.backend.service.entityProcessing.entityModification;
 
-import com.example.backend.payload.dto.ChildDTO;
-import com.example.backend.payload.dto.DishDTO;
-import com.example.backend.payload.dto.ParentDTO;
-import com.example.backend.payload.dto.UpdateMenuDTO;
+import com.example.backend.payload.dto.*;
 import com.example.backend.payload.response.ModificationResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +13,7 @@ public class EntityModificationService {
     private final ChildModifier childModifier;
     private final DishModifier dishModifier;
     private final MenuModifier menuModifier;
+    private final OrderModifier orderModifier;
 
     @Transactional
     public ModificationResponse updateParent(Long parentId, ParentDTO newData) {
@@ -33,5 +31,10 @@ public class EntityModificationService {
     @Transactional
     public ModificationResponse updateMenu(Long menuId, UpdateMenuDTO newData) {
         return menuModifier.modify(menuId, newData);
+    }
+
+    @Transactional
+    public ModificationResponse updateOrder(Long orderId, UpdateOrderDTO newData) {
+        return orderModifier.modify(orderId, newData);
     }
 }

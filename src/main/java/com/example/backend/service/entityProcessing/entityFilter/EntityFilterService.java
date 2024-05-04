@@ -5,6 +5,8 @@ import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
+import com.example.backend.entity.dish.order.repository.OrderMenuRepository;
+import com.example.backend.entity.dish.order.repository.OrderRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.UserRepository;
@@ -22,6 +24,8 @@ public class EntityFilterService {
     private final DishRepository dishRepository;
     private final CurrentMenuRepository currentMenuRepository;
     private final MenuDishRepository menuDishRepository;
+    private final OrderRepository orderRepository;
+    private final OrderMenuRepository orderMenuRepository;
 
     public List<?> getParents(Object... values) {
         return userRepository.findAll(ParentSpecification.filterByCriteria(values));
@@ -49,5 +53,13 @@ public class EntityFilterService {
         List<MenuDish> dishes = menuDishRepository.findAll(MenuDishSpecification.filterByCriteria(values));
         dishes.forEach(o -> o.getDish().setImageUrl("http://localhost:8080" + o.getDish().getImageUrl().substring(2).replace("\\", "/")));
         return dishes;
+    }
+
+    public List<?> getOrder(Object... values) {
+        return orderRepository.findAll(OrderSpecification.filterByCriteria(values));
+    }
+
+    public List<?> getOrderMenu(Object... values) {
+        return orderMenuRepository.findAll(OrderMenuSpecification.filterByCriteria(values));
     }
 }

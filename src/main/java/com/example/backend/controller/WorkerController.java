@@ -41,15 +41,13 @@ public class WorkerController {
     public ResponseEntity<?> getMenu(@RequestParam(name = "id", required = false) Long id,
                                      @RequestParam(name = "endDate", required = false) LocalDate endDate,
                                      @RequestParam(name = "startDate", required = false) LocalDate startDate) {
-        return ResponseEntity.ok(entityFilterService
-                .getMenu("id", id, "endDate", endDate, "startDate", startDate));
+        return ResponseEntity.ok(entityFilterService.getMenu("id", id, "endDate", endDate, "startDate", startDate));
     }
 
     @GetMapping("/get/menu/dishes")
     public ResponseEntity<?> getMenuDishes(@RequestParam(name = "id", required = false) Long id,
                                            @RequestParam(name = "menuId", required = false) Long menuId) {
-        return ResponseEntity.ok(entityFilterService
-                .getMenuDish("id", id, "currentMenu", menuId));
+        return ResponseEntity.ok(entityFilterService.getMenuDish("id", id, "currentMenu", menuId));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
@@ -96,8 +94,8 @@ public class WorkerController {
         return ResponseEntity.ok(deleteEntityService.deleteDish(dishId));
     }
 
-    @DeleteMapping("/delete/menu/{menuId}")
-    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
-        return ResponseEntity.ok(deleteEntityService.deleteMenu(menuId));
-    }
+//    @DeleteMapping("/delete/menu/{menuId}")
+//    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
+//        return ResponseEntity.ok(deleteEntityService.deleteMenu(menuId));
+//    }
 }
