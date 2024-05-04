@@ -1,0 +1,18 @@
+package com.example.backend.payload.dto;
+
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.Set;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDTO {
+    private Long childId;
+    private LocalDate date;
+    private Long menuId;
+    private Set<Long> menuDishes;
+}
