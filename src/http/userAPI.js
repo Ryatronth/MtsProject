@@ -17,40 +17,44 @@ export const mainInfo = async () => {
 };
 
 export const getGroups = async () => {
-  const { data } = await $authHost.post('api/user/admin/get/groups', []);
+  const { data } = await $authHost.get('api/user/admin/get/groups');
   console.log(data);
   return data;
 };
 
 export const getParents = async (qparametr) => {
-  const { data } = await $authHost.post(
-    'api/user/admin/get/parents',
-    qparametr
-  );
+  const { data } = await $authHost.get('api/user/admin/get/parents', qparametr);
   return data;
 };
 
 export const getChildren = async (qparametr) => {
-  const { data } = await $authHost.post(
-    'api/user/admin/get/children',
-    qparametr
+  const { data } = await $authHost.get(
+    `api/user/admin/get/children${qparametr}`
   );
   return data;
 };
 
 export const getDishes = async (qparametr) => {
-  const { data } = await $authHost.post(
-    'api/user/worker/get/dishes',
-    qparametr
+  const { data } = await $authHost.get(
+    `api/user/worker/get/dishes${qparametr}`
   );
   return data;
 };
 
+export const getMenuId = async (qparametr) => {
+  const { data } = await $authHost.get(`api/user/worker/get/menu${qparametr}`);
+  return data;
+};
+
 export const getCurrentMenu = async (qparametr) => {
-  const { data } = await $authHost.post(
-    'api/user/worker/get/dishes',
-    qparametr
+  const { data } = await $authHost.get(
+    `api/user/worker/get/menu/dishes${qparametr}`
   );
+  return data;
+};
+
+export const getCurrentMenuId = async (qparametr) => {
+  const { data } = await $authHost.post('api/user/worker/get/menu', qparametr);
   return data;
 };
 
@@ -89,6 +93,11 @@ export const createDish = async (formData) => {
     'api/user/worker/create/dish',
     formData
   );
+  return data;
+};
+
+export const createCurrentMenu = async (dishes) => {
+  const { data } = await $authHost.post('api/user/worker/create/menu', dishes);
   return data;
 };
 

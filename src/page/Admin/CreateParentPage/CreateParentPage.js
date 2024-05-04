@@ -66,13 +66,7 @@ const CreateParentPage = observer(() => {
   };
 
   useEffect(() => {
-    const qparametr = [
-      {
-        key: 'parent',
-        value: null,
-        operation: 'EQUAL',
-      },
-    ];
+    const qparametr = `?unlinked=uwu`;
     getChildren(qparametr)
       .then((data) => {
         if (data) {

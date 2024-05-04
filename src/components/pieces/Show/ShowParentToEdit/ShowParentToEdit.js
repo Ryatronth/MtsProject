@@ -22,7 +22,7 @@ const ShowParentToEdit = observer(() => {
 
   useEffect(() => {
     setTimeout(() => {
-      const qparametr = [];
+      const qparametr = ``;
       getParents(qparametr)
         .then((data) => {
           if (data) {

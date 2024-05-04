@@ -6,7 +6,12 @@ import { WORKER_ROUTE } from '../../../utils/consts';
 import styles from './WorkWithMenu.module.css';
 import { Button } from 'react-bootstrap';
 import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
-import { getDishes } from '../../../http/userAPI';
+import {
+  createCurrentMenu,
+  getCurrentMenu,
+  getDishes,
+  getMenuId,
+} from '../../../http/userAPI';
 import SpinnerMain from '../../../components/loaders/SpinnerMain';
 import { observer } from 'mobx-react-lite';
 
@@ -18,13 +23,31 @@ const WorkWithMenu = observer(() => {
   const [selectedDishesList, setSelectedDishesList] = useState([]);
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
 
+  const clickSaveCurrentMenu = async () => {
+    const dishes = {
+      dishes: selectedDishesList.map((dish) => dish.id),
+      endDate: `2024-05-14`,
+      startDate: `2024-05-04`, //YYYY-MM-DD
+    };
+    createCurrentMenu(dishes);
+  };
+
   useEffect(() => {
     setTimeout(() => {
-      const qparametr = [];
-      getDishes(qparametr)
-        .then((data) => setAllDishesList(data))
-        .finally(() => setLoading(false));
-      // getCurrentMenu();
+      let qparametr = `?endDate=2024-05-14`;
+      getMenuId(qparametr).then((id) => {
+        qparametr = `?menuId=${id[0].id}`;
+        getCurrentMenu(qparametr)
+          .then((menu) => {
+            const listMenu = menu.map((o) => o.dish);
+            setSelectedDishesList(listMenu);
+            qparametr = `?exclude=${listMenu.map((o) => o.id).join(',')}`;
+            getDishes(qparametr).then((data) => {
+              setAllDishesList(data);
+            });
+          })
+          .finally(() => setLoading(false));
+      });
     }, 2000);
   }, []);
 
@@ -54,7 +77,7 @@ const WorkWithMenu = observer(() => {
             Назад
           </Button>
         </div>
-        <div className={`d-flex column-gap-3`}>
+        <div className={`d-flex column-gap-3 mb-4`}>
           <Button
             variant="outline-success"
             className={`${styles.mainBtn}`}
@@ -86,6 +109,13 @@ const WorkWithMenu = observer(() => {
             onClick={() => setSelectedTime('ALL')}
           >
             All
+          </Button>
+          <Button
+            variant="outline-success"
+            className={`${styles.mainBtn}`}
+            onClick={() => clickSaveCurrentMenu()}
+          >
+            Сохранить
           </Button>
         </div>
         <div

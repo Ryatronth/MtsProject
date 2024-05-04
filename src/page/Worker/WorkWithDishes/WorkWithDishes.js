@@ -18,7 +18,7 @@ const WorkWithDishes = observer(() => {
 
   useEffect(() => {
     setTimeout(() => {
-      const qparametr = [];
+      const qparametr = ``;
       getDishes(qparametr)
         .then((data) => setDishesList(data))
         .finally(() => setLoading(false));

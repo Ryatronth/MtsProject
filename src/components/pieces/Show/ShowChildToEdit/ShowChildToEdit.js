@@ -25,7 +25,7 @@ const ShowChildToEdit = observer(() => {
 
   useEffect(() => {
     setTimeout(() => {
-      const qparametr = [];
+      const qparametr = ``;
       getChildren(qparametr)
         .then((data) => {
           if (data) {

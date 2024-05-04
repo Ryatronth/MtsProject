@@ -52,6 +52,7 @@ const ModalWindowCreateDish = observer(
           const uwu = await createDish(formData).then((data) => {
             setFlag(false);
             alert(data.message);
+            document.body.style.overflow = '';
             setDishesList([...dishesList, data.object]);
           });
         }

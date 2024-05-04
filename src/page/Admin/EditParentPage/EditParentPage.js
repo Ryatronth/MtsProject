@@ -61,24 +61,12 @@ const EditParentPage = observer(() => {
   useEffect(() => {
     setFIO(`${parentData.surname} ${parentData.name} ${parentData.patronymic}`);
     setPhone(parentData.phone);
-    let qparametr = [
-      {
-        key: 'parent',
-        value: parentData.id,
-        operation: 'EQUAL',
-      },
-    ];
+    let qparametr = `?parentId=${parentData.id}`;
     getChildren(qparametr).then((data) => {
       setChildList(data);
       console.log(data);
     });
-    qparametr = [
-      {
-        key: 'parent',
-        value: null,
-        operation: 'EQUAL',
-      },
-    ];
+    qparametr = `?unlinked=uwu`;
     getChildren(qparametr).then((data) => {
       setAllChild(data);
     });
