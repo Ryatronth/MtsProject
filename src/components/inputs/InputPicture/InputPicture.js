@@ -5,15 +5,15 @@ import { Image } from 'react-bootstrap';
 const InputPicture = ({ ico }) => {
   const drowing = (eve) => {
     const choosedFile = eve.target.files[0];
-    if (choosedFile) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        document
-          .querySelector('.input__picture')
-          .setAttribute('src', reader.result);
-      });
-      reader.readAsDataURL(choosedFile);
-    }
+    // if (choosedFile) {
+    //   const reader = new FileReader();
+    //   reader.addEventListener('load', () => {
+    //     document
+    //       .querySelector('.input__picture')
+    //       .setAttribute('src', reader.result);
+    //   });
+    //   reader.readAsDataURL(choosedFile);
+    // }
   };
 
   return (

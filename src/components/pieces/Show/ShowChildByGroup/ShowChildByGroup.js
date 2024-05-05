@@ -29,18 +29,16 @@ const ShowChildByGroup = ({ groupId }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      const qparametr = `?groupId=${groupId}`;
-      getChildren(qparametr)
-        .then((data) => {
-          if (data) {
-            console.log(data);
-            setListData(data);
-            return data;
-          }
-        })
-        .finally(() => setLoading(false));
-    }, 2000);
+    const qparametr = `?groupId=${groupId}`;
+    getChildren(qparametr)
+      .then((data) => {
+        if (data) {
+          console.log(data);
+          setListData(data);
+          return data;
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

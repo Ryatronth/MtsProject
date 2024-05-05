@@ -17,12 +17,10 @@ const WorkWithDishes = observer(() => {
   const [dishesList, setDishesList] = useState([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      const qparametr = ``;
-      getDishes(qparametr)
-        .then((data) => setDishesList(data))
-        .finally(() => setLoading(false));
-    }, 2000);
+    const qparametr = ``;
+    getDishes(qparametr)
+      .then((data) => setDishesList(data))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

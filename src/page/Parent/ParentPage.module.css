@@ -3,6 +3,53 @@
   height: 690px;
 }
 .parentContainer {
-  padding-top: 110px;
-  row-gap: 90px;
+  padding: 36px 127px 15px 105px;
+}
+.childbtnCont {
+  margin-left: 32px;
+  margin-bottom: 28px;
+}
+.childTitle {
+  color: #fdfdfb;
+  font-weight: 500;
+  font-size: 32px;
+}
+
+.childBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-top: 3px;
+  margin-left: 11px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.mainSpan {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 4px;
+}
+
+.mainSpan span {
+  width: 4px;
+  height: 3px;
+  background-color: #fdfdfb;
+}
+
+.mainBtn {
+  width: 396px;
+  height: 54px;
+  border-radius: 35px;
+  border: 0;
+  background-color: #87c631;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 24px;
 }

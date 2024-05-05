@@ -24,19 +24,17 @@ const ShowChildToEdit = observer(() => {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      const qparametr = ``;
-      getChildren(qparametr)
-        .then((data) => {
-          if (data) {
-            console.log(data);
-            setChildList(data);
-            getGroups().then((dataG) => setGroupList(dataG));
-            return data;
-          }
-        })
-        .finally(() => setLoading(false));
-    }, 2000);
+    const qparametr = ``;
+    getChildren(qparametr)
+      .then((data) => {
+        if (data) {
+          console.log(data);
+          setChildList(data);
+          getGroups().then((dataG) => setGroupList(dataG));
+          return data;
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

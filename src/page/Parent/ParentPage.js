@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  ADMIN_CREATE_PARENT_ROUTE,
-  ADMIN_WORK_WITH_GROUPS_ROUTE,
-  ADMIN_WORK_WITH_PROFILE_ROUTE,
+  PARENT_CREATE_ORDER_ROUTE,
+  PARENT_VIEW_ORDER_ROUTE,
 } from '../../utils/consts';
 import backgr from '../../assets/bgProfile.png';
 import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
-import MainButton from '../../components/buttons/MainButton/MainButton';
-import ico from '../../assets/admin/ico-adminBtn.png';
 import styles from './ParentPage.module.css';
+import { Button } from 'react-bootstrap';
+import ChildrenOfParenat from '../../components/pieces/ChildrenOfParenat/ChildrenOfParenat';
+import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
 
-const ParentPage = () => {
+const ParentPage = observer(() => {
+  const navigate = useNavigate();
+  const [orientation, setOrientation] = useState('chocolate');
+  const toggleMenu = () => {
+    const menu = document.querySelector('.childBtn');
+    if (menu.classList.contains('burger')) {
+      menu.classList.replace('burger', 'chocolate');
+      setOrientation('chocolate');
+    } else if (menu.classList.contains('chocolate')) {
+      menu.classList.replace('chocolate', 'burger');
+      setOrientation('burger');
+    } else {
+      menu.classList.add('burger');
+      setOrientation('burger');
+    }
+  };
+
   return (
     <>
       <ProfileMainInfo />
@@ -21,32 +38,69 @@ const ParentPage = () => {
         }}
       >
         <div
-          className={`${styles.parentContainer} d-flex flex-column justify-content-center align-items-center`}
+          className={`${styles.parentContainer} d-flex flex-column align-items-start`}
         >
           <div
-            style={{ width: '100%', flexWrap: 'wrap' }}
-            className="d-flex justify-content-evenly align-items-center"
+            className={`${styles.childbtnCont} d-flex justify-content-between align-items-center`}
           >
-            <MainButton
-              value={'Работа с группами'}
-              route={ADMIN_WORK_WITH_GROUPS_ROUTE}
-              ico={ico}
-            />
-            <MainButton
-              value={'Создать профиль родителя'}
-              route={ADMIN_CREATE_PARENT_ROUTE}
-              ico={ico}
-            />
-            <MainButton
-              value={'Редактировать профиль'}
-              route={ADMIN_WORK_WITH_PROFILE_ROUTE}
-              ico={ico}
-            />
+            <h2 className={`${styles.childTitle}`}>Дети</h2>
+            <button
+              className={`${styles.childBtn} childBtn`}
+              onClick={() => toggleMenu()}
+            >
+              <div className={`${styles.mainSpan} mainSpan`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div className={`${styles.mainSpan} mainSpan`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div className={`${styles.mainSpan} mainSpan`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
+          <div
+            style={{ width: '100%', flexWrap: 'wrap' }}
+            className={`d-flex justify-content-between align-items-start`}
+          >
+            <ChildrenOfParenat orientation={orientation} />
+            <div
+              style={{ rowGap: '41px' }}
+              className="d-flex flex-column justify-content-evenly align-items-center"
+            >
+              <Button
+                variant="success"
+                className={`${styles.mainBtn}`}
+                onClick={() => navigate(PARENT_VIEW_ORDER_ROUTE)}
+              >
+                Посмотреть рацион
+              </Button>
+              <Button
+                variant="success"
+                className={`${styles.mainBtn}`}
+                onClick={() => navigate(PARENT_CREATE_ORDER_ROUTE)}
+              >
+                Сформировать рацион
+              </Button>
+              <Button
+                variant="success"
+                className={`${styles.mainBtn}`}
+                // route={ADMIN_WORK_WITH_PROFILE_ROUTE}
+              >
+                Оплатить
+              </Button>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
-};
+});
 
 export default ParentPage;

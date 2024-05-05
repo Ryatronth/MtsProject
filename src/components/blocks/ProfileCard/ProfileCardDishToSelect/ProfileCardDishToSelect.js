@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Image } from 'react-bootstrap';
-import icoBtn from '../../../../assets/worker/ico-addDish.png';
 import styles from './ProfileCardDishToSelect.module.css';
 
 const ProfileCardDishToSelect = ({
@@ -9,6 +8,7 @@ const ProfileCardDishToSelect = ({
   exDishesList,
   funcAddSet,
   funcSubSet,
+  ico,
 }) => {
   const exchange = () => {
     const newList = dishesList.filter((dish) => dish.id !== dishData.id);
@@ -33,7 +33,7 @@ const ProfileCardDishToSelect = ({
           className={`${styles.btnCard} d-flex justify-content-center align-items-center`}
           onClick={() => exchange()}
         >
-          <Image src={icoBtn}></Image>
+          <Image src={ico}></Image>
         </Button>
       </div>
     </div>

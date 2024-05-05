@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 const $host = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://192.168.159.16:8080/',
 });
 
 const $authHost = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://192.168.159.16:8080/',
 });
 
 const $token = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://192.168.159.16:8080/',
 });
 
 const authInterceptor = (config) => {

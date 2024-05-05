@@ -34,6 +34,13 @@ export const getChildren = async (qparametr) => {
   return data;
 };
 
+export const getChildrenForParent = async (qparametr) => {
+  const { data } = await $authHost.get(
+    `api/user/parent/get/children${qparametr}`
+  );
+  return data;
+};
+
 export const getDishes = async (qparametr) => {
   const { data } = await $authHost.get(
     `api/user/worker/get/dishes${qparametr}`
@@ -46,9 +53,21 @@ export const getMenuId = async (qparametr) => {
   return data;
 };
 
+export const getMenuIdForParent = async (qparametr) => {
+  const { data } = await $authHost.get(`api/user/parent/get/menu${qparametr}`);
+  return data;
+};
+
 export const getCurrentMenu = async (qparametr) => {
   const { data } = await $authHost.get(
     `api/user/worker/get/menu/dishes${qparametr}`
+  );
+  return data;
+};
+
+export const getCurrentMenuForParent = async (qparametr) => {
+  const { data } = await $authHost.get(
+    `api/user/parent/get/menu/dishes${qparametr}`
   );
   return data;
 };
@@ -98,6 +117,14 @@ export const createDish = async (formData) => {
 
 export const createCurrentMenu = async (dishes) => {
   const { data } = await $authHost.post('api/user/worker/create/menu', dishes);
+  return data;
+};
+
+export const createOrders = async (orders) => {
+  const { data } = await $authHost.post(
+    'api/user/parent/child/order/create',
+    orders
+  );
   return data;
 };
 
@@ -180,6 +207,14 @@ export const updateDish = async (dishId, formData) => {
   const { data } = await $authHost.post(
     `api/user/worker/update/dish/${dishId}`,
     formData
+  );
+  return data;
+};
+
+export const updateCurrentMenu = async (menuId, dishes) => {
+  const { data } = await $authHost.post(
+    `api/user/worker/update/menu/${menuId}`,
+    dishes
   );
   return data;
 };

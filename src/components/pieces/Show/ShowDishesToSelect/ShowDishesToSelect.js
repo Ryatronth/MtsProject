@@ -4,7 +4,7 @@ import styles from './ShowDishesToSelect.module.css';
 import ProfileCardDishToSelect from '../../../blocks/ProfileCard/ProfileCardDishToSelect/ProfileCardDishToSelect';
 
 const ShowDishesToSelect = observer(
-  ({ selectedTime, dishesList, funcAddSet, funcSubSet, exDishesList }) => {
+  ({ selectedTime, dishesList, funcAddSet, funcSubSet, exDishesList, ico }) => {
     const filteredListData = dishesList.filter((data) => {
       if (selectedTime === 'ALL') return data;
       const groupMatch = data.category === selectedTime;
@@ -29,6 +29,7 @@ const ShowDishesToSelect = observer(
               funcAddSet={funcAddSet}
               funcSubSet={funcSubSet}
               exDishesList={exDishesList}
+              ico={ico}
             />
           ))}
         </div>

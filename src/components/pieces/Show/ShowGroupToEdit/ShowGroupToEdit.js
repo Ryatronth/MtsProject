@@ -23,17 +23,15 @@ const ShowGroupToEdit = observer(() => {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      getGroups()
-        .then((data) => {
-          if (data) {
-            console.log(data);
-            setListData(data);
-            return data;
-          }
-        })
-        .finally(() => setLoading(false));
-    }, 2000);
+    getGroups()
+      .then((data) => {
+        if (data) {
+          console.log(data);
+          setListData(data);
+          return data;
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

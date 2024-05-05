@@ -11,7 +11,11 @@ import {
   WORKER_ROUTE,
   WORKER_WORK_WITH_DISHES,
   WORKER_WORK_WITH_MENU,
+  WORKER_CREATE_MENU,
+  WORKER_EDIT_MENU,
   PARENT_ROUTE,
+  PARENT_VIEW_ORDER_ROUTE,
+  PARENT_CREATE_ORDER_ROUTE,
 } from './utils/consts';
 import Main from './page/MainPage/Main';
 import Auth from './page/AuthPage/Auth';
@@ -26,6 +30,10 @@ import WorkerPage from './page/Worker/WorkerPage';
 import WorkWithDishes from './page/Worker/WorkWithDishes/WorkWithDishes';
 import ParentPage from './page/Parent/ParentPage';
 import WorkWithMenu from './page/Worker/WorkWithMenu/WorkWithMenu';
+import ViewOrder from './page/Parent/ViewOrder/ViewOrder';
+import CreateOrder from './page/Parent/CreateOrder/CreateOrder';
+import CreateMenu from './page/Worker/CreateMenu/CreateMenu';
+import EditMenu from './page/Worker/EditMenu/EditMenu';
 
 export const publicRoutes = [
   {
@@ -82,11 +90,27 @@ export const workerRoutes = [
     path: WORKER_WORK_WITH_MENU,
     Component: WorkWithMenu,
   },
+  {
+    path: WORKER_CREATE_MENU,
+    Component: CreateMenu,
+  },
+  {
+    path: WORKER_EDIT_MENU,
+    Component: EditMenu,
+  },
 ];
 
 export const parentRoutes = [
   {
     path: PARENT_ROUTE,
     Component: ParentPage,
+  },
+  {
+    path: PARENT_CREATE_ORDER_ROUTE,
+    Component: CreateOrder,
+  },
+  {
+    path: PARENT_VIEW_ORDER_ROUTE,
+    Component: ViewOrder,
   },
 ];
