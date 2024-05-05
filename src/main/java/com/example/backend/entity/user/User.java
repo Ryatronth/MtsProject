@@ -1,5 +1,6 @@
 package com.example.backend.entity.user;
 
+import com.example.backend.entity.notification.Notification;
 import com.example.backend.entity.auth.RoleName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -45,6 +47,10 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Parent parent;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
 
     @JsonIgnore
     @Override

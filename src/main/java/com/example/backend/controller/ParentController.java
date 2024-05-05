@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.payload.dto.OrderDTO;
 import com.example.backend.payload.dto.UpdateOrderDTO;
+import com.example.backend.service.NotificationService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
 import com.example.backend.service.entityProcessing.entityFilter.EntityFilterService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
@@ -19,6 +20,8 @@ public class ParentController {
     private final EntityCreationService entityCreationService;
     private final EntityModificationService entityModificationService;
     private final EntityFilterService entityFilterService;
+
+    private final NotificationService notificationService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/children")
@@ -53,6 +56,11 @@ public class ParentController {
         return ResponseEntity.ok(entityFilterService.getOrderMenu("id", id, "order", orderId));
     }
 
+    @GetMapping("/get/notifications/{userId}")
+    public ResponseEntity<?> getNotifications(@PathVariable Long userId) {
+        return ResponseEntity.ok(notificationService.getUserNotification(userId));
+    }
+
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/child/order/create")
     public ResponseEntity<?> createOrder(@RequestBody Set<OrderDTO> data) {
@@ -63,5 +71,11 @@ public class ParentController {
     @PostMapping("/child/order/{orderId}/update")
     public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody UpdateOrderDTO data) {
         return ResponseEntity.ok(entityModificationService.updateOrder(orderId, data));
+    }
+
+    // Удаление --------------------------------------------------------------------------------------------------------
+    @DeleteMapping("/delete/notification/{notificationId}")
+    public ResponseEntity<?> deleteNotification(@PathVariable Long notificationId) {
+        return ResponseEntity.ok(notificationService.deleteNotification(notificationId));
     }
 }

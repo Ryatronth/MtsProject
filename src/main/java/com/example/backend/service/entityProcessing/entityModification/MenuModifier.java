@@ -9,13 +9,19 @@ import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
 import com.example.backend.entity.dish.order.Order;
 import com.example.backend.entity.dish.order.repository.OrderRepository;
+import com.example.backend.entity.user.Child;
+import com.example.backend.entity.user.User;
+import com.example.backend.entity.user.repository.ChildRepository;
+import com.example.backend.entity.user.repository.UserRepository;
 import com.example.backend.payload.dto.UpdateMenuDTO;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Component
@@ -26,13 +32,15 @@ public class MenuModifier {
     private final DishRepository dishRepository;
     private final OrderRepository orderRepository;
 
+    private final NotificationService notificationService;
+    private final ChildRepository childRepository;
+    private final UserRepository userRepository;
+
     public ModificationResponse modify(Long id, UpdateMenuDTO newData) {
         try {
             CurrentMenu currentMenu = currentMenuRepository.findById(id).orElseThrow(() -> new ModificationException("Меню не найдено"));
 
-            if (currentMenu.getStartDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() &&
-                    currentMenu.getEndDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() &&
-                    currentMenu.getEndDate().getDayOfMonth() < LocalDate.now().getDayOfMonth()) {
+            if (currentMenu.getStartDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() && (currentMenu.getEndDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() || (currentMenu.getEndDate().getDayOfMonth() < LocalDate.now().getDayOfMonth() && currentMenu.getEndDate().getMonth().getValue() == LocalDate.now().getMonth().getValue()))) {
                 throw new ModificationException("Вы не можете изменить меню за прошлые месяцы");
             }
 
@@ -47,11 +55,7 @@ public class MenuModifier {
 
             currentMenuRepository.save(currentMenu);
 
-            return ModificationResponse.builder()
-                    .status(ResponseStatus.SUCCESS)
-                    .message("Меню изменено успешно")
-                    .object(currentMenu)
-                    .build();
+            return ModificationResponse.builder().status(ResponseStatus.SUCCESS).message("Меню изменено успешно").object(currentMenu).build();
         } catch (Exception ex) {
             throw new ModificationException(ex.getMessage());
         }
@@ -63,10 +67,7 @@ public class MenuModifier {
             if (menuDishRepository.findByCurrentMenuAndDish(menu, dish).isPresent()) {
                 throw new ModificationException("Данное блюдо уже добавлено в меню");
             }
-            menuDishRepository.save(MenuDish.builder()
-                    .currentMenu(menu)
-                    .dish(dish)
-                    .build());
+            menuDishRepository.save(MenuDish.builder().currentMenu(menu).dish(dish).build());
         }
     }
 
@@ -84,6 +85,13 @@ public class MenuModifier {
         Set<Order> orders = orderRepository.findOverlappingOrders(LocalDate.now(), menu.getEndDate());
 
         if (orders.isEmpty()) return;
+
+        for (Order order : orders) {
+            Child child = childRepository.findById(order.getChild().getId()).orElseThrow(() -> new ModificationException("Ребенок не найден"));
+            User user = userRepository.findById(child.getParent().getId()).orElseThrow(() -> new ModificationException("Родитель не найден"));
+
+            notificationService.createNotification(user, "Меню было изменено " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM")) + ". Пожалуйста, составьте меню для своих детей заново.");
+        }
 
         orderRepository.deleteAll(orders);
     }
