@@ -13,6 +13,5 @@ import java.util.Set;
 public class OrderDTO {
     private Long childId;
     private LocalDate date;
-    private Long menuId;
     private Set<Long> menuDishes;
 }

@@ -223,10 +223,8 @@ public class EntityCreationService {
 
         double totalPrice = 0;
 
-        long menuId = data.getMenuId();
         for (long menuDishId : data.getMenuDishes()) {
-            MenuDish menuDish = menuDishRepository.findByCurrentMenuIdAndDishId(menuId, menuDishId)
-                    .orElseThrow(() -> new CreationException("Блюдо не найдено"));
+            MenuDish menuDish = menuDishRepository.findById(menuDishId).orElseThrow(() -> new CreationException("Блюдо не найдено"));
 
             OrderMenu orderMenu = orderMenuRepository.save(
                     OrderMenu.builder()

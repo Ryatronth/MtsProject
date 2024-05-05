@@ -86,13 +86,17 @@ public class MenuModifier {
 
         if (orders.isEmpty()) return;
 
+        createNotifications(orders);
+
+        orderRepository.deleteAll(orders);
+    }
+
+    private void createNotifications(Set<Order> orders) {
         for (Order order : orders) {
             Child child = childRepository.findById(order.getChild().getId()).orElseThrow(() -> new ModificationException("Ребенок не найден"));
             User user = userRepository.findById(child.getParent().getId()).orElseThrow(() -> new ModificationException("Родитель не найден"));
 
             notificationService.createNotification(user, "Меню было изменено " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM")) + ". Пожалуйста, составьте меню для своих детей заново.");
         }
-
-        orderRepository.deleteAll(orders);
     }
 }
