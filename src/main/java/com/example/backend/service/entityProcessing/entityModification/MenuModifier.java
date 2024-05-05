@@ -7,12 +7,15 @@ import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
+import com.example.backend.entity.dish.order.Order;
+import com.example.backend.entity.dish.order.repository.OrderRepository;
 import com.example.backend.payload.dto.UpdateMenuDTO;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Component
@@ -21,13 +24,21 @@ public class MenuModifier {
     private final CurrentMenuRepository currentMenuRepository;
     private final MenuDishRepository menuDishRepository;
     private final DishRepository dishRepository;
+    private final OrderRepository orderRepository;
 
     public ModificationResponse modify(Long id, UpdateMenuDTO newData) {
         try {
             CurrentMenu currentMenu = currentMenuRepository.findById(id).orElseThrow(() -> new ModificationException("Меню не найдено"));
 
+            if (currentMenu.getStartDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() &&
+                    currentMenu.getEndDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() &&
+                    currentMenu.getEndDate().getDayOfMonth() < LocalDate.now().getDayOfMonth()) {
+                throw new ModificationException("Вы не можете изменить меню за прошлые месяцы");
+            }
+
             if (!newData.getToDelete().isEmpty()) {
-                deleteDishes(currentMenu , newData.getToDelete());
+                deleteDishes(currentMenu, newData.getToDelete());
+                refreshOrders(currentMenu);
             }
 
             if (!newData.getToAdd().isEmpty()) {
@@ -59,12 +70,21 @@ public class MenuModifier {
         }
     }
 
-    private void deleteDishes(CurrentMenu menu , Set<Long> toDelete) {
+    private void deleteDishes(CurrentMenu menu, Set<Long> toDelete) {
         for (long dishId : toDelete) {
             Dish dish = dishRepository.findById(dishId).orElseThrow(() -> new ModificationException("Блюдо не найдено"));
             MenuDish menuDish = menuDishRepository.findByCurrentMenuAndDish(menu, dish).orElseThrow(() -> new ModificationException("Связь меню-блюдо не найдена"));
+            menuDish.setCurrentMenu(null);
             menu.getDishes().remove(menuDish);
-            menuDishRepository.delete(menuDish);
+            menuDishRepository.save(menuDish);
         }
+    }
+
+    private void refreshOrders(CurrentMenu menu) {
+        Set<Order> orders = orderRepository.findOverlappingOrders(LocalDate.now(), menu.getEndDate());
+
+        if (orders.isEmpty()) return;
+
+        orderRepository.deleteAll(orders);
     }
 }
