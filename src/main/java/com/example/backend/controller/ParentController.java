@@ -33,8 +33,10 @@ public class ParentController {
     @GetMapping("/get/menu")
     public ResponseEntity<?> getMenu(@RequestParam(name = "id", required = false) Long id,
                                      @RequestParam(name = "endDate", required = false) LocalDate endDate,
-                                     @RequestParam(name = "startDate", required = false) LocalDate startDate) {
-        return ResponseEntity.ok(entityFilterService.getMenu("id", id, "endDate", endDate, "startDate", startDate));
+                                     @RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                     @RequestParam(name = "date", required = false) LocalDate date) {
+        return ResponseEntity.ok(entityFilterService.getMenu("id", id, "endDate", endDate, "startDate", startDate,
+                "date", date));
     }
 
     @GetMapping("/get/menu/dishes")
