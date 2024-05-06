@@ -1,11 +1,13 @@
 package com.example.backend.service.entityProcessing.entityFilter;
 
+import com.example.backend.controller.exception.customException.FilterException;
 import com.example.backend.entity.dish.menu.Dish;
 import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
 import com.example.backend.entity.dish.order.Order;
+import com.example.backend.entity.dish.order.OrderMenu;
 import com.example.backend.entity.dish.order.repository.OrderMenuRepository;
 import com.example.backend.entity.dish.order.repository.OrderRepository;
 import com.example.backend.entity.user.Child;
@@ -68,15 +70,17 @@ public class EntityFilterService {
     }
 
     public List<?> getOrderMenu(Object... values) {
-        return orderMenuRepository.findAll(OrderMenuSpecification.filterByCriteria(values));
+        List<MenuDish> orders = orderMenuRepository.findAll(OrderMenuSpecification.filterByCriteria(values)).stream().map(OrderMenu::getMenuDish).toList();
+        orders.forEach(o -> o.getDish().setImageUrl("http://localhost:8080" + o.getDish().getImageUrl().substring(2).replace("\\", "/")));
+        return orders;
     }
 
-    public Map<?, ?> getOrdersToWorker(LocalDate date) {
+    public Map<?, ?> getOrdersToWorker(LocalDate currDate) {
+        if (currDate == null) {
+            throw new FilterException("Поле дата не может быть пустым");
+        }
         Map<String, List<ChildDishDTO>> dishDTOMap = new HashMap<>();
         List<ChildGroup> groups = groupRepository.findAll();
-
-//        LocalDate currDate = LocalDate.now();
-        LocalDate currDate = date;
 
         for (ChildGroup group : groups) {
 
