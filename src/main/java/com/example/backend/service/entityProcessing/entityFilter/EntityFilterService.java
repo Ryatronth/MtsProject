@@ -5,15 +5,23 @@ import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.dish.menu.repository.MenuDishRepository;
+import com.example.backend.entity.dish.order.Order;
 import com.example.backend.entity.dish.order.repository.OrderMenuRepository;
 import com.example.backend.entity.dish.order.repository.OrderRepository;
+import com.example.backend.entity.user.Child;
+import com.example.backend.entity.user.ChildGroup;
 import com.example.backend.entity.user.repository.ChildRepository;
 import com.example.backend.entity.user.repository.GroupRepository;
 import com.example.backend.entity.user.repository.UserRepository;
+import com.example.backend.payload.dto.ChildDishDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +69,34 @@ public class EntityFilterService {
 
     public List<?> getOrderMenu(Object... values) {
         return orderMenuRepository.findAll(OrderMenuSpecification.filterByCriteria(values));
+    }
+
+    public Map<?, ?> getOrdersToWorker(LocalDate date) {
+        Map<String, List<ChildDishDTO>> dishDTOMap = new HashMap<>();
+        List<ChildGroup> groups = groupRepository.findAll();
+
+//        LocalDate currDate = LocalDate.now();
+        LocalDate currDate = date;
+
+        for (ChildGroup group : groups) {
+
+            List<ChildDishDTO> childDishDTOS = new ArrayList<>();
+
+            List<Child> children = childRepository.findAll(ChildSpecification.filterByCriteria("childGroup", group.getId()));
+            for (Child child : children) {
+                List<Order> orders = orderRepository.findAll(OrderSpecification.filterByCriteria("date", currDate, "child", child.getId()));
+                if (orders.isEmpty()) continue;
+
+                Order order = orders.getFirst();
+
+                List<Dish> dishes = orderMenuRepository.findAll(OrderMenuSpecification
+                        .filterByCriteria("order", order.getId())).stream().map(o -> o.getMenuDish().getDish()).toList();
+
+                childDishDTOS.add(ChildDishDTO.builder().child(child).dishes(dishes).build());
+            }
+            dishDTOMap.put(group.getId(), childDishDTOS);
+        }
+
+        return dishDTOMap;
     }
 }

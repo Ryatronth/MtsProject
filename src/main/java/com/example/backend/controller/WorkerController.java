@@ -52,6 +52,11 @@ public class WorkerController {
         return ResponseEntity.ok(entityFilterService.getMenuDish("id", id, "currentMenu", menuId));
     }
 
+    @GetMapping("/get/orders")
+    public ResponseEntity<?> getOrders(@RequestParam(name = "date", required = false) LocalDate date) {
+        return ResponseEntity.ok(entityFilterService.getOrdersToWorker(date));
+    }
+
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute DishDTO data) {
