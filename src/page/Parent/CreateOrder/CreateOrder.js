@@ -4,17 +4,19 @@ import { Context } from '../../../index';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import {
-  createOrders,
   getChildrenForParent,
   getCurrentMenuForParent,
   getMenuIdForParent,
 } from '../../../http/userAPI';
 import SpinnerMain from '../../../components/loaders/SpinnerMain';
 import ico from '../../../assets/parent/ico-calendar.png';
+import icoSub from '../../../assets/worker/ico-sub.png';
+import icoPlus from '../../../assets/worker/ico-addDish.png';
 import styles from './CreateOrder.module.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
+import ModalWindowConfirmation from '../../../components/pieces/ModalWindowConfirmation/ModalWindowConfirmation';
 
 const CreateOrder = () => {
   const { user } = useContext(Context);
@@ -22,16 +24,67 @@ const CreateOrder = () => {
   const [selectedchildrenList, setSelectedChildrenList] = useState([]);
   const [allDishesList, setAllDishesList] = useState([]);
   const [selectedDishesList, setSelectedDishesList] = useState([]);
+  // const [selectedID, setSelectedID] = useState([]);
+  // const [allID, setAllID] = useState([]);
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
   const [startDate, setStartDate] = useState(
     new Date(new Date().getTime() + 86400000)
   );
   const [endDate, setEndDate] = useState(null);
+  const [maxDate, setMaxDate] = useState(null);
+  const [minDate, setMinDate] = useState(
+    new Date(new Date().getTime() + 86400000)
+  );
   const [loading, setLoading] = useState(true);
-  const [flag, setFlag] = useState(false);
+  const [calendarFlag, setCalendarFlag] = useState(false);
+  const [modalWindowFlag, setModalWindowFlag] = useState(false);
 
-  const onChange = (dates) => {
+  const onChange = async (dates) => {
     const [start, end] = dates;
+    if (maxDate < start) {
+      let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
+      await getMenuIdForParent(qparametr).then((data) => {
+        const tempEndDate = data[0].endDate.split('-');
+        const tempStartDate = data[0].startDate.split('-');
+        setMaxDate(
+          new Date(`${tempEndDate[0]}/${tempEndDate[1]}/${tempEndDate[2]}`)
+        );
+        setMinDate(
+          new Date(
+            `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
+          )
+        );
+        qparametr = `?menuId=${data[0].id}`;
+        getCurrentMenuForParent(qparametr).then((menu) => {
+          setAllDishesList(menu);
+        });
+      });
+      console.log(start);
+    }
+    if (minDate > start) {
+      let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
+      await getMenuIdForParent(qparametr).then((data) => {
+        const tempEndDate = data[0].endDate.split('-');
+        const tempStartDate = data[0].startDate.split('-');
+        setMaxDate(
+          new Date(`${tempEndDate[0]}/${tempEndDate[1]}/${tempEndDate[2]}`)
+        );
+        setMinDate(
+          new Date(
+            `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
+          )
+        );
+        qparametr = `?menuId=${data[0].id}`;
+        getCurrentMenuForParent(qparametr).then((menu) => {
+          setAllDishesList(menu);
+        });
+      });
+      console.log(start);
+    }
     setStartDate(start);
     setEndDate(end);
   };
@@ -49,40 +102,25 @@ const CreateOrder = () => {
     }
   };
 
-  const clickCreateOrder = async () => {
-    const orders = selectedchildrenList.flatMap((child) => {
-      const objList = [];
-      let tempStartDate = new Date(startDate);
-
-      while (tempStartDate <= endDate) {
-        objList.push({
-          childId: child.id,
-          date: `${tempStartDate.getFullYear()}-${(tempStartDate.getMonth() + 1)
-            .toString()
-            .padStart(2, '0')}-${tempStartDate
-            .getDate()
-            .toString()
-            .padStart(2, '0')}`,
-          menuDishes: selectedDishesList.map((dish) => dish.id),
-        });
-
-        tempStartDate.setDate(tempStartDate.getDate() + 1);
-      }
-      return objList;
-    });
-    await createOrders(orders)
-      .then((data) => console.log(data))
-      .catch((e) => console.log(e));
-  };
-
   useEffect(() => {
-    let qparametr = `?endDate=2024-05-28`;
-    getMenuIdForParent(qparametr).then((id) => {
-      qparametr = `?menuId=${id[0].id}`;
+    let qparametr = `?date=${startDate.getFullYear()}-${(
+      startDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
+    getMenuIdForParent(qparametr).then((data) => {
+      const tempEndDate = data[0].endDate.split('-');
+      const tempStartDate = data[0].startDate.split('-');
+      setMaxDate(
+        new Date(`${tempEndDate[0]}/${tempEndDate[1]}/${tempEndDate[2]}`)
+      );
+      setMinDate(
+        new Date(`${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`)
+      );
+      qparametr = `?menuId=${data[0].id}`;
       getCurrentMenuForParent(qparametr)
         .then((menu) => {
-          const listMenu = menu.map((o) => o.dish);
-          setAllDishesList(listMenu);
+          setAllDishesList(menu);
         })
         .finally(() => setLoading(false));
     });
@@ -167,16 +205,17 @@ const CreateOrder = () => {
             <Button
               variant="outline-success"
               className={`${styles.calendarBtn}`}
-              onClick={() => setFlag(flag ? false : true)}
+              onClick={() => setCalendarFlag(calendarFlag ? false : true)}
             >
               <Image src={ico} className={`${styles.calendarBtnImage}`} />
             </Button>
-            {flag && (
+            {calendarFlag && (
               <DatePicker
                 calendarClassName={`${styles.customCalendar}`}
                 selected={startDate}
                 onChange={onChange}
                 minDate={new Date(new Date().getTime() + 86400000)}
+                maxDate={!(endDate && startDate) ? maxDate : ''}
                 startDate={startDate}
                 endDate={endDate}
                 selectsRange
@@ -190,12 +229,16 @@ const CreateOrder = () => {
           <Button
             variant="outline-success"
             className={`${styles.createOrderBtn}`}
-            onClick={() => clickCreateOrder()}
+            onClick={() => {
+              setModalWindowFlag(true);
+              document.body.style.overflow = 'hidden';
+            }}
           >
             Составить рацион
           </Button>
         </div>
         <div
+          style={{ marginTop: '45px' }}
           className={`d-flex flex-column justify-content-center align-items-center`}
         >
           <h2 className={`${styles.menuTitle}`}>Выбранные блюда</h2>
@@ -206,11 +249,10 @@ const CreateOrder = () => {
               exDishesList={allDishesList}
               funcAddSet={setAllDishesList}
               funcSubSet={setSelectedDishesList}
+              ico={icoSub}
             />
           </div>
-          <h2 style={{ marginTop: '25px' }} className={`${styles.menuTitle}`}>
-            Выберите блюда
-          </h2>
+          <h2 className={`${styles.menuTitle}`}>Выберите блюда</h2>
           <div style={{ width: '1657px' }}>
             <ShowDishesToSelect
               selectedTime={selectedTime}
@@ -218,10 +260,23 @@ const CreateOrder = () => {
               exDishesList={selectedDishesList}
               funcAddSet={setSelectedDishesList}
               funcSubSet={setAllDishesList}
+              ico={icoPlus}
             />
           </div>
         </div>
       </div>
+      {modalWindowFlag && (
+        <ModalWindowConfirmation
+          setFlag={setModalWindowFlag}
+          selectedchildrenList={selectedchildrenList}
+          selectedDishesList={selectedDishesList} //
+          setAllDishesList={setAllDishesList} //
+          setSelectedDishesList={setSelectedDishesList} //
+          allDishesList={allDishesList} //
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )}
     </div>
   );
 };

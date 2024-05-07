@@ -21,18 +21,16 @@ const ShowParentToEdit = observer(() => {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      const qparametr = ``;
-      getParents(qparametr)
-        .then((data) => {
-          if (data) {
-            console.log(data);
-            setParentList(data);
-            return data;
-          }
-        })
-        .finally(() => setLoading(false));
-    }, 2000);
+    const qparametr = ``;
+    getParents(qparametr)
+      .then((data) => {
+        if (data) {
+          console.log(data);
+          setParentList(data);
+          return data;
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

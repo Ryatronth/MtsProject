@@ -11,7 +11,9 @@ const ProfileCardDishToSelect = ({
   ico,
 }) => {
   const exchange = () => {
-    const newList = dishesList.filter((dish) => dish.id !== dishData.id);
+    const newList = dishesList.filter(
+      (data) => data.dish.id !== dishData.dish.id
+    );
     funcAddSet([...exDishesList, dishData]);
     funcSubSet(newList);
   };
@@ -21,13 +23,13 @@ const ProfileCardDishToSelect = ({
       className={`${styles.profileCard} d-flex flex-column align-items-center justify-content-between row-gap-4`}
     >
       <div className={`${styles.imgContainer}`}>
-        <Image src={dishData.imageUrl} className={`${styles.img}`}></Image>
+        <Image src={dishData.dish.imageUrl} className={`${styles.img}`}></Image>
       </div>
-      <h2 className={`${styles.titleCard}`}>{dishData.name}</h2>
+      <h2 className={`${styles.titleCard}`}>{dishData.dish.name}</h2>
       <div
         className={`${styles.secContainerCard} d-flex justify-content-between align-items-center`}
       >
-        <span className={`${styles.priceCard}`}>₽{dishData.price}</span>
+        <span className={`${styles.priceCard}`}>₽{dishData.dish.price}</span>
         <Button
           variant="success"
           className={`${styles.btnCard} d-flex justify-content-center align-items-center`}

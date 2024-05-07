@@ -72,6 +72,18 @@ export const getCurrentMenuForParent = async (qparametr) => {
   return data;
 };
 
+export const getOrderIdForParent = async (qparametr) => {
+  const { data } = await $authHost.get(`api/user/parent/get/order${qparametr}`);
+  return data;
+};
+
+export const getOrderForParent = async (qparametr) => {
+  const { data } = await $authHost.get(
+    `api/user/parent/get/order/dishes${qparametr}`
+  );
+  return data;
+};
+
 export const getCurrentMenuId = async (qparametr) => {
   const { data } = await $authHost.post('api/user/worker/get/menu', qparametr);
   return data;

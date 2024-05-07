@@ -35,10 +35,10 @@ const EditMenu = observer(() => {
     const dishes = {
       toAdd: selectedDishesList
         .filter((dish) => !stayDishesList.includes(dish))
-        .map((dish) => dish.id),
+        .map((dish) => dish.dish.id),
       toDelete: stayDishesList
         .filter((dish) => !selectedDishesList.includes(dish))
-        .map((dish) => dish.id),
+        .map((dish) => dish.dish.id),
     };
     updateCurrentMenu(menuId, dishes).then((data) => {
       alert(data.message);
@@ -54,11 +54,15 @@ const EditMenu = observer(() => {
       getCurrentMenu(qparametr)
         .then((menu) => {
           const listMenu = menu.map((o) => o.dish);
-          setSelectedDishesList(listMenu);
-          setStaydDishesList(listMenu);
+          setSelectedDishesList(menu);
+          setStaydDishesList(menu);
           qparametr = `?exclude=${listMenu.map((o) => o.id).join(',')}`;
           getDishes(qparametr).then((data) => {
-            setAllDishesList(data);
+            const newList = data.map((o, index) => {
+              return { id: index, dish: o };
+            });
+            console.log(newList);
+            setAllDishesList(newList);
           });
         })
         .finally(() => setLoading(false));

@@ -1,0 +1,174 @@
+.parentBody {
+  border-radius: 70px 70px 0 0;
+  height: 690px;
+}
+.parentContainer {
+  row-gap: 45px;
+  padding: 36px 127px 15px 105px;
+}
+.firstCont {
+  width: 100%;
+}
+/* dropDown */
+.dropTitle {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 350px;
+  height: 46px;
+  padding: 15px 24px 15px 63px;
+  margin-right: 40px;
+  border-radius: 40px;
+  border: none;
+  background-image: url('../../../assets/parent/ico-searchChild.png');
+  background-repeat: no-repeat;
+  background-position: 28px center;
+  background-color: #87c631;
+  color: rgb(25%, 25%, 25%, 0.5);
+  line-height: 16px;
+  font-weight: 400;
+  font-size: 16px;
+}
+.dropMenu {
+  width: 350px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+.dropSelElem {
+  background-color: #198754 !important;
+  color: #fff !important;
+  &:hover {
+    background-color: #198754 !important;
+  }
+}
+.dropSimpleElem {
+  &:hover {
+    color: #000;
+    background-color: #f8f9fa;
+  }
+  &:active {
+    color: #000;
+    background-color: #f8f9fa;
+  }
+}
+/* -------- */
+.btnContainer {
+  column-gap: 15px;
+}
+.mainBtn {
+  width: 200px;
+  padding: 14px 0;
+  border-radius: 35px;
+  border: none;
+  background-color: #87c631;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+  line-height: 18px;
+  font-weight: 400;
+  font-size: 20px;
+}
+.mainTitle {
+  color: #fdfdfb;
+  margin-right: 34px;
+  font-weight: 500;
+  font-size: 32px;
+}
+.orderContainer {
+  flex-wrap: wrap;
+  width: 100%;
+}
+/* calendar */
+.calendarContainer {
+  position: relative;
+  width: 44px;
+  height: 43px;
+  padding: 0 0 3px 0;
+  margin-top: 15px;
+  margin-right: 277px;
+  border-radius: 8px;
+  border: none;
+}
+
+.calendarBtn {
+  position: relative;
+  width: 44px;
+  height: 43px;
+  padding: 0 0 3px 0;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(172, 172, 172, 0.5);
+  }
+  &:active {
+    background-color: rgba(140, 140, 140, 0.5) !important;
+  }
+}
+.calendarBtnImage {
+  position: absolute;
+  top: -4px;
+  left: 0;
+}
+.customCalendar {
+  position: absolute !important;
+  top: 50px;
+  left: -94px;
+}
+/* -------- */
+
+.dishesContainer {
+  width: 1175px;
+  height: 520px;
+  padding: 0 60px 0 52px;
+  border-radius: 20px;
+  background-color: rgb(99%, 99%, 98%, 0.2);
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+.dishesList {
+  column-gap: 85px;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 35px;
+    background-color: #afafaf;
+  }
+
+  &::-webkit-scrollbar {
+    width: 25px;
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    min-height: 90px;
+    border-radius: 35px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #fdfdfb;
+  }
+}
+.cardDish {
+  min-width: 284px;
+  height: 345px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  background-color: #fdfdfb;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.1);
+}
+.cardImg {
+  object-fit: cover;
+  width: 100%;
+  height: 285px;
+  border-radius: 20px;
+}
+.cardDescr {
+  width: 100%;
+  padding: 0 12px;
+  margin-top: 8px;
+  color: #414141;
+  font-weight: 600;
+  font-size: 17px;
+  text-align: center;
+}

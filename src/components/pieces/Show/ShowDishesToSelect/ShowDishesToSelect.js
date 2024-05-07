@@ -7,7 +7,7 @@ const ShowDishesToSelect = observer(
   ({ selectedTime, dishesList, funcAddSet, funcSubSet, exDishesList, ico }) => {
     const filteredListData = dishesList.filter((data) => {
       if (selectedTime === 'ALL') return data;
-      const groupMatch = data.category === selectedTime;
+      const groupMatch = data.dish.category === selectedTime;
       return groupMatch;
     });
 
@@ -23,7 +23,7 @@ const ShowDishesToSelect = observer(
         >
           {filteredListData.map((data) => (
             <ProfileCardDishToSelect
-              key={data.id}
+              key={data.dish.id}
               dishData={data}
               dishesList={dishesList}
               funcAddSet={funcAddSet}

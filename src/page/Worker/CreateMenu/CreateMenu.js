@@ -26,7 +26,7 @@ const CreateMenu = observer(() => {
 
   const clickSaveCurrentMenu = async () => {
     const dishes = {
-      dishes: selectedDishesList.map((dish) => dish.id),
+      dishes: selectedDishesList.map((data) => data.dish.id),
       endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
         .toString()
         .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
@@ -49,7 +49,11 @@ const CreateMenu = observer(() => {
     let qparametr = ``;
     getDishes(qparametr)
       .then((data) => {
-        setAllDishesList(data);
+        const newList = data.map((o, index) => {
+          return { id: index, dish: o };
+        });
+        setAllDishesList(newList);
+        console.log(newList);
       })
       .finally(() => setLoading(false));
   }, []);

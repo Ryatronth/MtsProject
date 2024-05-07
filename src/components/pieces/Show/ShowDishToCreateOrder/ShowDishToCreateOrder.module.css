@@ -1,0 +1,51 @@
+.section {
+  row-gap: 35px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 35px;
+    background-color: #afafaf;
+  }
+
+  &::-webkit-scrollbar {
+    width: 25px;
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    min-height: 90px;
+    border-radius: 35px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #fdfdfb;
+  }
+}
+.containerChild {
+  padding: 0 36px 0 0;
+}
+.childName {
+  margin-bottom: 16px;
+  margin-left: 30px;
+  color: #414141;
+  font-weight: 600;
+  font-size: 20px;
+}
+.containerDish {
+  row-gap: 9px;
+  padding: 14px 35px 10px 28px;
+  border-radius: 35px;
+  background-color: rgb(85%, 85%, 85%, 0.2);
+}
+.dishInfo {
+  color: #414141;
+  font-weight: 500;
+  font-size: 22px;
+}
+.dishName {
+  width: 450px;
+}
+.deleteDish {
+  padding: 5px 15px;
+  border-radius: 25px;
+  border: none;
+}
