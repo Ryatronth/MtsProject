@@ -6,11 +6,13 @@ import com.example.backend.payload.dto.UpdateMenuDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.PdfService;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
 import com.example.backend.service.entityProcessing.entityFilter.EntityFilterService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,8 @@ public class WorkerController {
     private final EntityModificationService entityModificationService;
     private final DeleteEntityService deleteEntityService;
     private final EntityFilterService entityFilterService;
+
+    private final PdfService pdfService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/dishes")
@@ -53,8 +57,13 @@ public class WorkerController {
     }
 
     @GetMapping("/get/orders")
-    public ResponseEntity<?> getOrders(@RequestParam(name = "date", required = false) LocalDate date) {
+    public ResponseEntity<?> getOrders(@RequestParam(name = "date") LocalDate date) {
         return ResponseEntity.ok(entityFilterService.getOrdersToWorker(date));
+    }
+
+    @GetMapping("/get/menu/pdf")
+    public ResponseEntity<?> getPdfMenu(@RequestParam(name = "date") LocalDate date) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfService.createMenu(date));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
