@@ -48,6 +48,13 @@ export const getDishes = async (qparametr) => {
   return data;
 };
 
+export const getOrdersForWorker = async (qparametr) => {
+  const { data } = await $authHost.get(
+    `api/user/worker/get/orders${qparametr}`
+  );
+  return data;
+};
+
 export const getMenuId = async (qparametr) => {
   const { data } = await $authHost.get(`api/user/worker/get/menu${qparametr}`);
   return data;
@@ -139,27 +146,6 @@ export const createOrders = async (orders) => {
   );
   return data;
 };
-
-// export const createWorker = async ({
-//   username,
-//   password,
-//   surname,
-//   name,
-//   patronymic,
-//   phone,
-// }) => {
-//   const { data } = await $authHost.post('api/user/admin/create/worker', {
-//     username,
-//     password,
-//     surname,
-//     name,
-//     patronymic,
-//     phone,
-//     role: 'WORKER',
-//     imageUrl: null,
-//   });
-//   return data;
-// };
 
 export const deleteChild = async (childId) => {
   const { data } = await $authHost.delete(

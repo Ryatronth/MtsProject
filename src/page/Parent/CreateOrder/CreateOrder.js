@@ -230,8 +230,14 @@ const CreateOrder = () => {
             variant="outline-success"
             className={`${styles.createOrderBtn}`}
             onClick={() => {
-              setModalWindowFlag(true);
-              document.body.style.overflow = 'hidden';
+              if (!selectedchildrenList.length) {
+                alert('Выберите ребёнка/детей');
+              } else if (!selectedDishesList.length) {
+                alert('Выберите блюда для заказа');
+              } else {
+                setModalWindowFlag(true);
+                document.body.style.overflow = 'hidden';
+              }
             }}
           >
             Составить рацион
@@ -269,10 +275,10 @@ const CreateOrder = () => {
         <ModalWindowConfirmation
           setFlag={setModalWindowFlag}
           selectedchildrenList={selectedchildrenList}
-          selectedDishesList={selectedDishesList} //
-          setAllDishesList={setAllDishesList} //
-          setSelectedDishesList={setSelectedDishesList} //
-          allDishesList={allDishesList} //
+          selectedDishesList={selectedDishesList}
+          setAllDishesList={setAllDishesList}
+          setSelectedDishesList={setSelectedDishesList}
+          allDishesList={allDishesList}
           startDate={startDate}
           endDate={endDate}
         />

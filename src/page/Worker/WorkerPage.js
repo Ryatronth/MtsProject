@@ -3,7 +3,7 @@ import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMain
 import backgr from '../../assets/bgProfile.png';
 import MainButton from '../../components/buttons/MainButton/MainButton';
 import {
-  ADMIN_WORK_WITH_PROFILE_ROUTE,
+  WORKER_VIEW_MENU_ROUTE,
   WORKER_WORK_WITH_DISHES,
   WORKER_WORK_WITH_MENU,
 } from '../../utils/consts';
@@ -41,7 +41,7 @@ const WorkerPage = () => {
             />
             <MainButton
               value={'Посмотреть меню'}
-              route={ADMIN_WORK_WITH_PROFILE_ROUTE}
+              route={WORKER_VIEW_MENU_ROUTE}
               ico={icoViewMenu}
             />
           </div>

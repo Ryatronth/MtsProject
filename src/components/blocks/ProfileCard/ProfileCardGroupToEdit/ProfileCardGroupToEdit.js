@@ -9,9 +9,9 @@ import ModalWindowEdit from '../../../pieces/ModalWindowEdit/ModalWindowEdit';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
 
 const ProfileCardGroupToEdit = observer(
-  ({ mainData, listData, setListData }) => {
+  ({ mainData, listData, setListData, groupId }) => {
     const [flag, setFlag] = useState(false);
-    const [flagEdit, setFlagEdit] = useState(false);
+    const [flagEdit, setFlagEdit] = useState(groupId ? true : false);
 
     const showModalWindowDelete = () => {
       setFlag(true);

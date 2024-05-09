@@ -10,6 +10,8 @@ const ShowDishToCreateOrder = observer(
     setSelectedDishesList,
     setAllDishesList,
     allDishesList,
+    resPrice,
+    setResPrice,
   }) => {
     const subDish = (data) => {
       console.log(data);
@@ -17,6 +19,7 @@ const ShowDishToCreateOrder = observer(
       setSelectedDishesList(
         selectedDishesList.filter((o) => o.dish.id !== data.dish.id)
       );
+      setResPrice(resPrice - data.dish.price * selectedchildrenList.length);
     };
     return (
       <div

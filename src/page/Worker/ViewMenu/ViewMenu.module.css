@@ -1,0 +1,113 @@
+.menuTitle {
+  color: #414141;
+  font-weight: 600;
+  font-size: 36px;
+  margin-bottom: 25px;
+}
+.mainBtn {
+  width: 200px;
+  height: 46px;
+  border-radius: 35px;
+  background-color: #fdfdfb;
+  font-weight: 400;
+  font-size: 20px;
+}
+.workGroupsTitle {
+  margin: 47px 0 43px 0;
+}
+.exit {
+  height: 46px;
+  width: 200px;
+  /* margin-right: 575px; */
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 20px;
+}
+/* dropDown */
+.dropTitle {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 325px;
+  height: 46px;
+  padding: 15px 24px 15px 75px;
+  /* margin-right: 40px; */
+  border-radius: 40px;
+  border: none;
+  background-image: url('../../../assets/parent/ico-searchChild.png');
+  background-repeat: no-repeat;
+  background-position: 35px center;
+  background-color: #87c631;
+  color: rgb(25%, 25%, 25%, 0.5);
+  line-height: 16px;
+  font-weight: 400;
+  font-size: 16px;
+}
+.dropMenu {
+  width: 350px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+.dropSelElem {
+  background-color: #198754 !important;
+  color: #fff !important;
+  &:hover {
+    background-color: #198754 !important;
+  }
+}
+.dropSimpleElem {
+  &:hover {
+    color: #000;
+    background-color: #f8f9fa;
+  }
+  &:active {
+    color: #000;
+    background-color: #f8f9fa;
+  }
+}
+/* -------- */
+
+/* calendar */
+.calendarContainer {
+  position: relative;
+  width: 44px;
+  height: 43px;
+  padding: 0 0 3px 0;
+  margin-right: 148px;
+  border-radius: 8px;
+  border: none;
+}
+
+.calendarBtn {
+  position: relative;
+  width: 44px;
+  height: 43px;
+  padding: 0 0 3px 0;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(172, 172, 172, 0.5);
+  }
+  &:active {
+    background-color: rgba(140, 140, 140, 0.5) !important;
+  }
+}
+.calendarBtnImage {
+  position: absolute;
+  top: -4px;
+  left: 0;
+}
+.customCalendar {
+  position: absolute !important;
+  top: 50px;
+  left: -94px;
+}
+/* -------- */
+
+.savePdf {
+  margin-top: 50px;
+  border-radius: 35px;
+}

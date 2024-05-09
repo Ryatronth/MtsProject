@@ -14,7 +14,9 @@ const ProfileCardMenuToCreate = ({ setModuleFlag, listData, setListData }) => {
   const [startDate, setStartDate] = useState(
     new Date(new Date().getTime() + 86400000)
   );
-  const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().getTime() + 86400000 * 28)
+  );
 
   const redirToCreate = () => {
     navigate(WORKER_CREATE_MENU, {

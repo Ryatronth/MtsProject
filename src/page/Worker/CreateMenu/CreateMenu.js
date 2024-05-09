@@ -25,24 +25,31 @@ const CreateMenu = observer(() => {
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
 
   const clickSaveCurrentMenu = async () => {
-    const dishes = {
-      dishes: selectedDishesList.map((data) => data.dish.id),
-      endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
-      startDate: `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`, //YYYY-MM-DD
-    };
-    createCurrentMenu(dishes)
-      .then((data) => {
-        alert(data.message);
-        navigate(WORKER_WORK_WITH_MENU);
-      })
-      .catch((e) => {
-        alert(e.response.data.message);
-        navigate(WORKER_WORK_WITH_MENU);
-      });
+    if (selectedDishesList.length) {
+      const dishes = {
+        dishes: selectedDishesList.map((data) => data.dish.id),
+        endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
+        startDate: `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${startDate
+          .getDate()
+          .toString()
+          .padStart(2, '0')}`, //YYYY-MM-DD
+      };
+      createCurrentMenu(dishes)
+        .then((data) => {
+          alert(data.message);
+          navigate(WORKER_WORK_WITH_MENU);
+        })
+        .catch((e) => {
+          alert(e.response.data.message);
+          navigate(WORKER_WORK_WITH_MENU);
+        });
+    } else {
+      alert('Выберите блюда');
+    }
   };
 
   useEffect(() => {

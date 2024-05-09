@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import exit from '../../../assets/exit.png';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import downArrow from '../../../assets/downArrow.png';
@@ -13,7 +13,7 @@ const ModalWindowCreateDish = observer(
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState(0);
     const [category, setCategory] = useState(selectedTime.toLowerCase());
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState(null);
 
     const drowing = async (eve) => {
       const choosedFile = eve.target.files[0];
@@ -31,12 +31,12 @@ const ModalWindowCreateDish = observer(
 
     const clickCreateDish = async () => {
       try {
-        if (!name) {
-          alert('Введите название блюда');
-        } else if (!description) {
-          alert('Введите описание для блюда');
+        if (name < 2) {
+          alert('Введите корректное название блюда');
         } else if (!price) {
           alert('Введите цену блюда');
+        } else if (description < 2) {
+          alert('Введите корректное описание для блюда');
         } else if (!category) {
           alert('Выберите категорию блюда');
         } else if (!image) {
@@ -48,7 +48,6 @@ const ModalWindowCreateDish = observer(
           formData.append('price', price);
           formData.append('category', category.toUpperCase());
           formData.append('image', image);
-          console.log(image);
           const uwu = await createDish(formData).then((data) => {
             setFlag(false);
             alert(data.message);
@@ -60,6 +59,21 @@ const ModalWindowCreateDish = observer(
         console.log(e);
       }
     };
+
+    useEffect(() => {
+      const loadImage = async () => {
+        const response = await fetch(ico);
+        const blob = await response.blob();
+        const list = response.url.split('/');
+        const file = new File([blob], `${list[list.length - 1]}`, {
+          type: `${blob.type}`,
+        });
+
+        setImage(file);
+      };
+
+      loadImage();
+    }, []);
 
     return (
       <div className={`${styles.blur}`}>

@@ -16,6 +16,8 @@ import {
   PARENT_ROUTE,
   PARENT_VIEW_ORDER_ROUTE,
   PARENT_CREATE_ORDER_ROUTE,
+  WORKER_VIEW_MENU_ROUTE,
+  PDF_ROUTE,
 } from './utils/consts';
 import Main from './page/MainPage/Main';
 import Auth from './page/AuthPage/Auth';
@@ -34,6 +36,8 @@ import ViewOrder from './page/Parent/ViewOrder/ViewOrder';
 import CreateOrder from './page/Parent/CreateOrder/CreateOrder';
 import CreateMenu from './page/Worker/CreateMenu/CreateMenu';
 import EditMenu from './page/Worker/EditMenu/EditMenu';
+import ViewMenu from './page/Worker/ViewMenu/ViewMenu';
+import PDFPage from './page/PDFPage/PDFPage';
 
 export const publicRoutes = [
   {
@@ -97,6 +101,14 @@ export const workerRoutes = [
   {
     path: WORKER_EDIT_MENU,
     Component: EditMenu,
+  },
+  {
+    path: WORKER_VIEW_MENU_ROUTE,
+    Component: ViewMenu,
+  },
+  {
+    path: PDF_ROUTE,
+    Component: PDFPage,
   },
 ];
 

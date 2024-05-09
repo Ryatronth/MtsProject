@@ -9,7 +9,7 @@ import ProfileCardMenuToCreate from '../../../blocks/ProfileCard/ProfileCardMenu
 
 const ShowMenuToEdit = observer(() => {
   const [listData, setListData] = useState([]);
-  const [newGroup, setNewGroup] = useState(false);
+  const [newMenu, setNewMenu] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const ShowMenuToEdit = observer(() => {
         <Button
           variant="success"
           className={`${styles.showListBtn}`}
-          onClick={() => setNewGroup(true)}
+          onClick={() => setNewMenu(true)}
         >
           Создать меню
         </Button>
@@ -47,9 +47,9 @@ const ShowMenuToEdit = observer(() => {
         style={{ height: '785px' }}
         className={`${styles.section} d-flex flex-column`}
       >
-        {newGroup && (
+        {newMenu && (
           <ProfileCardMenuToCreate
-            setModuleFlag={setNewGroup}
+            setModuleFlag={setNewMenu}
             listData={listData}
             setListData={setListData}
           />

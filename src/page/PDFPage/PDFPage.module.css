@@ -1,0 +1,53 @@
+.pdfTitle {
+  margin-top: 12px;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 12px 0;
+}
+
+/* Table Styles */
+
+.tableWrapper {
+  width: 85%;
+  margin: 10px 70px 70px;
+  box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+}
+
+.flTable {
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  background-color: white;
+}
+
+.flTable td,
+.flTable th {
+  /* width: 500px; */
+  /* text-align: center; */
+  padding: 8px;
+}
+
+.flTable td {
+  border-right: 1px solid #f8f8f8;
+  font-size: 12px;
+}
+
+.flTable thead th {
+  color: #ffffff;
+  background: #4fc3a1;
+}
+
+.flTable thead th:nth-child(odd) {
+  color: #ffffff;
+  background: #324960;
+}
+
+.flTable tr:nth-child(even) {
+  background: #f8f8f8;
+}

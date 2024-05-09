@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import exit from '../../../assets/exit.png';
 import { Button, Image } from 'react-bootstrap';
 import styles from './ModalWindowConfirmation.module.css';
@@ -15,8 +15,10 @@ const ModalWindowConfirmation = ({
   startDate,
   endDate,
 }) => {
+  console.log(selectedDishesList);
+  const [resPrice, setResPrice] = useState();
+
   const clickCreateOrder = async () => {
-    console.log(selectedDishesList.map((dish) => dish.id));
     const orders = selectedchildrenList.flatMap((child) => {
       const objList = [];
       let tempStartDate = new Date(startDate);
@@ -39,8 +41,22 @@ const ModalWindowConfirmation = ({
     });
     await createOrders(orders)
       .then((data) => console.log(data))
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        setFlag(false);
+        alert(e.response.data.message);
+        document.body.style.overflow = '';
+      });
+    setFlag(false);
+    document.body.style.overflow = '';
   };
+
+  useEffect(() => {
+    const price = selectedDishesList.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.dish.price;
+    }, 0);
+    setResPrice(price * selectedchildrenList.length);
+  }, []);
+
   return (
     <div className={`${styles.blur}`}>
       <div
@@ -62,13 +78,16 @@ const ModalWindowConfirmation = ({
             setAllDishesList={setAllDishesList}
             setSelectedDishesList={setSelectedDishesList}
             allDishesList={allDishesList}
+            resPrice={resPrice}
+            setResPrice={setResPrice}
           />
         </div>
         <div
           className={`${styles.blockConfirmation} d-flex justify-content-between align-items-center`}
         >
           <h2 className={`${styles.result}`}>
-            ИТОГ:&nbsp;<span className={`${styles.resultRub}`}>₽1000</span>
+            ИТОГ:&nbsp;&nbsp;
+            <span className={`${styles.resultRub}`}>₽&nbsp;{resPrice}</span>
           </h2>
           <Button
             variant="success"

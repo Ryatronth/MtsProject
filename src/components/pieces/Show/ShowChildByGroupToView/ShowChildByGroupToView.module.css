@@ -1,0 +1,20 @@
+.mainContainer {
+  width: 100%;
+  padding-top: 25px;
+  border-radius: 35px;
+  border: none;
+  background-color: rgba(217, 217, 217, 0.2);
+}
+.listContainer {
+  row-gap: 14px;
+  width: 100%;
+  padding: 25px 14px;
+}
+.profileCard {
+  cursor: pointer;
+  width: 100%;
+  padding: 13px 85px 13px 92px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}

@@ -1,6 +1,6 @@
 .profileCard {
   width: calc(100% - 62px);
-  height: 105px;
+  min-height: 105px;
   padding: 13px 25px 13px 45px;
   border-radius: 20px;
   background-color: #f7f7f5;

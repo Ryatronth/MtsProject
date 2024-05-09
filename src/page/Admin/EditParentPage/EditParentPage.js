@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../../../index';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ico from '../../../assets/admin/ico-parentAva.png';
@@ -17,41 +17,98 @@ import ModalWindowAdd from '../../../components/pieces/ModalWindowAdd/ModalWindo
 const EditParentPage = observer(() => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
-  const [FIO, setFIO] = useState('');
-  const [phone, setPhone] = useState('');
-  const [childList, setChildList] = useState([]);
-  const [allChild, setAllChild] = useState([]);
-  const [allGroup, setAllGroup] = useState([]);
-  const [flagModalWindow, setFlagModalWindow] = useState(false);
   const location = useLocation();
   const { state } = location;
   const parentData = state?.parentData;
+  // data
+  const [childList, setChildList] = useState([]);
+  const [allChild, setAllChild] = useState([]);
+  const [allGroup, setAllGroup] = useState([]);
+  // input`s
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  // ссылки на input`s
+  const fullNameInputRef = useRef(null);
+  const phoneNumberInputRef = useRef(null);
+  const loginInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+  // специфические state`s
+  const [flagModalWindow, setFlagModalWindow] = useState(false);
+
+  const formatFullName = (FIO) => {
+    const words = FIO.split(' ').slice(0, 3);
+    setFullName(
+      words
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    );
+  };
+
+  const formatPhoneNumber = (inputStr) => {
+    let input = inputStr.replace(/\D/g, '');
+    const formats = [
+      { length: 1, format: '$1' },
+      { length: 4, format: '$1 ($2' },
+      { length: 7, format: '$1 ($2) $3' },
+      { length: 9, format: '$1 ($2) $3-$4' },
+      { length: 11, format: '$1 ($2) $3-$4-$5' },
+    ];
+
+    for (const format of formats) {
+      if (
+        input.length <= format.length ||
+        (input.length > 11 && format.length === 11)
+      ) {
+        const formattedInput = input.replace(
+          /^(\d{1,1})(\d{1,3})(\d{0,3})(\d{0,2})(\d{0,2})(\d*)/,
+          format.format
+        );
+        if (formattedInput !== input) {
+          input = formattedInput;
+          break;
+        }
+      }
+    }
+    setPhone(input);
+  };
 
   const saveChanges = async () => {
     try {
-      if (!FIO) {
-        alert('Введите ФИО ребёнка');
+      const fioList = fullName.split(' ');
+      if (fioList.length < 3 || fioList[2] === '') {
+        alert('Введите верный ФИО');
+        fullNameInputRef.current.focus();
+      } else if (phone.replace(/\D/g, '').length < 11) {
+        alert('Введите правильный номер телефона');
+        phoneNumberInputRef.current.focus();
+      } else if (login.length <= 3 && login !== '') {
+        alert('Логин должен содержать более 3х символов');
+        loginInputRef.current.focus();
+      } else if (password.length <= 5 && password !== '') {
+        alert('Пароль должен содержать более 5и символов');
+        passwordInputRef.current.focus();
       } else {
-        const fio = FIO.split(' ');
-        const data = {
-          surname: fio[0],
-          name: fio[1],
-          patronymic: fio[2],
-          phone: phone,
-          role: 'PARENT',
-          parentId: parentData.id,
-          imageUrl: null,
-          username: document.querySelector('#username').value
-            ? document.querySelector('#username').value
-            : null,
-          password: document.querySelector('#password').value
-            ? document.querySelector('#password').value
-            : null,
-          children: childList.map((child) => child.id),
-        };
-        const uwu = await updateParent(parentData.id, data);
-        console.log(uwu);
-        navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
+        if (childList.length) {
+          const data = {
+            surname: fioList[0],
+            name: fioList[1],
+            patronymic: fioList[2],
+            phone: phone,
+            role: 'PARENT',
+            parentId: parentData.id,
+            imageUrl: null,
+            username: login !== '' ? login : null,
+            password: password !== '' ? password : null,
+            children: childList.map((child) => child.id),
+          };
+          const uwu = await updateParent(parentData.id, data);
+          console.log(uwu);
+          navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
+        } else {
+          alert('Выберите ребёнка');
+        }
       }
     } catch (e) {
       alert(e);
@@ -59,7 +116,9 @@ const EditParentPage = observer(() => {
   };
 
   useEffect(() => {
-    setFIO(`${parentData.surname} ${parentData.name} ${parentData.patronymic}`);
+    setFullName(
+      `${parentData.surname} ${parentData.name} ${parentData.patronymic}`
+    );
     setPhone(parentData.phone);
     let qparametr = `?parentId=${parentData.id}`;
     getChildren(qparametr).then((data) => {
@@ -88,17 +147,20 @@ const EditParentPage = observer(() => {
             <div className="d-flex flex-column ">
               <h2 className={`${styles.inputTitle}`}>ФИО:</h2>
               <input
+                ref={fullNameInputRef}
                 id="inputInfo"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '420px',
                   minWidth: '350px',
                 }}
-                value={FIO}
-                onChange={(e) => setFIO(e.target.value)}
+                value={fullName}
+                onChange={(e) => formatFullName(e.target.value)}
+                placeholder="Введите ФИО"
               ></input>
               <h2 className={`${styles.inputTitle}`}>Номер телефона:</h2>
               <input
+                ref={phoneNumberInputRef}
                 id="inputInfo"
                 className={`${styles.inputText}`}
                 style={{
@@ -106,27 +168,36 @@ const EditParentPage = observer(() => {
                   minWidth: '200px',
                 }}
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => formatPhoneNumber(e.target.value)}
+                placeholder="Введите телефон"
               ></input>
             </div>
             <div className="d-flex flex-column ">
               <h2 className={`${styles.inputTitle}`}>Логин:</h2>
               <input
+                ref={loginInputRef}
                 id="username"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '300px',
                   minWidth: '270px',
                 }}
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                placeholder="Отставьте поле пустым или измените логин" //допилить
               ></input>
               <h2 className={`${styles.inputTitle}`}>Пароль:</h2>
               <input
+                ref={passwordInputRef}
                 id="password"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '300px',
                   minWidth: '270px',
                 }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Отставьте поле пустым или измените пароль" //допилить
               ></input>
             </div>
           </div>

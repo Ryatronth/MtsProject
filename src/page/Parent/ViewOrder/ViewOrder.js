@@ -67,26 +67,29 @@ const ViewOrder = observer(() => {
   };
 
   useEffect(() => {
-    let qparametr = `?date=${selectedDate.getFullYear()}-${(
-      selectedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
-    getOrderIdForParent(qparametr)
-      .then((dataId) => {
-        if (dataId[0]) {
-          qparametr = `?orderId=${dataId[0].id}`;
-          getOrderForParent(qparametr).then((data) => {
-            setDiahesList(data.map((o) => o.dish));
-            setOrderBe(true);
-          });
-        } else {
-          setOrderBe(false);
-        }
-        qparametr = `?parentId=${jwtDecode(localStorage.getItem('token')).id}`;
-        getChildrenForParent(qparametr).then((data) => {
-          setChildrenList(data);
-          setSelectedchildrenList([data[0]]);
+    let qparametr = `?parentId=${jwtDecode(localStorage.getItem('token')).id}`;
+    getChildrenForParent(qparametr)
+      .then((dataChild) => {
+        setChildrenList(dataChild);
+        setSelectedchildrenList([dataChild[0]]);
+        qparametr = `?date=${selectedDate.getFullYear()}-${(
+          selectedDate.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, '0')}-${selectedDate
+          .getDate()
+          .toString()
+          .padStart(2, '0')}&childId=${dataChild[0].id}`;
+        getOrderIdForParent(qparametr).then((dataId) => {
+          if (dataId[0]) {
+            qparametr = `?orderId=${dataId[0].id}`;
+            getOrderForParent(qparametr).then((data) => {
+              setDiahesList(data.map((o) => o.dish));
+              setOrderBe(true);
+            });
+          } else {
+            setOrderBe(false);
+          }
         });
       })
       .finally(() => setLoading(false));

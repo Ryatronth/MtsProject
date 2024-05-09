@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
 import backgr from '../../../assets/bgProfile.png';
 import ico from '../../../assets/admin/ico-childAva-195.png';
@@ -13,18 +13,29 @@ import { createChild } from '../../../http/userAPI';
 
 const CreateChildPage = observer(() => {
   const { user } = useContext(Context);
+  const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
   const groupId = state?.groupId;
-  const navigate = useNavigate();
-  const [FIO, setFIO] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const fullNameInputRef = useRef(null);
+
+  const formatFullName = (FIO) => {
+    const words = FIO.split(' ').slice(0, 3);
+    setFullName(
+      words
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    );
+  };
 
   const clickCreateChild = async () => {
     try {
-      if (!FIO) {
-        alert('Введите ФИО ребёнка');
+      const fio = fullName.split(' ');
+      if (fio.length < 3 || fio[2] === '') {
+        fullNameInputRef.current.focus();
+        alert('Введите полное ФИО ребёнка');
       } else {
-        const fio = FIO.split(' ');
         const data = {
           surname: fio[0],
           name: fio[1],
@@ -34,7 +45,9 @@ const CreateChildPage = observer(() => {
         };
         const uwu = await createChild(data);
         console.log(uwu);
-        navigate(ADMIN_WORK_WITH_GROUPS_ROUTE);
+        navigate(ADMIN_WORK_WITH_GROUPS_ROUTE, {
+          state: { groupId: groupId },
+        });
       }
     } catch (e) {
       alert(e);
@@ -56,8 +69,11 @@ const CreateChildPage = observer(() => {
             <div className="d-flex flex-column ">
               <h2 className={`${styles.inputTitle}`}>ФИО</h2>
               <input
+                ref={fullNameInputRef}
                 className={`px-4 py-2 mt-2 ${styles.inputText}`}
-                onChange={(e) => setFIO(e.target.value)}
+                value={fullName}
+                onChange={(e) => formatFullName(e.target.value)}
+                placeholder="Введите ФИО"
               ></input>
               <h2 className={`${styles.inputTitle}`}>Группа</h2>
               <p
@@ -84,7 +100,11 @@ const CreateChildPage = observer(() => {
             variant="danger"
             style={{ width: '396px', fontSize: 24 }}
             className="reset-btn cpecial-btn"
-            onClick={() => navigate(ADMIN_WORK_WITH_GROUPS_ROUTE)}
+            onClick={() => {
+              navigate(ADMIN_WORK_WITH_GROUPS_ROUTE, {
+                state: { groupId: groupId },
+              });
+            }}
           >
             Отмена
           </Button>

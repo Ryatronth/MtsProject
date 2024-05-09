@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import ProfileCardGroupToEdit from '../../../blocks/ProfileCard/ProfileCardGroupToEdit/ProfileCardGroupToEdit';
 import ProfileCardGroupToCrete from '../../../blocks/ProfileCard/ProfileCardGroupToCrete/ProfileCardGroupToCrete';
 
-const ShowGroupToEdit = observer(() => {
+const ShowGroupToEdit = observer(({ groupId }) => {
   const [listData, setListData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newGroup, setNewGroup] = useState(false);
@@ -72,6 +72,7 @@ const ShowGroupToEdit = observer(() => {
         {filteredListData.map((data) => (
           <ProfileCardGroupToEdit
             key={data.id}
+            groupId={groupId === data.id ? data.id : undefined}
             mainData={data}
             listData={listData}
             setListData={setListData}

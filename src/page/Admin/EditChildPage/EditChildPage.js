@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../../../index';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ico from '../../../assets/admin/ico-childAva-195.png';
@@ -14,20 +14,30 @@ import { getGroups, updateChild } from '../../../http/userAPI';
 const EditChildPage = observer(() => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
-  const [FIO, setFIO] = useState('');
   const location = useLocation();
   const { state } = location;
   const childData = state?.childData;
-  console.log(childData);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [groupList, setGroupList] = useState([]);
+  const [fullName, setFullName] = useState('');
+  const fullNameInputRef = useRef(null);
+
+  const formatFullName = (FIO) => {
+    const words = FIO.split(' ').slice(0, 3);
+    setFullName(
+      words
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    );
+  };
 
   const saveChanges = async () => {
     try {
-      if (!FIO) {
-        alert('Введите ФИО ребёнка');
+      const fio = fullName.split(' ');
+      if (fio.length < 3 || fio[2] === '') {
+        fullNameInputRef.current.focus();
+        alert('Введите полное ФИО ребёнка');
       } else {
-        const fio = FIO.split(' ');
         const data = {
           surname: fio[0],
           name: fio[1],
@@ -49,9 +59,12 @@ const EditChildPage = observer(() => {
     getGroups().then((data) => {
       setGroupList(data);
       console.log(groupList);
-      setFIO(`${childData.surname} ${childData.name} ${childData.patronymic}`);
+      setFullName(
+        `${childData.surname} ${childData.name} ${childData.patronymic}`
+      );
       setSelectedGroup(childData.childGroup.id);
     });
+    fullNameInputRef.current.focus();
   }, []);
 
   return (
@@ -69,9 +82,11 @@ const EditChildPage = observer(() => {
             <div className="d-flex flex-column ">
               <h2 className={`${styles.inputTitle}`}>ФИО</h2>
               <input
+                ref={fullNameInputRef}
                 className={`px-4 py-2 mt-2 ${styles.inputText}`}
-                value={FIO}
-                onChange={(e) => setFIO(e.target.value)}
+                value={fullName}
+                onChange={(e) => formatFullName(e.target.value)}
+                placeholder="Введите ФИО"
               ></input>
               <h2 className={`${styles.inputTitle}`}>Группа</h2>
               <div>

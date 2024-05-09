@@ -13,9 +13,7 @@ const ModalWindowEditDish = observer(
     const [description, setDescription] = useState(dishData.composition);
     const [price, setPrice] = useState(dishData.price);
     const [category, setCategory] = useState(dishData.category.toLowerCase());
-    const [image, setImage] = useState(dishData.imageUrl);
-
-    console.log(image);
+    const [image, setImage] = useState();
 
     const drowing = async (eve) => {
       const choosedFile = eve.target.files[0];
@@ -70,6 +68,22 @@ const ModalWindowEditDish = observer(
         console.log(e);
       }
     };
+
+    useEffect(() => {
+      const loadImage = async () => {
+        const response = await fetch(dishData.imageUrl);
+        const blob = await response.blob();
+        const list = response.url.split('/');
+        const file = new File([blob], `${list[list.length - 1]}`, {
+          type: `${blob.type}`,
+        });
+
+        setImage(file);
+      };
+
+      loadImage();
+    }, []);
+
     return (
       <div className={`${styles.blur}`}>
         <div className={`${styles.mainInfo} d-flex flex-column`}>
@@ -86,7 +100,7 @@ const ModalWindowEditDish = observer(
               <Image
                 className={`${styles.img} input__picture`}
                 alt=""
-                src={image}
+                src={dishData.imageUrl}
               />
               <input
                 type="file"
