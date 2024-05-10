@@ -11,6 +11,9 @@ public class MenuSpecification {
                 switch (key) {
                     case "date" -> builder.and(builder.lessThanOrEqualTo(root.get("startDate"), (LocalDate) value),
                             builder.greaterThanOrEqualTo(root.get("endDate"), (LocalDate) value));
+                    case "fromDate" -> builder.or(builder.and(builder.lessThanOrEqualTo(root.get("startDate"), (LocalDate) value),
+                                builder.greaterThanOrEqualTo(root.get("endDate"), (LocalDate) value)),
+                                builder.greaterThanOrEqualTo(root.get("startDate"), (LocalDate) value));
                     default -> builder.equal(root.get(key), value);
                 }, values);
     }

@@ -2,6 +2,7 @@ package com.example.backend.service.entityProcessing;
 
 import com.example.backend.entity.dish.menu.CurrentMenu;
 import com.example.backend.entity.dish.menu.Dish;
+import com.example.backend.entity.dish.menu.MenuDish;
 import com.example.backend.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.entity.user.repository.ChildRepository;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,12 +63,19 @@ public class DeleteEntityService {
         dish.setRemoved(true);
         dishRepository.save(dish);
 
-        List<CurrentMenu> menus = entityFilterService.getMenu("date", LocalDate.now());
+        LocalDate currDate = LocalDate.now();
+
+        List<CurrentMenu> menus = entityFilterService.getMenu("fromDate", currDate);
         if (!menus.isEmpty()) {
-            long menuId = menus.getFirst().getId();
-            List<Dish> dishes = entityFilterService.getDishes("currentMenu", menuId, "dish", dishId);
-            if (!dishes.isEmpty()) {
-                entityModificationService.updateMenu(menuId, UpdateMenuDTO.builder().toAdd(Set.of(dishes.getFirst().getId())).build());
+            for (CurrentMenu menu : menus) {
+                long menuId = menu.getId();
+                List<MenuDish> dishes = entityFilterService.getMenuDish("currentMenu", menuId, "dish", dishId);
+                if (!dishes.isEmpty()) {
+                    entityModificationService.updateMenu(menuId, UpdateMenuDTO.builder()
+                            .toDelete(Set.of(dishes.getFirst().getDish().getId()))
+                            .toAdd(new HashSet<>())
+                            .build());
+                }
             }
         }
 

@@ -39,8 +39,11 @@ public class MenuModifier {
     public ModificationResponse modify(Long id, UpdateMenuDTO newData) {
         try {
             CurrentMenu currentMenu = currentMenuRepository.findById(id).orElseThrow(() -> new ModificationException("Меню не найдено"));
+            LocalDate currDate = LocalDate.now();
 
-            if (currentMenu.getStartDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() && (currentMenu.getEndDate().getMonth().getValue() < LocalDate.now().getMonth().getValue() || (currentMenu.getEndDate().getDayOfMonth() < LocalDate.now().getDayOfMonth() && currentMenu.getEndDate().getMonth().getValue() == LocalDate.now().getMonth().getValue()))) {
+            if (!((currentMenu.getStartDate().isBefore(currDate) || currentMenu.getStartDate().isEqual(currDate))
+                    && (currentMenu.getEndDate().isAfter(currDate) || currentMenu.getEndDate().isEqual(currDate))
+                    || currentMenu.getStartDate().isAfter(currDate))) {
                 throw new ModificationException("Вы не можете изменить меню за прошлые месяцы");
             }
 
