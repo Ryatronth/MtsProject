@@ -17,6 +17,10 @@ public class Notification {
 
     private String message;
 
+    private String date;
+
+    private String time;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

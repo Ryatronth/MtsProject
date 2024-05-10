@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Service
@@ -24,13 +26,16 @@ public class NotificationService {
     private final EntityFilterService entityFilterService;
 
     public void createNotification(User user, String message) {
-        if (notificationRepository.existsByMessageAndUser(message, user)) {
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+        if (notificationRepository.existsByMessageAndUserAndDateAndTime(message, user, LocalDate.now().toString(), time)) {
             return;
         }
 
         Notification notification = Notification.builder()
                 .user(user)
                 .message(message)
+                .date(LocalDate.now().toString())
+                .time(time)
                 .build();
 
         notificationRepository.save(notification);

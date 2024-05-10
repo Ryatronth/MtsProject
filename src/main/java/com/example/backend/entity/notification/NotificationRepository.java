@@ -10,5 +10,5 @@ import java.util.Set;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long>, JpaSpecificationExecutor<Notification> {
     Set<Notification> findAllByUserId(Long userId);
-    boolean existsByMessageAndUser(String message, User user);
+    boolean existsByMessageAndUserAndDateAndTime(String message, User user, String date, String time);
 }

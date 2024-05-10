@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -99,7 +100,9 @@ public class MenuModifier {
             Child child = childRepository.findById(order.getChild().getId()).orElseThrow(() -> new ModificationException("Ребенок не найден"));
             User user = userRepository.findById(child.getParent().getId()).orElseThrow(() -> new ModificationException("Родитель не найден"));
 
-            notificationService.createNotification(user, "Меню было изменено " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM")) + ". Пожалуйста, составьте меню для своих детей заново.");
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM"));
+            String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+            notificationService.createNotification(user, "Меню было изменено " + date + " в " + time + ". Пожалуйста, составьте меню для своих детей заново.");
         }
     }
 }
