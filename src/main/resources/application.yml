@@ -24,7 +24,7 @@ jwt:
   secret-key:
     access: ${key}
   expire:
-    access: 1800000
+    access: 1800000000000
     refresh: 108000000
 
 

@@ -10,7 +10,7 @@ public class DishSpecification {
     public static Specification<Dish> filterByCriteria(Object... values) {
         return FilterProcessor.createSpec((key, value, root, builder) ->
                 switch (key) {
-                    case "id" -> builder.equal(root.get(key), value);
+                    case "id", "isRemoved" -> builder.equal(root.get(key), value);
                     case "priceFrom" -> builder.greaterThanOrEqualTo(root.get("price"), (Double) value);
                     case "priceTo" -> builder.lessThanOrEqualTo(root.get("price"), (Double) value);
                     case "exclude" -> {

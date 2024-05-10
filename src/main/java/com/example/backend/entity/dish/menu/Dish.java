@@ -31,6 +31,10 @@ public class Dish {
     private String imageUrl;
 
     @JsonIgnore
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isRemoved;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "dish")
     private Set<MenuDish> menuDishes;
 }

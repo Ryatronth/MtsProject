@@ -6,13 +6,11 @@ import com.example.backend.payload.dto.UpdateMenuDTO;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
-import com.example.backend.service.PdfService;
 import com.example.backend.service.entityProcessing.DeleteEntityService;
 import com.example.backend.service.entityProcessing.entityCreation.EntityCreationService;
 import com.example.backend.service.entityProcessing.entityFilter.EntityFilterService;
 import com.example.backend.service.entityProcessing.entityModification.EntityModificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +26,6 @@ public class WorkerController {
     private final DeleteEntityService deleteEntityService;
     private final EntityFilterService entityFilterService;
 
-    private final PdfService pdfService;
-
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/dishes")
     public ResponseEntity<?> getDishes(@RequestParam(name = "id", required = false) Long id,
@@ -38,7 +34,8 @@ public class WorkerController {
                                        @RequestParam(name = "priceTo", required = false) Double priceTo,
                                        @RequestParam(name = "exclude", required = false) HashSet<Long> indexes) {
         return ResponseEntity.ok(entityFilterService
-                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo, "exclude", indexes));
+                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo, "exclude", indexes,
+                        "isRemoved", false));
     }
 
     @GetMapping("/get/menu")
@@ -61,23 +58,14 @@ public class WorkerController {
         return ResponseEntity.ok(entityFilterService.getOrdersToWorker(date));
     }
 
-    @GetMapping("/get/menu/pdf")
-    public ResponseEntity<?> getPdfMenu(@RequestParam(name = "date") LocalDate date) {
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfService.createMenu(date));
-    }
-
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute DishDTO data) {
-        CreationResponse response = entityCreationService.createDish(data);
-        if (response.getStatus() == ResponseStatus.SUCCESS) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(400).body(response);
+        return ResponseEntity.ok(entityCreationService.createDish(data));
     }
 
     @PostMapping("/create/menu")
-    public ResponseEntity<?> createDish(@RequestBody MenuDTO data) {
+    public ResponseEntity<?> createMenu(@RequestBody MenuDTO data) {
         CreationResponse response = entityCreationService.createMenu(data);
         if (response.getStatus() == ResponseStatus.SUCCESS) {
             return ResponseEntity.ok(response);

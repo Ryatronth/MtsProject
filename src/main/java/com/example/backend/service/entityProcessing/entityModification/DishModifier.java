@@ -6,20 +6,17 @@ import com.example.backend.entity.dish.menu.repository.DishRepository;
 import com.example.backend.payload.dto.DishDTO;
 import com.example.backend.payload.response.ModificationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class DishModifier {
     private final DishRepository dishRepository;
+
+    private final ImageService imageService;
     public ModificationResponse modify(Long id, DishDTO newData) {
         try {
             Dish dish = dishRepository.findById(id).orElseThrow(() -> new ModificationException("Блюдо не найдено"));
@@ -46,7 +43,7 @@ public class DishModifier {
 
             dishRepository.save(dish);
 
-            dish.setImageUrl("http://localhost:8080" + dish.getImageUrl().substring(2).replace("\\", "/"));
+            dish.setImageUrl(imageService.refactorPath(dish.getImageUrl()));
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)
@@ -58,24 +55,12 @@ public class DishModifier {
         }
     }
 
-    private void changeImage(Dish dish, DishDTO newData) throws Exception {
+    private void changeImage(Dish dish, DishDTO newData) {
         MultipartFile image = newData.getImage();
-
         if (image.isEmpty()) {
             return;
         }
-
-        File oldImage = new File(dish.getImageUrl());
-        oldImage.delete();
-
-        byte[] bytes = newData.getImage().getBytes();
-        String UPLOAD_DIR = "../images/dish/";
-
-        String filename = UUID.randomUUID().toString();
-
-        Path path = Paths.get(UPLOAD_DIR + filename);
-        Files.write(path, bytes);
-
-        dish.setImageUrl(path.toString());
+        imageService.deleteImage(dish.getImageUrl());
+        dish.setImageUrl(imageService.saveImage(image));
     }
 }

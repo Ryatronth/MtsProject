@@ -9,6 +9,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UpdateMenuDTO {
     private Set<Long> toDelete;
     private Set<Long> toAdd;

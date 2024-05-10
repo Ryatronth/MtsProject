@@ -9,6 +9,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UpdateOrderDTO {
     private Set<Long> toAdd;
     private Set<Long> toDelete;

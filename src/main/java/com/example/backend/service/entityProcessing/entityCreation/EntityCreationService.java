@@ -22,17 +22,17 @@ import com.example.backend.entity.user.repository.UserRepository;
 import com.example.backend.payload.dto.*;
 import com.example.backend.payload.response.CreationResponse;
 import com.example.backend.payload.response.authResponse.ResponseStatus;
+import com.example.backend.service.ImageService;
+import com.example.backend.service.entityProcessing.entityFilter.EntityFilterService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +50,8 @@ public class EntityCreationService {
     private final OrderMenuRepository orderMenuRepository;
 
     private final EntityBuilder entityBuilder;
+    private final ImageService imageService;
+    private final EntityFilterService entityFilterService;
 
     public CreationResponse createUser(UserDTO data) {
         return entityBuilder.createEntity(data, userRepository,
@@ -129,7 +131,7 @@ public class EntityCreationService {
     }
 
     public CreationResponse createDish(DishDTO data) {
-        String pathToImage = saveImage(data.getImage());
+        String pathToImage = imageService.saveImage(data.getImage());
 
         CreationResponse response = entityBuilder.createEntity(data, dishRepository,
                 dto -> Dish.builder()
@@ -138,41 +140,22 @@ public class EntityCreationService {
                         .category(data.getCategory())
                         .price(data.getPrice())
                         .imageUrl(pathToImage)
+                        .isRemoved(false)
                         .build(),
                 condition -> dishRepository.findByName(data.getName()).isPresent(),
                 "Блюдо успешно создано",
                 "Данное блюдо уже существует");
 
         Dish dish = (Dish) response.getObject();
-        dish.setImageUrl("http://localhost:8080" + dish.getImageUrl().substring(2).replace("\\", "/"));
+        dish.setImageUrl(imageService.refactorPath(dish.getImageUrl()));
         response.setObject(dish);
         return response;
     }
 
-    private String saveImage(MultipartFile image) {
-        try {
-            if (image.isEmpty()) {
-                throw new CreationException("Файл пуст");
-            }
-
-            byte[] bytes = image.getBytes();
-
-            String UPLOAD_DIR = "../images/dish/";
-
-            String filename = UUID.randomUUID().toString();
-
-            Path path = Paths.get(UPLOAD_DIR + filename);
-            Files.write(path, bytes);
-
-            return path.toString();
-        } catch (IOException ex) {
-            throw new CreationException(ex.getMessage());
-        }
-    }
-
     public CreationResponse createMenu(MenuDTO data) {
-        Set<CurrentMenu> menus = currentMenuRepository.findOverlappingMenus(data.getStartDate(), data.getEndDate());
-        if (!menus.isEmpty()) {
+        List<CurrentMenu> fromStart = entityFilterService.getMenu("date", data.getStartDate());
+        List<CurrentMenu> toEnd = entityFilterService.getMenu("date", data.getEndDate());
+        if (!fromStart.isEmpty() || !toEnd.isEmpty()) {
             throw new CreationException("Меню на данные даты уже создано");
         }
 

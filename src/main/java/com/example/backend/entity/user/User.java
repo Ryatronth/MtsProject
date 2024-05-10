@@ -49,7 +49,7 @@ public class User implements UserDetails {
     private Parent parent;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<Notification> notifications;
 
     @JsonIgnore

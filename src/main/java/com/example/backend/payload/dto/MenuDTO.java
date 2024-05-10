@@ -10,6 +10,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class MenuDTO {
     private LocalDate startDate;
     private LocalDate endDate;

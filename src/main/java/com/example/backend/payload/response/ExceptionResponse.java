@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class FilterExceptionResponse {
+public class ExceptionResponse {
     private ResponseStatus status;
     private String message;
 }

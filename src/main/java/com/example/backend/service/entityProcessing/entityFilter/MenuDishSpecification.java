@@ -1,6 +1,7 @@
 package com.example.backend.service.entityProcessing.entityFilter;
 
 import com.example.backend.entity.dish.menu.CurrentMenu;
+import com.example.backend.entity.dish.menu.Dish;
 import com.example.backend.entity.dish.menu.MenuDish;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,6 +12,10 @@ public class MenuDishSpecification {
                 switch (key) {
                     case "currentMenu" -> {
                         Join<MenuDish, CurrentMenu> menuJoin = root.join(key);
+                        yield builder.equal(menuJoin.get("id"), value);
+                    }
+                    case "dish" -> {
+                        Join<MenuDish, Dish> menuJoin = root.join(key);
                         yield builder.equal(menuJoin.get("id"), value);
                     }
                     default -> builder.equal(root.get(key), value);

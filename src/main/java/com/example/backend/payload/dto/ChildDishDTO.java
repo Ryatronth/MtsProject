@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ChildDishDTO {
     private Child child;
     private List<Dish> dishes;
