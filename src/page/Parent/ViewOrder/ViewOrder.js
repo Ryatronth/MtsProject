@@ -47,7 +47,10 @@ const ViewOrder = observer(() => {
 
   const onChange = (dates) => {
     setSelectedDate(dates);
-    getter(dates, selectedchildrenList);
+    if (!selectedchildrenList.length) setOrderBe(false);
+    else {
+      getter(dates, selectedchildrenList);
+    }
   };
 
   const handleSelect = (id) => {
@@ -55,6 +58,13 @@ const ViewOrder = observer(() => {
       setSelectedchildrenList(
         selectedchildrenList.filter((child) => child.id !== +id)
       );
+      if (!selectedchildrenList.length) setOrderBe(false);
+      else {
+        getter(
+          selectedDate,
+          childrenList.filter((child) => child.id === +id)
+        );
+      }
     } else {
       setSelectedchildrenList([
         childrenList.filter((child) => child.id === +id)[0],
@@ -70,27 +80,31 @@ const ViewOrder = observer(() => {
     let qparametr = `?parentId=${jwtDecode(localStorage.getItem('token')).id}`;
     getChildrenForParent(qparametr)
       .then((dataChild) => {
-        setChildrenList(dataChild);
-        setSelectedchildrenList([dataChild[0]]);
-        qparametr = `?date=${selectedDate.getFullYear()}-${(
-          selectedDate.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, '0')}-${selectedDate
-          .getDate()
-          .toString()
-          .padStart(2, '0')}&childId=${dataChild[0].id}`;
-        getOrderIdForParent(qparametr).then((dataId) => {
-          if (dataId[0]) {
-            qparametr = `?orderId=${dataId[0].id}`;
-            getOrderForParent(qparametr).then((data) => {
-              setDiahesList(data.map((o) => o.dish));
-              setOrderBe(true);
-            });
-          } else {
-            setOrderBe(false);
-          }
-        });
+        if (dataChild.length === 0) {
+          alert('Детей нет');
+        } else {
+          setChildrenList(dataChild);
+          setSelectedchildrenList([dataChild[0]]);
+          qparametr = `?date=${selectedDate.getFullYear()}-${(
+            selectedDate.getMonth() + 1
+          )
+            .toString()
+            .padStart(2, '0')}-${selectedDate
+            .getDate()
+            .toString()
+            .padStart(2, '0')}&childId=${dataChild[0].id}`;
+          getOrderIdForParent(qparametr).then((dataId) => {
+            if (dataId[0]) {
+              qparametr = `?orderId=${dataId[0].id}`;
+              getOrderForParent(qparametr).then((data) => {
+                setDiahesList(data.map((o) => o.dish));
+                setOrderBe(true);
+              });
+            } else {
+              setOrderBe(false);
+            }
+          });
+        }
       })
       .finally(() => setLoading(false));
   }, []);
@@ -211,6 +225,7 @@ const ViewOrder = observer(() => {
                       (dish) =>
                         dish.category === selectedTime && (
                           <div
+                            key={dish.id}
                             className={`${styles.cardDish}  d-flex flex-column align-items-center justify-content-start`}
                           >
                             <Image

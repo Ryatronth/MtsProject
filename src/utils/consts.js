@@ -16,6 +16,7 @@ export const WORKER_VIEW_MENU_ROUTE = '/view-menu';
 export const PARENT_ROUTE = '/parent';
 export const PARENT_CREATE_ORDER_ROUTE = '/create-order';
 export const PARENT_VIEW_ORDER_ROUTE = '/view-order';
+export const PARENT_PDF_ORDER_ROUTE = '/pdf-order';
 //
 export const PDF_ROUTE = '/temp-PDF';
 // export const ADMIN_CREATE_WORKER_ROUTE = '/create-worker';

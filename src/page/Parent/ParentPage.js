@@ -10,10 +10,12 @@ import { Button } from 'react-bootstrap';
 import ChildrenOfParenat from '../../components/pieces/ChildrenOfParenat/ChildrenOfParenat';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
+import ModalWindowPay from '../../components/pieces/ModalWindowPay/ModalWindowPay';
 
 const ParentPage = observer(() => {
   const navigate = useNavigate();
   const [orientation, setOrientation] = useState('chocolate');
+  const [flag, setFlag] = useState(false);
   const toggleMenu = () => {
     const menu = document.querySelector('.childBtn');
     if (menu.classList.contains('burger')) {
@@ -91,13 +93,14 @@ const ParentPage = observer(() => {
               <Button
                 variant="success"
                 className={`${styles.mainBtn}`}
-                // route={ADMIN_WORK_WITH_PROFILE_ROUTE}
+                onClick={() => setFlag(true)}
               >
                 Оплатить
               </Button>
             </div>
           </div>
         </div>
+        {flag && <ModalWindowPay setFlag={setFlag} />}
       </div>
     </>
   );

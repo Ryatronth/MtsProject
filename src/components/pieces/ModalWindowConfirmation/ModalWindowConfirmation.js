@@ -18,23 +18,47 @@ const ModalWindowConfirmation = ({
   console.log(selectedDishesList);
   const [resPrice, setResPrice] = useState();
 
+  const isWeekend = (date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  };
+
+  const countWeekendDays = (startDate, endDate) => {
+    let count = 0;
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      if (isWeekend(currentDate)) {
+        count++;
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return count;
+  };
+
   const clickCreateOrder = async () => {
     const orders = selectedchildrenList.flatMap((child) => {
       const objList = [];
       let tempStartDate = new Date(startDate);
+      console.log(1234);
 
       while (tempStartDate <= endDate || !endDate) {
-        objList.push({
-          childId: child.id,
-          date: `${tempStartDate.getFullYear()}-${(tempStartDate.getMonth() + 1)
-            .toString()
-            .padStart(2, '0')}-${tempStartDate
-            .getDate()
-            .toString()
-            .padStart(2, '0')}`,
-          menuDishes: selectedDishesList.map((dish) => dish.id),
-        });
-        if (!endDate) break;
+        console.log(tempStartDate.getDay());
+        if (tempStartDate.getDay() !== 0 && tempStartDate.getDay() !== 6) {
+          objList.push({
+            childId: child.id,
+            date: `${tempStartDate.getFullYear()}-${(
+              tempStartDate.getMonth() + 1
+            )
+              .toString()
+              .padStart(2, '0')}-${tempStartDate
+              .getDate()
+              .toString()
+              .padStart(2, '0')}`,
+            menuDishes: selectedDishesList.map((dish) => dish.id),
+          });
+          if (!endDate) break;
+        }
         tempStartDate.setDate(tempStartDate.getDate() + 1);
       }
       return objList;
@@ -54,7 +78,14 @@ const ModalWindowConfirmation = ({
     const price = selectedDishesList.reduce((accumulator, currentItem) => {
       return accumulator + currentItem.dish.price;
     }, 0);
-    setResPrice(price * selectedchildrenList.length);
+    setResPrice(
+      price *
+        selectedchildrenList.length *
+        (endDate.getDate() -
+          startDate.getDate() +
+          1 -
+          countWeekendDays(startDate, endDate))
+    );
   }, []);
 
   return (

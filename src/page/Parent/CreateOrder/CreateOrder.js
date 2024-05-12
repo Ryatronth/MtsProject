@@ -39,6 +39,11 @@ const CreateOrder = () => {
   const [calendarFlag, setCalendarFlag] = useState(false);
   const [modalWindowFlag, setModalWindowFlag] = useState(false);
 
+  const isWeekday = (date) => {
+    const day = new Date(date).getDay();
+    return day !== 0 && day !== 6;
+  };
+
   const onChange = async (dates) => {
     const [start, end] = dates;
     if (maxDate < start) {
@@ -46,20 +51,25 @@ const CreateOrder = () => {
         .toString()
         .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
       await getMenuIdForParent(qparametr).then((data) => {
-        const tempEndDate = data[0].endDate.split('-');
-        const tempStartDate = data[0].startDate.split('-');
-        setMaxDate(
-          new Date(`${tempEndDate[0]}/${tempEndDate[1]}/${tempEndDate[2]}`)
-        );
-        setMinDate(
-          new Date(
-            `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
-          )
-        );
-        qparametr = `?menuId=${data[0].id}`;
-        getCurrentMenuForParent(qparametr).then((menu) => {
-          setAllDishesList(menu);
-        });
+        console.log(data);
+        if (data.length === 0) {
+          alert('На данную дату меню не готово');
+        } else {
+          const tempEndDate = data[0].endDate.split('-');
+          const tempStartDate = data[0].startDate.split('-');
+          setMaxDate(
+            new Date(`${tempEndDate[0]}/${tempEndDate[1]}/${tempEndDate[2]}`)
+          );
+          setMinDate(
+            new Date(
+              `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
+            )
+          );
+          qparametr = `?menuId=${data[0].id}`;
+          getCurrentMenuForParent(qparametr).then((menu) => {
+            setAllDishesList(menu);
+          });
+        }
       });
       console.log(start);
     }
@@ -222,6 +232,7 @@ const CreateOrder = () => {
                 inline
                 showDisabledMonthNavigation
                 onClick={(e) => e.stopPropagation()}
+                filterDate={isWeekday}
                 // locale="ru"
               />
             )}
@@ -234,6 +245,8 @@ const CreateOrder = () => {
                 alert('Выберите ребёнка/детей');
               } else if (!selectedDishesList.length) {
                 alert('Выберите блюда для заказа');
+              } else if (endDate === null) {
+                setEndDate(startDate);
               } else {
                 setModalWindowFlag(true);
                 document.body.style.overflow = 'hidden';

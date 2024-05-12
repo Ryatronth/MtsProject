@@ -21,6 +21,12 @@ const ViewMenu = () => {
   const [calendarFlag, setCalendarFlag] = useState(false);
   const [dishCount, setDishCount] = useState([]);
 
+  const isWeekday = (date) => {
+    const day = new Date(date).getDay();
+    console.log(day);
+    return day !== 0 && day !== 6;
+  };
+
   const handlePDF = () => {
     navigate(PDF_ROUTE, {
       state: { data: dishCount, group: selectGroup },
@@ -54,23 +60,27 @@ const ViewMenu = () => {
       .padStart(2, '0')}-${dates.getDate().toString().padStart(2, '0')}`;
 
     await getOrdersForWorker(qparametr).then((data) => {
-      setAllData(data);
-      setDataByGroup(data[selectGroup]);
-      const dishCounts = {};
-      data[selectGroup].forEach((order) => {
-        order.dishes.forEach((dish) => {
-          if (dishCounts[dish.id]) {
-            dishCounts[dish.id].count++;
-          } else {
-            dishCounts[dish.id] = {
-              id: dish.id,
-              name: dish.name,
-              count: 1,
-            };
-          }
+      if (Object.keys(data).length === 0) {
+        alert('Групп нет!');
+      } else {
+        setAllData(data);
+        setDataByGroup(data[selectGroup]);
+        const dishCounts = {};
+        data[selectGroup].forEach((order) => {
+          order.dishes.forEach((dish) => {
+            if (dishCounts[dish.id]) {
+              dishCounts[dish.id].count++;
+            } else {
+              dishCounts[dish.id] = {
+                id: dish.id,
+                name: dish.name,
+                count: 1,
+              };
+            }
+          });
         });
-      });
-      setDishCount(Object.values(dishCounts));
+        setDishCount(Object.values(dishCounts));
+      }
     });
   };
 
@@ -82,26 +92,31 @@ const ViewMenu = () => {
       .padStart(2, '0')}-${selectDate.getDate().toString().padStart(2, '0')}`;
 
     getOrdersForWorker(qparametr).then((data) => {
-      let groupList = Object.keys(data);
-      setAllGroupList(groupList);
-      setAllData(data);
-      setSelectGroup(groupList[0]);
-      setDataByGroup(data[groupList[0]]);
-      const dishCounts = {};
-      data[groupList[0]].forEach((order) => {
-        order.dishes.forEach((dish) => {
-          if (dishCounts[dish.id]) {
-            dishCounts[dish.id].count++;
-          } else {
-            dishCounts[dish.id] = {
-              id: dish.id,
-              name: dish.name,
-              count: 1,
-            };
-          }
+      console.log(Object.keys(data).length);
+      if (Object.keys(data).length === 0) {
+        alert('Групп нет');
+      } else {
+        let groupList = Object.keys(data);
+        setAllGroupList(groupList);
+        setAllData(data);
+        setSelectGroup(groupList[0]);
+        setDataByGroup(data[groupList[0]]);
+        const dishCounts = {};
+        data[groupList[0]].forEach((order) => {
+          order.dishes.forEach((dish) => {
+            if (dishCounts[dish.id]) {
+              dishCounts[dish.id].count++;
+            } else {
+              dishCounts[dish.id] = {
+                id: dish.id,
+                name: dish.name,
+                count: 1,
+              };
+            }
+          });
         });
-      });
-      setDishCount(Object.values(dishCounts));
+        setDishCount(Object.values(dishCounts));
+      }
     });
   }, []);
 
@@ -167,6 +182,7 @@ const ViewMenu = () => {
                 inline
                 showDisabledMonthNavigation
                 onClick={(e) => e.stopPropagation()}
+                filterDate={isWeekday}
                 // locale="ru"
               />
             )}
@@ -178,7 +194,7 @@ const ViewMenu = () => {
         <Button
           variant="success"
           className={`${styles.savePdf}`}
-          disabled={!dataByGroup.length}
+          disabled={dataByGroup && !dataByGroup.length}
           onClick={async () => handlePDF()}
         >
           Сформировать PDF

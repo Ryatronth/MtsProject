@@ -50,7 +50,7 @@ const WorkWithDishes = observer(() => {
         <div
           className={`d-flex flex-column justify-content-center align-items-center`}
         >
-          <h2 style={{ marginBottom: '25px' }}>Завтрак</h2>
+          <h2 style={{ marginBottom: '25px' }}>ЗАВТРАК</h2>
           <div style={{ width: '1268px' }}>
             <ShowDishesToEdit
               selectedTime="BREAKFAST"
@@ -66,7 +66,7 @@ const WorkWithDishes = observer(() => {
               setDishesList={setDishesList}
             />
           </div>
-          <h2 style={{ marginBottom: '25px' }}>Полдник</h2>
+          <h2 style={{ marginBottom: '25px' }}>ПОЛДНИК</h2>
           <div style={{ width: '1268px' }}>
             <ShowDishesToEdit
               selectedTime="SNACK"

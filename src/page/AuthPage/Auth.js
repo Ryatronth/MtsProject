@@ -40,8 +40,7 @@ const Auth = observer(() => {
         navigate(router[jwtDecode(user.token).role]);
       }
     } catch (e) {
-      console.log(e);
-      alert(e.response);
+      alert(e.response.data.message);
     }
   };
 

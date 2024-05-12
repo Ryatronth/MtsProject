@@ -9,6 +9,10 @@ const ShowChildByGroupToView = ({ mainData, date }) => {
   const [modalWindowFlag, setModalWindowFlag] = useState(false);
   const [modalWindowInfo, setModalWindowInfo] = useState(false);
 
+  if (!mainData) {
+    return <div>Ни одной группы нет</div>;
+  }
+
   if (!mainData.length) {
     return <div>У группы нет блюд</div>;
   }

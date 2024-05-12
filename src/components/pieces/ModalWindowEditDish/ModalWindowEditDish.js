@@ -3,7 +3,7 @@ import exit from '../../../assets/exit.png';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import downArrow from '../../../assets/downArrow.png';
 import { updateDish } from '../../../http/userAPI';
-import ico from '../../../assets/childrenPP.png';
+import ico from '../../../assets/worker/ico-mainDish.png';
 import { observer } from 'mobx-react-lite';
 import styles from './ModalWindowEditDish.module.css';
 
@@ -14,6 +14,7 @@ const ModalWindowEditDish = observer(
     const [price, setPrice] = useState(dishData.price);
     const [category, setCategory] = useState(dishData.category.toLowerCase());
     const [image, setImage] = useState();
+    const [imageSrc, setImageSrc] = useState(dishData.imageUrl);
 
     const drowing = async (eve) => {
       const choosedFile = eve.target.files[0];
@@ -70,6 +71,7 @@ const ModalWindowEditDish = observer(
     };
 
     useEffect(() => {
+      console.log(dishData);
       const loadImage = async () => {
         const response = await fetch(dishData.imageUrl);
         const blob = await response.blob();
@@ -100,7 +102,8 @@ const ModalWindowEditDish = observer(
               <Image
                 className={`${styles.img} input__picture`}
                 alt=""
-                src={dishData.imageUrl}
+                src={imageSrc}
+                onError={() => setImageSrc(ico)}
               />
               <input
                 type="file"
@@ -168,13 +171,13 @@ const ModalWindowEditDish = observer(
                   </Dropdown.Toggle>
                   <Dropdown.Menu style={{ width: '263px' }}>
                     <Dropdown.Item onClick={() => setCategory('breakfast')}>
-                      breakfast
+                      Завтрак
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => setCategory('lunch')}>
-                      lunch
+                      Обед
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => setCategory('snack')}>
-                      snack
+                      Полдник
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
