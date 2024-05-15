@@ -4,6 +4,7 @@ import com.example.backend.dining.payload.dto.ChildDTO;
 import com.example.backend.dining.payload.dto.GroupDTO;
 import com.example.backend.dining.payload.dto.ParentDTO;
 import com.example.backend.dining.service.ChildService;
+import com.example.backend.dining.service.CsvService;
 import com.example.backend.dining.service.GroupService;
 import com.example.backend.dining.service.ParentService;
 import com.example.backend.dining.validator.groups.ValidForCreate;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +23,7 @@ public class AdminController {
     private final GroupService groupService;
     private final ChildService childService;
     private final ParentService parentService;
+    private final CsvService csvService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/parents")
@@ -68,15 +71,15 @@ public class AdminController {
         return ResponseEntity.ok(parentService.create(data));
     }
 
-//    @PostMapping("/create/child/csv")
-//    public ResponseEntity<?> createChildFromCsv(@RequestParam("file") MultipartFile file) {
-//        return ResponseEntity.ok(csvUserCreationService.readFile(file, ChildDTO.class, creationService::createChild));
-//    }
-//
-//    @PostMapping("/create/parents/csv")
-//    public ResponseEntity<?> createUsersFromCsv(@RequestParam("file") MultipartFile file) {
-//        return ResponseEntity.ok(csvUserCreationService.readFile(file, ParentDTO.class, creationService::createParent));
-//    }
+    @PostMapping("/create/child/csv")
+    public ResponseEntity<?> createChildFromCsv(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(csvService.processChildCsv(file));
+    }
+
+    @PostMapping("/create/parents/csv")
+    public ResponseEntity<?> createParentsFromCsv(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(csvService.processParentCsv(file));
+    }
 
     // Изменение -------------------------------------------------------------------------------------------------------
     @PutMapping("/update/parent/{parentId}")

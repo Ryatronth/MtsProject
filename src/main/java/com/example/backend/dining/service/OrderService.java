@@ -56,7 +56,7 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
 
     @Override
     public CreationResponse<Order> create(OrderDTO data) {
-        if (data.getDate().isBefore(LocalDate.now())) throw new CreationException("Невозможно составить заказ на данную дату");
+        if (data.getDate().isBefore(LocalDate.now()) || data.getDate().isEqual(LocalDate.now())) throw new CreationException("Невозможно составить заказ на данную дату");
         CurrentMenu menu = currentMenuRepository.findMenuByDate(data.getDate()).orElseThrow(() -> new CreationException("Невозможно составить заказ на данную дату"));
         Child child = childRepository.findById(data.getChildId()).orElseThrow(() -> new CreationException("Ребенок не найден"));
 
@@ -129,7 +129,7 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
                         .build();
             }
 
-            if (order.getDate().isBefore(LocalDate.now())) throw new ModificationException("Невозможно изменить заказ на данную дату");
+            if (order.getDate().isBefore(LocalDate.now()) || order.getDate().isEqual(LocalDate.now())) throw new ModificationException("Невозможно изменить заказ на данную дату");
             CurrentMenu menu = currentMenuRepository.findById(data.getMenuId()).orElseThrow(() -> new ModificationException("Меню не найдено"));
 
             if (!data.getToDelete().isEmpty()) {
