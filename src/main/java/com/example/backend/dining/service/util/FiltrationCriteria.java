@@ -1,4 +1,4 @@
-package com.example.backend.dining.service.entityProcessing.entityFilter;
+package com.example.backend.dining.service.util;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;

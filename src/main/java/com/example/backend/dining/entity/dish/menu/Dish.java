@@ -35,6 +35,6 @@ public class Dish {
     private boolean isRemoved;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dish")
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
     private Set<MenuDish> menuDishes;
 }

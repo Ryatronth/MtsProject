@@ -2,12 +2,10 @@ package com.example.backend.dining.entity.dish.order;
 
 import com.example.backend.dining.entity.dish.menu.MenuDish;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

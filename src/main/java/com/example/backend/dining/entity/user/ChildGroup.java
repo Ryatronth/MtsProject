@@ -18,6 +18,6 @@ public class ChildGroup {
     private String id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "childGroup", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "childGroup", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Child> children;
 }

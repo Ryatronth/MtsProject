@@ -3,10 +3,9 @@ package com.example.backend.dining.controller;
 import com.example.backend.dining.payload.dto.DishDTO;
 import com.example.backend.dining.payload.dto.MenuDTO;
 import com.example.backend.dining.payload.dto.UpdateMenuDTO;
-import com.example.backend.dining.service.entityProcessing.DeleteEntityService;
-import com.example.backend.dining.service.entityProcessing.entityCreation.EntityCreationService;
-import com.example.backend.dining.service.entityProcessing.entityFilter.EntityFilterService;
-import com.example.backend.dining.service.entityProcessing.entityModification.EntityModificationService;
+import com.example.backend.dining.service.DishService;
+import com.example.backend.dining.service.MenuService;
+import com.example.backend.dining.service.OrderService;
 import com.example.backend.dining.validator.groups.ValidForCreate;
 import com.example.backend.dining.validator.groups.ValidForUpdate;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +20,9 @@ import java.util.HashSet;
 @RequestMapping("/api/user/worker")
 @RequiredArgsConstructor
 public class WorkerController {
-    private final EntityCreationService entityCreationService;
-    private final EntityModificationService entityModificationService;
-    private final DeleteEntityService deleteEntityService;
-    private final EntityFilterService entityFilterService;
+    private final DishService dishService;
+    private final MenuService menuService;
+    private final OrderService orderService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/dishes")
@@ -33,61 +31,55 @@ public class WorkerController {
                                        @RequestParam(name = "priceFrom", required = false) Double priceFrom,
                                        @RequestParam(name = "priceTo", required = false) Double priceTo,
                                        @RequestParam(name = "exclude", required = false) HashSet<Long> indexes) {
-        return ResponseEntity.ok(entityFilterService
-                .getDishes("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo, "exclude", indexes,
+        return ResponseEntity.ok(dishService
+                .filtrate("id", id, "name", name, "priceFrom", priceFrom, "priceTo", priceTo, "exclude", indexes,
                         "isRemoved", false));
     }
 
-    @GetMapping("/get/menu")
+    @GetMapping("/get/menus")
     public ResponseEntity<?> getMenu(@RequestParam(name = "id", required = false) Long id,
                                      @RequestParam(name = "endDate", required = false) LocalDate endDate,
                                      @RequestParam(name = "startDate", required = false) LocalDate startDate,
                                      @RequestParam(name = "date", required = false) LocalDate date) {
-        return ResponseEntity.ok(entityFilterService.getMenu("id", id, "endDate", endDate, "startDate", startDate,
+        return ResponseEntity.ok(menuService.filtrate("id", id, "endDate", endDate, "startDate", startDate,
                 "date", date));
     }
 
-    @GetMapping("/get/menu/dishes")
-    public ResponseEntity<?> getMenuDishes(@RequestParam(name = "id", required = false) Long id,
-                                           @RequestParam(name = "menuId", required = false) Long menuId) {
-        return ResponseEntity.ok(entityFilterService.getMenuDish("id", id, "currentMenu", menuId));
+    @GetMapping("/get/menu/{menuId}/dishes")
+    public ResponseEntity<?> getMenuDishes(@PathVariable Long menuId) {
+        return ResponseEntity.ok(menuService.getMenuDishes(menuId));
     }
 
-    @GetMapping("/get/orders")
-    public ResponseEntity<?> getOrders(@RequestParam(name = "date") LocalDate date) {
-        return ResponseEntity.ok(entityFilterService.getOrdersToWorker(date));
+    @GetMapping("/get/orders/date/{date}")
+    public ResponseEntity<?> getOrders(@PathVariable LocalDate date) {
+        return ResponseEntity.ok(orderService.getOrdersToWorker(date));
     }
 
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute @Validated(ValidForCreate.class) DishDTO data) {
-        return ResponseEntity.ok(entityCreationService.createDish(data));
+        return ResponseEntity.ok(dishService.create(data));
     }
 
     @PostMapping("/create/menu")
     public ResponseEntity<?> createMenu(@RequestBody @Validated MenuDTO data) {
-        return ResponseEntity.ok(entityCreationService.createMenu(data));
+        return ResponseEntity.ok(menuService.create(data));
     }
 
     // Изменение -------------------------------------------------------------------------------------------------------
-    @PostMapping("/update/dish/{dishId}")
+    @PutMapping("/update/dish/{dishId}")
     public ResponseEntity<?> updateDish(@PathVariable Long dishId, @ModelAttribute @Validated(ValidForUpdate.class) DishDTO data) {
-        return ResponseEntity.ok(entityModificationService.updateDish(dishId, data));
+        return ResponseEntity.ok(dishService.modify(dishId, data));
     }
 
-    @PostMapping("/update/menu/{menuId}")
+    @PutMapping("/update/menu/{menuId}")
     public ResponseEntity<?> updateMenu(@PathVariable Long menuId, @RequestBody @Validated UpdateMenuDTO data) {
-        return ResponseEntity.ok(entityModificationService.updateMenu(menuId, data));
+        return ResponseEntity.ok(menuService.modify(menuId, data));
     }
 
     // Удаление --------------------------------------------------------------------------------------------------------
     @DeleteMapping("/delete/dish/{dishId}")
     public ResponseEntity<?> deleteDish(@PathVariable Long dishId) {
-        return ResponseEntity.ok(deleteEntityService.deleteDish(dishId));
+        return ResponseEntity.ok(dishService.delete(dishId));
     }
-
-//    @DeleteMapping("/delete/menu/{menuId}")
-//    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
-//        return ResponseEntity.ok(deleteEntityService.deleteMenu(menuId));
-//    }
 }

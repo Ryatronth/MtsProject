@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -17,4 +19,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query("SELECT o FROM Order o WHERE (o.date BETWEEN :startDate AND :endDate)")
     Set<Order> findOverlappingOrders(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT o FROM Order o JOIN FETCH o.details WHERE o.id = :orderId")
+    Optional<Order> findOrderByIdFetch(Long orderId);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.details WHERE o.date = :date")
+    List<Order> findOrdersByDateFetch(@Param("date") LocalDate date);
 }

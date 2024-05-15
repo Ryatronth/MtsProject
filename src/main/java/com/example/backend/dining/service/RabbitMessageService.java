@@ -8,10 +8,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MenuChangeMessageService {
+public class RabbitMessageService {
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendMenuChange(List<Long> childrenId) {
+    public void sendRefreshOrders(List<Long> childrenId) {
         rabbitTemplate.convertAndSend("application", "menu.change", childrenId);
     }
 }

@@ -20,8 +20,10 @@ public class Notification {
 
     private String message;
 
+    @Temporal(TemporalType.DATE)
     private LocalDate date;
 
+    @Temporal(TemporalType.TIME)
     private LocalTime time;
 
     @ManyToOne

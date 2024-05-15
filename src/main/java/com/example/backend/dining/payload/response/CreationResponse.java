@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CreationResponse {
+public class CreationResponse<T> {
     private ResponseStatus status;
     private String message;
-    private Object object;
+    private T object;
 }

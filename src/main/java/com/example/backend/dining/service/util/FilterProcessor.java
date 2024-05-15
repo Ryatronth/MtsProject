@@ -1,4 +1,4 @@
-package com.example.backend.dining.service.entityProcessing.entityFilter;
+package com.example.backend.dining.service.util;
 
 import com.example.backend.dining.controller.exception.customException.FilterException;
 import jakarta.persistence.criteria.Predicate;

@@ -31,11 +31,11 @@ public class Child {
     private ChildGroup childGroup;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Parent parent;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "child", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "child", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Order> orders;
 }

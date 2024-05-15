@@ -6,6 +6,7 @@ import com.example.backend.dining.controller.exception.customException.ImageProc
 import com.example.backend.dining.controller.exception.customException.ModificationException;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import com.example.backend.totalPayload.response.ExceptionResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
-    @ExceptionHandler({CreationException.class, ModificationException.class, FilterException.class, ImageProcessException.class})
+    @ExceptionHandler({CreationException.class, ModificationException.class, FilterException.class, ImageProcessException.class, EntityNotFoundException.class})
     public ResponseEntity<?> handleEntityException(Exception ex) {
         return ResponseEntity.status(400).body(ExceptionResponse.builder()
                 .status(ResponseStatus.ERROR)

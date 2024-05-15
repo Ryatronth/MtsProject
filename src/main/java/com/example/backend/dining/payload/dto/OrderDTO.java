@@ -14,11 +14,14 @@ import java.util.Set;
 @ToString
 public class OrderDTO {
     @NotNull(message = "не должно быть равно null")
+    private Long menuId;
+
+    @NotNull(message = "не должно быть равно null")
     private Long childId;
 
     @NotNull(message = "не должно быть равно null")
     private LocalDate date;
 
     @NotNull(message = "не должно быть равно null")
-    private Set<Long> menuDishes;
+    private Set<Long> dishes;
 }

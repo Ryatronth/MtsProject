@@ -25,6 +25,6 @@ public class Parent {
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Child> children;
 }
