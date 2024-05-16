@@ -1,6 +1,7 @@
 package com.example.backend.dining.entity.dish.menu;
 
 import com.example.backend.dining.entity.dish.Category;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,4 +38,12 @@ public class Dish {
     @JsonIgnore
     @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
     private Set<MenuDish> menuDishes;
+
+    @JsonGetter("imageUrl")
+    public String getImageUrl() {
+        if (imageUrl != null) {
+            return "http://localhost:8080" + imageUrl.substring(2);
+        }
+        return null;
+    }
 }

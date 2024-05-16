@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface CurrentMenuRepository extends JpaRepository<CurrentMenu, Long>, JpaSpecificationExecutor<CurrentMenu> {
-    @Query("SELECT cm FROM CurrentMenu cm JOIN FETCH cm.dishes WHERE cm.id = :menuId")
-    Optional<CurrentMenu> findMenuByIdFetch(Long menuId);
     @Query("SELECT cm FROM CurrentMenu cm WHERE :date BETWEEN cm.startDate and cm.endDate")
     Optional<CurrentMenu> findMenuByDate(LocalDate date);
 }

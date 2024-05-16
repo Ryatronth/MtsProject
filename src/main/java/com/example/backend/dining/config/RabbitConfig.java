@@ -16,9 +16,12 @@ public class RabbitConfig {
     @Bean
     public Declarables declarables() {
         Queue menuQueue = new Queue("menu.change", false);
+        Queue ordersDeleteQueue = new Queue("orders.delete", false);
         DirectExchange exchange = new DirectExchange("application");
         return new Declarables(menuQueue,
+                ordersDeleteQueue,
                 exchange,
-                BindingBuilder.bind(menuQueue).to(exchange).with("menu.change"));
+                BindingBuilder.bind(menuQueue).to(exchange).with("menu.change"),
+                BindingBuilder.bind(ordersDeleteQueue).to(exchange).with("orders.delete"));
     }
 }

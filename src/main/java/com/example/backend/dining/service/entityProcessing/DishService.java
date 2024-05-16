@@ -1,4 +1,4 @@
-package com.example.backend.dining.service;
+package com.example.backend.dining.service.entityProcessing;
 
 import com.example.backend.dining.controller.exception.customException.ModificationException;
 import com.example.backend.dining.entity.dish.menu.CurrentMenu;
@@ -9,6 +9,7 @@ import com.example.backend.dining.payload.dto.UpdateMenuDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.dining.payload.response.DeleteResponse;
 import com.example.backend.dining.payload.response.ModificationResponse;
+import com.example.backend.dining.service.ImageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,7 +34,7 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
     public CreationResponse<Dish> create(DishDTO data) {
         String pathToImage = imageService.saveImage(data.getImage());
 
-        CreationResponse<Dish> response = EntityBuilder.createEntity(data, dishRepository,
+        return EntityBuilder.createEntity(data, dishRepository,
                 dto -> Dish.builder()
                         .name(data.getName())
                         .composition(data.getComposition())
@@ -45,15 +46,6 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
                 condition -> dishRepository.findByName(data.getName()).isPresent(),
                 "Блюдо успешно создано",
                 "Данное блюдо уже существует");
-
-        changeImagePath(response);
-        return response;
-    }
-
-    private void changeImagePath(CreationResponse<Dish> response) {
-        Dish dish = response.getObject();
-        dish.setImageUrl(imageService.refactorPath(dish.getImageUrl()));
-        response.setObject(dish);
     }
 
     @Override
@@ -100,8 +92,6 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
             }
 
             dishRepository.save(dish);
-
-            dish.setImageUrl(imageService.refactorPath(dish.getImageUrl()));
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)

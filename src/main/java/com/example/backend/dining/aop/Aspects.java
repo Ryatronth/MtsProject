@@ -33,8 +33,8 @@ public class Aspects {
     }
 
     @After("com.example.backend.dining.aop.Pointcuts.pointNotification()")
-    public void notificationAdviceReturn(JoinPoint joinPoint) {
-        log.info("Создано уведомление: {}", joinPoint.getArgs());
+    public void notificationAdvice(JoinPoint pjp) {
+        log.info("Создано уведомление: {}", pjp.getSignature().getName());
     }
 
     @AfterThrowing(pointcut = "com.example.backend.dining.aop.Pointcuts.pointException()", throwing = "exception")

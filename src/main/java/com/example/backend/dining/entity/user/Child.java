@@ -31,7 +31,7 @@ public class Child {
     private ChildGroup childGroup;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Parent parent;
 

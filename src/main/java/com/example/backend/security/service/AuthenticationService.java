@@ -8,6 +8,7 @@ import com.example.backend.dining.entity.user.User;
 import com.example.backend.dining.entity.user.repository.UserRepository;
 import com.example.backend.security.payload.request.LoginRequest;
 import com.example.backend.security.payload.request.RefreshTokenRequest;
+import com.example.backend.security.payload.response.RefreshResponse;
 import com.example.backend.security.payload.response.TokenResponse;
 import com.example.backend.security.payload.response.InfoResponse;
 import com.example.backend.totalPayload.enums.ResponseStatus;
@@ -69,7 +70,7 @@ public class AuthenticationService {
         }
     }
 
-    public TokenResponse refreshAccessToken(RefreshTokenRequest request) {
+    public RefreshResponse refreshAccessToken(RefreshTokenRequest request) {
         String refreshToken = request.getRefreshToken();
         Token token = tokenRepository.findByToken(refreshToken).orElseThrow(() -> new RefreshException("Токен не найден"));
 
@@ -77,11 +78,10 @@ public class AuthenticationService {
 
         String accessToken = jwtService.generateAccessToken(user);
 
-        return TokenResponse.builder()
+        return RefreshResponse.builder()
                 .status(ResponseStatus.SUCCESS)
                 .message("Токен успешно создан")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
     }
 

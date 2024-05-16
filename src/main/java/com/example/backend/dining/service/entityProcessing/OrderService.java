@@ -1,4 +1,4 @@
-package com.example.backend.dining.service;
+package com.example.backend.dining.service.entityProcessing;
 
 import com.example.backend.dining.controller.exception.customException.CreationException;
 import com.example.backend.dining.controller.exception.customException.ModificationException;
@@ -20,16 +20,19 @@ import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.dining.payload.response.DeleteResponse;
 import com.example.backend.dining.payload.response.ModificationResponse;
 import com.example.backend.dining.payload.response.OrderWorkerResponse;
+import com.example.backend.dining.service.RabbitMessageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -154,9 +157,9 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
         }
     }
 
-    public Set<OrderMenu> getOrderMenu(Long orderId) {
+    public Set<Dish> getOrderMenu(Long orderId) {
         Order order = orderRepository.findOrderByIdFetch(orderId).orElseThrow(() -> new EntityNotFoundException("Заказ не найден"));
-        return order.getDetails();
+        return order.getDetails().stream().map(o -> o.getMenuDish().getDish()).collect(Collectors.toSet());
     }
 
     private void addDishes(Order order, CurrentMenu menu, Set<Long> toAdd) {
@@ -200,11 +203,12 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
                 .build();
     }
 
+    @RabbitListener(queues = "orders.delete")
     public void deleteInvalidOrders(CurrentMenu menu) {
         Set<Order> orders = orderRepository.findOverlappingOrders(LocalDate.now(), menu.getEndDate());
         if (orders.isEmpty()) return;
 
-        rabbitMessageService.sendRefreshOrders(orders.stream().map(o -> o.getChild().getId()).toList());
+        rabbitMessageService.sendRefreshOrders(orders.stream().map(o -> o.getChild().getParent().getUser()).toList());
 
         orderRepository.deleteAll(orders);
     }

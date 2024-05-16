@@ -1,4 +1,4 @@
-package com.example.backend.dining.service;
+package com.example.backend.dining.service.entityProcessing;
 
 import com.example.backend.dining.controller.exception.customException.CreationException;
 import com.example.backend.dining.controller.exception.customException.ModificationException;
@@ -12,6 +12,7 @@ import com.example.backend.dining.payload.dto.MenuDTO;
 import com.example.backend.dining.payload.dto.UpdateMenuDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.dining.payload.response.ModificationResponse;
+import com.example.backend.dining.service.RabbitMessageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +32,7 @@ public class MenuService implements EntityCreator<CurrentMenu, MenuDTO>, EntityF
     private final MenuDishRepository menuDishRepository;
     private final DishRepository dishRepository;
 
-    private final OrderService orderService;
+    private final RabbitMessageService rabbitMessageService;
 
     @Transactional
     @Override
@@ -92,7 +93,7 @@ public class MenuService implements EntityCreator<CurrentMenu, MenuDTO>, EntityF
     }
 
     public Set<MenuDish> getMenuDishes(Long menuId) {
-        CurrentMenu menu = currentMenuRepository.findMenuByIdFetch(menuId).orElseThrow(() -> new EntityNotFoundException("Меню не найдено"));
+        CurrentMenu menu = currentMenuRepository.findById(menuId).orElseThrow(() -> new EntityNotFoundException("Меню не найдено"));
         return menu.getDishes();
     }
 
@@ -111,7 +112,7 @@ public class MenuService implements EntityCreator<CurrentMenu, MenuDTO>, EntityF
 
             if (!data.getToDelete().isEmpty()) {
                 deleteDishes(currentMenu, data.getToDelete());
-                orderService.deleteInvalidOrders(currentMenu);
+                rabbitMessageService.sendDeleteOrders(currentMenu);
             }
 
             if (!data.getToAdd().isEmpty()) {

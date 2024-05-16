@@ -26,6 +26,6 @@ public class CurrentMenu {
     private LocalDate endDate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "currentMenu", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "currentMenu", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<MenuDish> dishes;
 }

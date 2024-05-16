@@ -1,4 +1,4 @@
-package com.example.backend.dining.service;
+package com.example.backend.dining.service.entityProcessing;
 
 import com.example.backend.dining.controller.exception.customException.CreationException;
 import com.example.backend.dining.controller.exception.customException.ModificationException;

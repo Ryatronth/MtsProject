@@ -14,15 +14,15 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ChildDTO {
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotBlank(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private String name;
 
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotBlank(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private String surname;
 
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]*)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]*)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     private String patronymic;
 
     @Null(groups = {ValidForCreate.class})

@@ -31,21 +31,22 @@ public class ParentDTO {
     @Null(groups = {ValidForCreate.class})
     private String imageUrl;
 
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotBlank(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private String name;
 
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]+)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotBlank(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private String surname;
 
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -]*)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
+    @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})([а-яА-Я -ёЁ]*)(?<!\\s)$", message = "должно содержать только кириллицу, пробел либо дефис", groups = {ValidForCreate.class, ValidForUpdate.class})
     private String patronymic;
 
     @Pattern(regexp = "\\+7[0-9]{10}", message = "должно быть в формате: +7xxxxxxxxxx", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotBlank(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private String phone;
 
+    @Size(min = 1, message = "вы должны выбрать ребенка", groups = {ValidForCreate.class, ValidForUpdate.class})
     @NotNull(message = "не должно быть пустым", groups = {ValidForCreate.class})
     private List<Long> children;
 

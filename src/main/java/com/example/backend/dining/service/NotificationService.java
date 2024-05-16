@@ -1,13 +1,16 @@
 package com.example.backend.dining.service;
 
 import com.example.backend.dining.controller.exception.customException.CreationException;
+import com.example.backend.dining.entity.dish.menu.CurrentMenu;
 import com.example.backend.dining.entity.notification.Notification;
 import com.example.backend.dining.entity.notification.NotificationRepository;
-import com.example.backend.dining.entity.user.Child;
+import com.example.backend.dining.entity.user.Parent;
 import com.example.backend.dining.entity.user.User;
-import com.example.backend.dining.entity.user.repository.ChildRepository;
 import com.example.backend.dining.entity.user.repository.UserRepository;
 import com.example.backend.dining.payload.response.DeleteResponse;
+import com.example.backend.dining.service.entityProcessing.MenuService;
+import com.example.backend.dining.service.entityProcessing.ParentService;
+import com.example.backend.security.entity.RoleName;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -24,10 +27,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class NotificationService {
     private final UserRepository userRepository;
-    private final ChildRepository childRepository;
     private final NotificationRepository notificationRepository;
 
    private final MenuService menuService;
+   private final ParentService parentService;
 
     public void createNotification(User user, String message) {
         LocalTime time = LocalTime.now().withNano(0);
@@ -59,14 +62,9 @@ public class NotificationService {
     }
 
     @RabbitListener(queues = "menu.change")
-    public void handleMenuChangedEvent(List<Long> childrenId) {
-        childrenId.forEach(id -> {
-            Child child = childRepository.findById(id).orElseThrow(() -> new AmqpRejectAndDontRequeueException("Ребенок не найден"));
-            if (child.getParent() == null) {
-                throw new AmqpRejectAndDontRequeueException("У ребенка должен быть определен родитель");
-            }
-            User user = userRepository.findById(child.getParent().getId()).orElseThrow(() -> new AmqpRejectAndDontRequeueException("Родитель не найден"));
-
+    public void handleMenuChangedEvent(List<User> users) {
+        users.forEach(user -> {
+            if (user == null) throw new AmqpRejectAndDontRequeueException("У ребенка должен быть определен родитель");
             createNotification(user, "Меню было изменено. Пожалуйста, составьте меню для своих детей заново.");
         });
     }
@@ -81,16 +79,16 @@ public class NotificationService {
         }
     }
 
-//    @Scheduled(cron = "0 0 9 * * *")
-//    public void sendPaymentNotify() {
-//        LocalDate currentDate = LocalDate.now();
-//        List<CurrentMenu> menus = entityFilterService.getMenu("date", currentDate);
-//        if (!menus.isEmpty()) {
-//            CurrentMenu menu = menus.getFirst();
-//            if (menu.getEndDate().equals(currentDate)) {
-//                List<User> users = entityFilterService.getParents("role", RoleName.PARENT);
-//                users.forEach(o -> createNotification(o, "Не забудьте оплатить заказы ваших детей."));
-//            }
-//        }
-//    }
+    @Scheduled(cron = "0 0 9 * * *")
+    public void sendPaymentNotify() {
+        LocalDate currentDate = LocalDate.now();
+        List<CurrentMenu> menus = menuService.filtrate("date", currentDate);
+        if (!menus.isEmpty()) {
+            CurrentMenu menu = menus.getFirst();
+            if (menu.getEndDate().equals(currentDate)) {
+                List<User> users = parentService.filtrate("role", RoleName.PARENT).stream().map(Parent::getUser).toList();
+                users.forEach(o -> createNotification(o, "Не забудьте оплатить заказы ваших детей."));
+            }
+        }
+    }
 }

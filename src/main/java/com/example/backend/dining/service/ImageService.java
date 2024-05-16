@@ -37,8 +37,4 @@ public class ImageService {
         File oldImage = new File(path);
         oldImage.delete();
     }
-
-    public String refactorPath(String path) {
-        return "http://localhost:8080" + path.substring(2);
-    }
 }
