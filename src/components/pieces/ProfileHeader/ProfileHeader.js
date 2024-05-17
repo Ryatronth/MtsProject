@@ -11,6 +11,12 @@ const ProfileHeader = observer(({ info }) => {
   const { user } = useContext(Context);
   const navigate = useNavigate();
 
+  const role = {
+    ADMIN: 'Администратор',
+    WORKER: 'Работник',
+    PARENT: 'Родитель',
+  };
+
   const logOut = () => {
     localStorage.setItem('token', '');
     user.setUser({});
@@ -35,7 +41,7 @@ const ProfileHeader = observer(({ info }) => {
               {info.surname} {info.name[0]}.{info.patronymic[0]}.
             </p>
             <p style={{ fontWeight: 500, fontSize: 14, color: '#F48104' }}>
-              {info.role}
+              {role[info.role]}
             </p>
           </div>
           <DropdownButton

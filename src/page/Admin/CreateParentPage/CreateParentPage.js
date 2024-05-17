@@ -48,11 +48,11 @@ const CreateParentPage = observer(() => {
   const formatPhoneNumber = (inputStr) => {
     let input = inputStr.replace(/\D/g, '');
     const formats = [
-      { length: 1, format: '$1' },
-      { length: 4, format: '$1 ($2' },
-      { length: 7, format: '$1 ($2) $3' },
-      { length: 9, format: '$1 ($2) $3-$4' },
-      { length: 11, format: '$1 ($2) $3-$4-$5' },
+      { length: 1, format: '+7' },
+      { length: 4, format: '+7 ($2' },
+      { length: 7, format: '+7 ($2) $3' },
+      { length: 9, format: '+7 ($2) $3-$4' },
+      { length: 11, format: '+7 ($2) $3-$4-$5' },
     ];
 
     for (const format of formats) {
@@ -61,7 +61,7 @@ const CreateParentPage = observer(() => {
         (input.length > 11 && format.length === 11)
       ) {
         const formattedInput = input.replace(
-          /^(\d{1,1})(\d{1,3})(\d{0,3})(\d{0,2})(\d{0,2})(\d*)/,
+          /^(\d{0,1})(\d{1,3})(\d{0,3})(\d{0,2})(\d{0,2})(\d*)/,
           format.format
         );
         if (formattedInput !== input) {
@@ -74,44 +74,26 @@ const CreateParentPage = observer(() => {
   };
 
   const clickCreateParent = async () => {
-    try {
-      const fioList = fullName.split(' ');
-      if (fioList.length < 3 || fioList[2] === '') {
-        alert('Введите верный ФИО');
-        fullNameInputRef.current.focus();
-      } else if (phoneNumber.replace(/\D/g, '').length < 11) {
-        alert('Введите правильный номер телефона');
-        phoneNumberInputRef.current.focus();
-      } else if (login.length <= 3) {
-        alert('Логин должен содержать более 3х символов');
-        loginInputRef.current.focus();
-      } else if (password.length <= 5) {
-        alert('Пароль должен содержать более 5и символов');
-        passwordInputRef.current.focus();
-      } else {
-        if (listChild.length) {
-          const user = {
-            username: login,
-            password: password,
-            surname: fioList[0],
-            name: fioList[1],
-            patronymic: fioList[2],
-            phone: phoneNumber,
-            role: 'PARENT',
-            imageUrl: null,
-            children: listChild.map((child) => child.id),
-          };
-          const uwu = await createParent(user);
-          console.log(uwu);
-          alert(uwu.message);
-          navigate(ADMIN_ROUTE);
-        } else {
-          alert('Выберите ребёнка');
-        }
-      }
-    } catch (e) {
-      alert(e);
-    }
+    const fioList = fullName.split(' ');
+    let phone = `+${phoneNumber.replace(/\D/g, '')}`;
+    const user = {
+      username: login,
+      password: password,
+      surname: fioList[0],
+      name: fioList[1],
+      patronymic: fioList[2],
+      phone: phone,
+      role: 'PARENT',
+      imageUrl: null,
+      children: listChild.map((child) => child.id),
+    };
+    await createParent(user)
+      .then((data) => {
+        console.log(data);
+        alert(data.message);
+        navigate(ADMIN_ROUTE);
+      })
+      .catch((e) => alert(e.response.data.message));
   };
 
   useEffect(() => {
@@ -162,7 +144,7 @@ const CreateParentPage = observer(() => {
               <input
                 ref={phoneNumberInputRef}
                 id="inputInfo"
-                type="tel"
+                // type="tel"
                 className={`${styles.inputText}`}
                 style={{
                   maxWidth: '230px',

@@ -48,51 +48,58 @@ export const getDishes = async (qparametr) => {
   return data;
 };
 
-export const getOrdersForWorker = async (qparametr) => {
+export const getOrdersForWorker = async (date) => {
   const { data } = await $authHost.get(
-    `api/user/worker/get/orders${qparametr}`
+    `api/user/worker/get/orders/date/${date}`
   );
   return data;
 };
 
 export const getMenuId = async (qparametr) => {
-  const { data } = await $authHost.get(`api/user/worker/get/menu${qparametr}`);
+  const { data } = await $authHost.get(`api/user/worker/get/menus${qparametr}`);
   return data;
 };
 
 export const getMenuIdForParent = async (qparametr) => {
-  const { data } = await $authHost.get(`api/user/parent/get/menu${qparametr}`);
+  const { data } = await $authHost.get(`api/user/parent/get/menus${qparametr}`);
   return data;
 };
 
-export const getCurrentMenu = async (qparametr) => {
-  const { data } = await $authHost.get(
-    `api/user/worker/get/menu/dishes${qparametr}`
-  );
+export const getCurrentMenu = async (id) => {
+  const { data } = await $authHost.get(`api/user/worker/get/menu/${id}/dishes`);
   return data;
 };
 
-export const getCurrentMenuForParent = async (qparametr) => {
+export const getCurrentMenuForParent = async (menuId) => {
   const { data } = await $authHost.get(
-    `api/user/parent/get/menu/dishes${qparametr}`
+    `api/user/parent/get/menu/${menuId}/dishes`
   );
   return data;
 };
 
 export const getOrderIdForParent = async (qparametr) => {
-  const { data } = await $authHost.get(`api/user/parent/get/order${qparametr}`);
+  const { data } = await $authHost.get(
+    `api/user/parent/get/orders${qparametr}`
+  );
   return data;
 };
 
-export const getOrderForParent = async (qparametr) => {
+export const getOrderForParent = async (orderId) => {
   const { data } = await $authHost.get(
-    `api/user/parent/get/order/dishes${qparametr}`
+    `api/user/parent/get/order/${orderId}/dishes`
   );
   return data;
 };
 
 export const getCurrentMenuId = async (qparametr) => {
   const { data } = await $authHost.post('api/user/worker/get/menu', qparametr);
+  return data;
+};
+
+export const getPayment = async (childId) => {
+  const { data } = await $authHost.get(
+    `api/user/parent/child/${childId}/get/payment`
+  );
   return data;
 };
 
@@ -163,7 +170,7 @@ export const deleteGroup = async (groupId) => {
 
 export const deleteParent = async (parentId) => {
   const { data } = await $authHost.delete(
-    `api/user/admin/delete/user/${parentId}`
+    `api/user/admin/delete/parent/${parentId}`
   );
   return data;
 };
@@ -179,7 +186,7 @@ export const updateChild = async (
   childId,
   { surname, name, patronymic, groupId, parentId, imageUrl }
 ) => {
-  const { data } = await $authHost.post(
+  const { data } = await $authHost.put(
     `api/user/admin/update/child/${childId}`,
     {
       surname,
@@ -194,7 +201,7 @@ export const updateChild = async (
 };
 
 export const updateParent = async (parentId, user) => {
-  const { data } = await $authHost.post(
+  const { data } = await $authHost.put(
     `api/user/admin/update/parent/${parentId}`,
     user
   );
@@ -202,7 +209,7 @@ export const updateParent = async (parentId, user) => {
 };
 
 export const updateDish = async (dishId, formData) => {
-  const { data } = await $authHost.post(
+  const { data } = await $authHost.put(
     `api/user/worker/update/dish/${dishId}`,
     formData
   );
@@ -210,7 +217,7 @@ export const updateDish = async (dishId, formData) => {
 };
 
 export const updateCurrentMenu = async (menuId, dishes) => {
-  const { data } = await $authHost.post(
+  const { data } = await $authHost.put(
     `api/user/worker/update/menu/${menuId}`,
     dishes
   );
@@ -229,7 +236,9 @@ export const refresh = async () => {
   const cookieMap = Object.fromEntries(cookies);
   const refreshToken = cookieMap['token'];
 
-  const { data } = await $token.post('api/user/refresh/all', { refreshToken });
+  const { data } = await $token.post('api/user/refresh/access', {
+    refreshToken,
+  });
   console.log(data);
   localStorage.setItem('token', data.accessToken);
   document.cookie = '';

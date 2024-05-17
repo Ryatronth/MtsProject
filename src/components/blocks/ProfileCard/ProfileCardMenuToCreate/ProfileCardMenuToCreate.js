@@ -7,15 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { WORKER_CREATE_MENU } from '../../../../utils/consts';
 import ReactDatePicker from 'react-datepicker';
 
-const ProfileCardMenuToCreate = ({ setModuleFlag, listData, setListData }) => {
+const ProfileCardMenuToCreate = ({
+  setModuleFlag,
+  newMenuDate,
+  listData,
+  setListData,
+}) => {
   const navigate = useNavigate();
   const [startFlag, setStartFlag] = useState(false);
   const [endFlag, setEndFlag] = useState(false);
-  const [startDate, setStartDate] = useState(
-    new Date(new Date().getTime() + 86400000)
-  );
+  const [startDate, setStartDate] = useState(newMenuDate);
   const [endDate, setEndDate] = useState(
-    new Date(new Date().getTime() + 86400000 * 29)
+    new Date(newMenuDate.getTime() + 86400000 * 29)
   );
 
   const redirToCreate = () => {

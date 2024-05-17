@@ -30,33 +30,23 @@ const ModalWindowCreateDish = observer(
     };
 
     const clickCreateDish = async () => {
-      try {
-        if (name < 2) {
-          alert('Введите корректное название блюда');
-        } else if (!price) {
-          alert('Введите цену блюда');
-        } else if (description < 2) {
-          alert('Введите корректное описание для блюда');
-        } else if (!category) {
-          alert('Выберите категорию блюда');
-        } else if (!image) {
-          alert('Выберите фотографию');
-        } else {
-          const formData = new FormData();
-          formData.append('name', name);
-          formData.append('composition', description);
-          formData.append('price', price);
-          formData.append('category', category.toUpperCase());
-          formData.append('image', image);
-          const uwu = await createDish(formData).then((data) => {
+      if (!price) {
+        alert('Введите цену блюда');
+      } else {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('composition', description);
+        formData.append('price', price);
+        formData.append('category', category.toUpperCase());
+        formData.append('image', image);
+        await createDish(formData)
+          .then((data) => {
             setFlag(false);
             alert(data.message);
             document.body.style.overflow = '';
             setDishesList([...dishesList, data.object]);
-          });
-        }
-      } catch (e) {
-        console.log(e);
+          })
+          .catch((e) => alert(e.response.data.message));
       }
     };
 

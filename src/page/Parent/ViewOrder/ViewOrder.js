@@ -33,10 +33,10 @@ const ViewOrder = observer(() => {
       .padStart(2, '0')}&childId=${child[0].id}`;
     await getOrderIdForParent(qparametr).then((dataId) => {
       if (dataId[0]) {
-        qparametr = `?orderId=${dataId[0].id}`;
-        getOrderForParent(qparametr).then((data) => {
+        const orderId = dataId[0].id;
+        getOrderForParent(orderId).then((data) => {
           console.log(data);
-          setDiahesList(data.map((o) => o.dish));
+          setDiahesList(data);
         });
         setOrderBe(true);
       } else {
@@ -95,9 +95,10 @@ const ViewOrder = observer(() => {
             .padStart(2, '0')}&childId=${dataChild[0].id}`;
           getOrderIdForParent(qparametr).then((dataId) => {
             if (dataId[0]) {
-              qparametr = `?orderId=${dataId[0].id}`;
-              getOrderForParent(qparametr).then((data) => {
-                setDiahesList(data.map((o) => o.dish));
+              const orderId = dataId[0].id;
+              getOrderForParent(orderId).then((data) => {
+                console.log(data);
+                setDiahesList(data);
                 setOrderBe(true);
               });
             } else {

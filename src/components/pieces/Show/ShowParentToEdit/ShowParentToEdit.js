@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import SpinnerMain from '../../../loaders/SpinnerMain';
-import { getGroups, getParents } from '../../../../http/userAPI';
+import { getParents } from '../../../../http/userAPI';
 import InputSearch from '../../../inputs/InputSearch/InputSearch';
-import { Dropdown } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
-import ProfileCardChildToEdit from '../../../blocks/ProfileCard/ProfileCardChildToEdit/ProfileCardChildToEdit';
 import styles from './ShowParentToEdit.module.css';
 import ProfileCardParentToEdit from '../../../blocks/ProfileCard/ProfileCardParentToEdit/ProfileCardParentToEdit';
 
@@ -26,7 +24,7 @@ const ShowParentToEdit = observer(() => {
       .then((data) => {
         if (data) {
           console.log(data);
-          setParentList(data);
+          setParentList(data.map((o) => o.user));
           return data;
         }
       })

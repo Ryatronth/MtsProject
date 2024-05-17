@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Button } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import { WORKER_VIEW_MENU_ROUTE } from '../../utils/consts';
@@ -55,24 +54,6 @@ const PDFPage = () => {
                   <td>{o.count}</td>
                 </tr>
               ))}
-              {/* {data.map((o) => (
-                <tr key={o.id}>
-                  <td>{o.name}</td>
-                  <td>{o.count}</td>
-                </tr>
-              ))}
-              {data.map((o) => (
-                <tr key={o.id}>
-                  <td>{o.name}</td>
-                  <td>{o.count}</td>
-                </tr>
-              ))}
-              {data.map((o) => (
-                <tr key={o.id}>
-                  <td>{o.name}</td>
-                  <td>{o.count}</td>
-                </tr>
-              ))} */}
             </tbody>
           </table>
         </div>

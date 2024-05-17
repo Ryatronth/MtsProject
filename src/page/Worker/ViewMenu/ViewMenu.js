@@ -9,6 +9,7 @@ import ico from '../../../assets/parent/ico-calendar.png';
 import styles from './ViewMenu.module.css';
 import { getOrdersForWorker } from '../../../http/userAPI';
 import ShowChildByGroupToView from '../../../components/pieces/Show/ShowChildByGroupToView/ShowChildByGroupToView';
+import SpinnerMain from '../../../components/loaders/SpinnerMain';
 
 const ViewMenu = () => {
   const { user } = useContext(Context);
@@ -19,11 +20,11 @@ const ViewMenu = () => {
   const [selectGroup, setSelectGroup] = useState();
   const [selectDate, setSelectDate] = useState(new Date());
   const [calendarFlag, setCalendarFlag] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [dishCount, setDishCount] = useState([]);
 
   const isWeekday = (date) => {
     const day = new Date(date).getDay();
-    console.log(day);
     return day !== 0 && day !== 6;
   };
 
@@ -35,90 +36,96 @@ const ViewMenu = () => {
 
   const handleSelect = (group) => {
     setSelectGroup(group);
-    setDataByGroup(allData[group]);
+    setDataByGroup(allData[group]?.details || []);
     const dishCounts = {};
-    allData[group].forEach((order) => {
-      order.dishes.forEach((dish) => {
-        if (dishCounts[dish.id]) {
-          dishCounts[dish.id].count++;
-        } else {
-          dishCounts[dish.id] = {
-            id: dish.id,
-            name: dish.name,
-            count: 1,
-          };
-        }
+    if (allData[group]) {
+      allData[group].details.forEach((order) => {
+        order.dishes.forEach((dish) => {
+          if (dishCounts[dish.id]) {
+            dishCounts[dish.id].count++;
+          } else {
+            dishCounts[dish.id] = {
+              id: dish.id,
+              name: dish.name,
+              count: 1,
+            };
+          }
+        });
       });
-    });
+    }
     setDishCount(Object.values(dishCounts));
   };
 
   const onChange = async (dates) => {
     setSelectDate(dates);
-    let qparametr = `?date=${dates.getFullYear()}-${(dates.getMonth() + 1)
+    let date = `${dates.getFullYear()}-${(dates.getMonth() + 1)
       .toString()
       .padStart(2, '0')}-${dates.getDate().toString().padStart(2, '0')}`;
-
-    await getOrdersForWorker(qparametr).then((data) => {
+    await getOrdersForWorker(date).then((data) => {
       if (Object.keys(data).length === 0) {
         alert('Групп нет!');
       } else {
         setAllData(data);
-        setDataByGroup(data[selectGroup]);
+        setDataByGroup(data[selectGroup]?.details || []);
         const dishCounts = {};
-        data[selectGroup].forEach((order) => {
-          order.dishes.forEach((dish) => {
-            if (dishCounts[dish.id]) {
-              dishCounts[dish.id].count++;
-            } else {
-              dishCounts[dish.id] = {
-                id: dish.id,
-                name: dish.name,
-                count: 1,
-              };
-            }
+        if (data[selectGroup]) {
+          data[selectGroup].details.forEach((order) => {
+            order.dishes.forEach((dish) => {
+              if (dishCounts[dish.id]) {
+                dishCounts[dish.id].count++;
+              } else {
+                dishCounts[dish.id] = {
+                  id: dish.id,
+                  name: dish.name,
+                  count: 1,
+                };
+              }
+            });
           });
-        });
+        }
         setDishCount(Object.values(dishCounts));
       }
     });
   };
 
   useEffect(() => {
-    let qparametr = `?date=${selectDate.getFullYear()}-${(
-      selectDate.getMonth() + 1
-    )
+    let date = `${selectDate.getFullYear()}-${(selectDate.getMonth() + 1)
       .toString()
       .padStart(2, '0')}-${selectDate.getDate().toString().padStart(2, '0')}`;
 
-    getOrdersForWorker(qparametr).then((data) => {
-      console.log(Object.keys(data).length);
-      if (Object.keys(data).length === 0) {
-        alert('Групп нет');
-      } else {
-        let groupList = Object.keys(data);
-        setAllGroupList(groupList);
-        setAllData(data);
-        setSelectGroup(groupList[0]);
-        setDataByGroup(data[groupList[0]]);
-        const dishCounts = {};
-        data[groupList[0]].forEach((order) => {
-          order.dishes.forEach((dish) => {
-            if (dishCounts[dish.id]) {
-              dishCounts[dish.id].count++;
-            } else {
-              dishCounts[dish.id] = {
-                id: dish.id,
-                name: dish.name,
-                count: 1,
-              };
-            }
+    getOrdersForWorker(date)
+      .then((data) => {
+        if (Object.keys(data).length === 0) {
+          alert('Групп нет');
+        } else {
+          let groupList = Object.keys(data);
+          setAllGroupList(groupList);
+          setAllData(data);
+          setSelectGroup(groupList[0]);
+          setDataByGroup(data[groupList[0]].details);
+          const dishCounts = {};
+          data[groupList[0]].details.forEach((order) => {
+            order.dishes.forEach((dish) => {
+              if (dishCounts[dish.id]) {
+                dishCounts[dish.id].count++;
+              } else {
+                dishCounts[dish.id] = {
+                  id: dish.id,
+                  name: dish.name,
+                  count: 1,
+                };
+              }
+            });
           });
-        });
-        setDishCount(Object.values(dishCounts));
-      }
-    });
+          setDishCount(Object.values(dishCounts));
+        }
+      })
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <SpinnerMain />;
+  }
 
   return (
     <div className="reset-container">
@@ -189,7 +196,11 @@ const ViewMenu = () => {
           </div>
         </div>
         <div style={{ width: '1110px', marginTop: '100px' }}>
-          <ShowChildByGroupToView mainData={dataByGroup} date={selectDate} />
+          <ShowChildByGroupToView
+            mainData={dataByGroup}
+            date={selectDate}
+            group={selectGroup}
+          />
         </div>
         <Button
           variant="success"

@@ -10,6 +10,7 @@ import ProfileCardMenuToCreate from '../../../blocks/ProfileCard/ProfileCardMenu
 const ShowMenuToEdit = observer(() => {
   const [listData, setListData] = useState([]);
   const [newMenu, setNewMenu] = useState(false);
+  const [newMenuDate, setNewMenuDate] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,12 @@ const ShowMenuToEdit = observer(() => {
         if (data) {
           console.log(data);
           setListData(data);
+          setNewMenuDate(
+            new Date(
+              new Date(data[data.length - 1]?.endDate).getTime() + 86400000 ||
+                new Date(new Date().getTime() + 86400000)
+            )
+          );
           return data;
         }
       })
@@ -49,6 +56,7 @@ const ShowMenuToEdit = observer(() => {
       >
         {newMenu && (
           <ProfileCardMenuToCreate
+            newMenuDate={newMenuDate}
             setModuleFlag={setNewMenu}
             listData={listData}
             setListData={setListData}

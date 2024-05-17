@@ -51,7 +51,7 @@ const EditChildPage = observer(() => {
         navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
       }
     } catch (e) {
-      alert(e);
+      alert(e.response.data.message);
     }
   };
 

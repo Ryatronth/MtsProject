@@ -4,10 +4,12 @@ import ico from '../../../../assets/prewChild.png';
 import styles from './ShowChildByGroupToView.module.css';
 import ModalWindowPreview from '../../ModalWindowPreview/ModalWindowPreview';
 
-const ShowChildByGroupToView = ({ mainData, date }) => {
+const ShowChildByGroupToView = ({ mainData, date, group }) => {
   // console.log(mainData);
   const [modalWindowFlag, setModalWindowFlag] = useState(false);
   const [modalWindowInfo, setModalWindowInfo] = useState(false);
+
+  // console.log(mainData, group);
 
   if (!mainData) {
     return <div>Ни одной группы нет</div>;
@@ -26,11 +28,11 @@ const ShowChildByGroupToView = ({ mainData, date }) => {
     <div
       className={`${styles.mainContainer} d-flex flex-column align-items-center`}
     >
-      <h2>Группа:&nbsp;&nbsp;{mainData[0].child.childGroup.id}</h2>
+      <h2>Группа:&nbsp;&nbsp;{group}</h2>
       <div className={`${styles.listContainer} d-flex flex-column`}>
         {mainData.map((ob) => (
           <div
-            key={ob.child.id}
+            key={ob.id}
             className={`${styles.profileCard} d-flex justify-content-between align-items-center`}
             onClick={() => viewModal(ob)}
           >
@@ -38,12 +40,12 @@ const ShowChildByGroupToView = ({ mainData, date }) => {
               style={{ columnGap: '70px' }}
               className={`d-flex align-items-center`}
             >
-              <Image src={ob.child.imageUrl || ico} />
+              <Image src={ob?.child?.imageUrl || ico} />
               <p>
-                {ob.child.surname} {ob.child.name} {ob.child.patronymic}
+                {ob.surname} {ob.name} {ob.patronymic}
               </p>
             </div>
-            <p>ID&nbsp;:&nbsp;{ob.child.id}</p>
+            <p>ID&nbsp;:&nbsp;{ob.id}</p>
           </div>
         ))}
       </div>

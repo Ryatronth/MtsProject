@@ -50,7 +50,7 @@ const EditMenu = observer(() => {
     let qparametr = `?endDate=${endDate}`;
     getMenuId(qparametr).then((id) => {
       setMenuId(id[0].id);
-      qparametr = `?menuId=${id[0].id}`;
+      qparametr = id[0].id;
       getCurrentMenu(qparametr)
         .then((menu) => {
           const listMenu = menu.map((o) => o.dish);

@@ -14,6 +14,7 @@ const ModalWindowConfirmation = ({
   setAllDishesList,
   startDate,
   endDate,
+  xxxId,
 }) => {
   console.log(selectedDishesList);
   const [resPrice, setResPrice] = useState();
@@ -40,7 +41,7 @@ const ModalWindowConfirmation = ({
     const orders = selectedchildrenList.flatMap((child) => {
       const objList = [];
       let tempStartDate = new Date(startDate);
-      console.log(1234);
+      // console.log(1234);
 
       while (tempStartDate <= endDate || !endDate) {
         console.log(tempStartDate.getDay());
@@ -55,7 +56,8 @@ const ModalWindowConfirmation = ({
               .getDate()
               .toString()
               .padStart(2, '0')}`,
-            menuDishes: selectedDishesList.map((dish) => dish.id),
+            dishes: selectedDishesList.map((dish) => dish.dish.id),
+            menuId: xxxId,
           });
           if (!endDate) break;
         }

@@ -20,6 +20,7 @@ import ModalWindowConfirmation from '../../../components/pieces/ModalWindowConfi
 
 const CreateOrder = () => {
   const { user } = useContext(Context);
+  const [xxxId, setXxxId] = useState(-1);
   const [childrenList, setChildrenList] = useState([]);
   const [selectedchildrenList, setSelectedChildrenList] = useState([]);
   const [allDishesList, setAllDishesList] = useState([]);
@@ -47,6 +48,7 @@ const CreateOrder = () => {
   const onChange = async (dates) => {
     const [start, end] = dates;
     if (maxDate < start) {
+      setSelectedDishesList([]);
       let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
         .toString()
         .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
@@ -65,8 +67,9 @@ const CreateOrder = () => {
               `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
             )
           );
-          qparametr = `?menuId=${data[0].id}`;
-          getCurrentMenuForParent(qparametr).then((menu) => {
+          setXxxId(data[0].id);
+          const menuId = data[0].id;
+          getCurrentMenuForParent(menuId).then((menu) => {
             setAllDishesList(menu);
           });
         }
@@ -74,6 +77,7 @@ const CreateOrder = () => {
       console.log(start);
     }
     if (minDate > start) {
+      setSelectedDishesList([]);
       let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
         .toString()
         .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
@@ -88,8 +92,9 @@ const CreateOrder = () => {
             `${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`
           )
         );
-        qparametr = `?menuId=${data[0].id}`;
-        getCurrentMenuForParent(qparametr).then((menu) => {
+        setXxxId(data[0].id);
+        const menuId = data[0].id;
+        getCurrentMenuForParent(menuId).then((menu) => {
           setAllDishesList(menu);
         });
       });
@@ -127,8 +132,9 @@ const CreateOrder = () => {
       setMinDate(
         new Date(`${tempStartDate[0]}/${tempStartDate[1]}/${tempStartDate[2]}`)
       );
-      qparametr = `?menuId=${data[0].id}`;
-      getCurrentMenuForParent(qparametr)
+      setXxxId(data[0].id);
+      const menuId = data[0].id;
+      getCurrentMenuForParent(menuId)
         .then((menu) => {
           setAllDishesList(menu);
         })
@@ -294,6 +300,7 @@ const CreateOrder = () => {
           allDishesList={allDishesList}
           startDate={startDate}
           endDate={endDate}
+          xxxId={xxxId}
         />
       )}
     </div>

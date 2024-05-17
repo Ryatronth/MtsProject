@@ -19,7 +19,11 @@ const ChildrenOfParenat = ({ orientation }) => {
   }, []);
 
   if (loading) {
-    return <SpinnerMain />;
+    return (
+      <div style={{ position: 'relative' }}>
+        <SpinnerMain />
+      </div>
+    );
   }
 
   return (

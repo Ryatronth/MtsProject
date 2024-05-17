@@ -6,7 +6,8 @@ import SpinnerMain from '../../../loaders/SpinnerMain';
 import { useNavigate } from 'react-router-dom';
 import { PARENT_PDF_ORDER_ROUTE } from '../../../../utils/consts';
 
-const ShowOrderByChild = observer(({ loading, mainData }) => {
+const ShowOrderByChild = observer(({ loading, mainData, childrenList }) => {
+  console.log(childrenList);
   const navigate = useNavigate();
   if (loading) {
     return (
@@ -16,9 +17,9 @@ const ShowOrderByChild = observer(({ loading, mainData }) => {
     );
   }
 
-  const handlePDF = (data) => {
+  const handlePDF = (child, data) => {
     navigate(PARENT_PDF_ORDER_ROUTE, {
-      state: { data: data },
+      state: { data, child },
     });
   };
 
@@ -28,32 +29,34 @@ const ShowOrderByChild = observer(({ loading, mainData }) => {
         style={{ maxHeight: '450px' }}
         className={`${styles.section} d-flex flex-column`}
       >
-        {mainData.map((data) => (
-          <div
-            key={data.child.id}
-            className={`${styles.card} d-flex flex-column align-items-start justify-content-between`}
-          >
-            <p className={`${styles.cardName}`}>
-              Ребёнок:&nbsp;{data.child.surname} {data.child.name}{' '}
-              {data.child.patronymic}
-            </p>
+        {mainData.map((data) => {
+          const child = childrenList.find((child) => child.id === data.id);
+          return (
             <div
-              className={`${styles.cardSection} d-flex justify-content-between align-items-center`}
+              key={data.id}
+              className={`${styles.card} d-flex flex-column align-items-start justify-content-between`}
             >
-              <p className={`${styles.cardPrice}`}>
-                Сумма:&nbsp;&nbsp;
-                <span>₽ {data.price}</span>
+              <p className={`${styles.cardName}`}>
+                Ребёнок:&nbsp;{child.surname} {child.name} {child.patronymic}
               </p>
-              <Button
-                variant="secondary"
-                className={`${styles.cardPdf}`}
-                onClick={async () => handlePDF(data)}
+              <div
+                className={`${styles.cardSection} d-flex justify-content-between align-items-center`}
               >
-                Сформировать отчёт
-              </Button>
+                <p className={`${styles.cardPrice}`}>
+                  Сумма:&nbsp;&nbsp;
+                  <span>₽ {data.data.totalPrice}</span>
+                </p>
+                <Button
+                  variant="secondary"
+                  className={`${styles.cardPdf}`}
+                  onClick={async () => handlePDF(child, data.data)}
+                >
+                  Сформировать отчёт
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

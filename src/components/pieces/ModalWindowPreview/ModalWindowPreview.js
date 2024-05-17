@@ -22,20 +22,19 @@ const ModalWindowPreview = ({ mainData, setFlag, date }) => {
           className={`d-flex flex-column justify-content-between align-items-start row-gap-3`}
         >
           <div className={`${styles.mainInfo} d-flex align-items-center`}>
-            <Image src={mainData.child.imageUrl || ico} />
+            <Image src={mainData?.child?.imageUrl || ico} />
             <div
               className={`d-flex flex-column justify-content-between align-items-start row-gap-4`}
             >
               <div className={`d-flex align-items-center column-gap-4`}>
                 <p className={`${styles.mainInfoTitle}`}>ФИО:</p>
                 <p className={`${styles.mainInfoDescr}`}>
-                  {mainData.child.surname} {mainData.child.name}{' '}
-                  {mainData.child.patronymic}
+                  {mainData.surname} {mainData.name} {mainData.patronymic}
                 </p>
               </div>
               <div className={`d-flex align-items-center column-gap-4`}>
                 <p className={`${styles.mainInfoTitle}`}>ID:</p>
-                <p className={`${styles.mainInfoDescr}`}>{mainData.child.id}</p>
+                <p className={`${styles.mainInfoDescr}`}>{mainData.id}</p>
               </div>
             </div>
           </div>

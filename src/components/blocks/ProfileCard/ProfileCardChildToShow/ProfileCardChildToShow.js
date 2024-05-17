@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './ProfileCardChildToShow.module.css';
 import ico from '../../../../assets/admin/ico-childAva-182.png';
-import { Image } from 'react-bootstrap';
+import minus from '../../../../assets/admin/minus.png';
+import { Button, Image } from 'react-bootstrap';
 
 const ProfileCardChildToShow = ({
   data,
@@ -29,15 +30,16 @@ const ProfileCardChildToShow = ({
         </p>
         {data.childGroup.id}
       </div>
-      <span
+      <Button
+        variant="danger"
         className={`${styles.minus}`}
         onClick={() => {
           setListChild(listChild.filter((child) => child.id !== data.id));
           setAllChild([...allChild, data]);
         }}
       >
-        -
-      </span>
+        <Image src={minus} />
+      </Button>
     </div>
   );
 };

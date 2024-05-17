@@ -50,7 +50,7 @@ const CreateChildPage = observer(() => {
         });
       }
     } catch (e) {
-      alert(e);
+      alert(e.response.data.message);
     }
   };
 

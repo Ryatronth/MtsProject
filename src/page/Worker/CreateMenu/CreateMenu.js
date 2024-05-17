@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
 import { Context } from '../../..';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { WORKER_ROUTE, WORKER_WORK_WITH_MENU } from '../../../utils/consts';
+import { WORKER_WORK_WITH_MENU } from '../../../utils/consts';
 import { Button } from 'react-bootstrap';
 import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
 import { createCurrentMenu, getDishes } from '../../../http/userAPI';
@@ -25,31 +25,24 @@ const CreateMenu = observer(() => {
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
 
   const clickSaveCurrentMenu = async () => {
-    if (selectedDishesList.length) {
-      const dishes = {
-        dishes: selectedDishesList.map((data) => data.dish.id),
-        endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
-        startDate: `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}-${startDate
-          .getDate()
-          .toString()
-          .padStart(2, '0')}`, //YYYY-MM-DD
-      };
-      createCurrentMenu(dishes)
-        .then((data) => {
-          alert(data.message);
-          navigate(WORKER_WORK_WITH_MENU);
-        })
-        .catch((e) => {
-          alert(e.response.data.message);
-          navigate(WORKER_WORK_WITH_MENU);
-        });
-    } else {
-      alert('Выберите блюда');
-    }
+    const dishes = {
+      dishes: selectedDishesList.map((data) => data.dish.id),
+      endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
+      startDate: `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`, //YYYY-MM-DD
+    };
+    createCurrentMenu(dishes)
+      .then((data) => {
+        alert(data.message);
+        navigate(WORKER_WORK_WITH_MENU);
+      })
+      .catch((e) => {
+        alert(e.response.data.message);
+        // navigate(WORKER_WORK_WITH_MENU);
+      });
   };
 
   useEffect(() => {
@@ -98,7 +91,7 @@ const CreateMenu = observer(() => {
             active={selectedTime === 'BREAKFAST'}
             onClick={() => setSelectedTime('BREAKFAST')}
           >
-            breakfast
+            Завтрак
           </Button>
           <Button
             variant="outline-success"
@@ -106,7 +99,7 @@ const CreateMenu = observer(() => {
             active={selectedTime === 'LUNCH'}
             onClick={() => setSelectedTime('LUNCH')}
           >
-            lunch
+            Обед
           </Button>
           <Button
             variant="outline-success"
@@ -114,7 +107,7 @@ const CreateMenu = observer(() => {
             active={selectedTime === 'SNACK'}
             onClick={() => setSelectedTime('SNACK')}
           >
-            snack
+            Полдник
           </Button>
           <Button
             variant="outline-success"
@@ -122,7 +115,7 @@ const CreateMenu = observer(() => {
             active={selectedTime === 'ALL'}
             onClick={() => setSelectedTime('ALL')}
           >
-            All
+            Все
           </Button>
           <Button
             variant="outline-success"

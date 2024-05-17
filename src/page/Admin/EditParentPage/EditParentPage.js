@@ -49,11 +49,11 @@ const EditParentPage = observer(() => {
   const formatPhoneNumber = (inputStr) => {
     let input = inputStr.replace(/\D/g, '');
     const formats = [
-      { length: 1, format: '$1' },
-      { length: 4, format: '$1 ($2' },
-      { length: 7, format: '$1 ($2) $3' },
-      { length: 9, format: '$1 ($2) $3-$4' },
-      { length: 11, format: '$1 ($2) $3-$4-$5' },
+      { length: 1, format: '+7' },
+      { length: 4, format: '+7 ($2' },
+      { length: 7, format: '+7 ($2) $3' },
+      { length: 9, format: '+7 ($2) $3-$4' },
+      { length: 11, format: '+7 ($2) $3-$4-$5' },
     ];
 
     for (const format of formats) {
@@ -75,44 +75,27 @@ const EditParentPage = observer(() => {
   };
 
   const saveChanges = async () => {
-    try {
-      const fioList = fullName.split(' ');
-      if (fioList.length < 3 || fioList[2] === '') {
-        alert('Введите верный ФИО');
-        fullNameInputRef.current.focus();
-      } else if (phone.replace(/\D/g, '').length < 11) {
-        alert('Введите правильный номер телефона');
-        phoneNumberInputRef.current.focus();
-      } else if (login.length <= 3 && login !== '') {
-        alert('Логин должен содержать более 3х символов');
-        loginInputRef.current.focus();
-      } else if (password.length <= 5 && password !== '') {
-        alert('Пароль должен содержать более 5и символов');
-        passwordInputRef.current.focus();
-      } else {
-        if (childList.length) {
-          const data = {
-            surname: fioList[0],
-            name: fioList[1],
-            patronymic: fioList[2],
-            phone: phone,
-            role: 'PARENT',
-            parentId: parentData.id,
-            imageUrl: null,
-            username: login !== '' ? login : null,
-            password: password !== '' ? password : null,
-            children: childList.map((child) => child.id),
-          };
-          const uwu = await updateParent(parentData.id, data);
-          console.log(uwu);
-          navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
-        } else {
-          alert('Выберите ребёнка');
-        }
-      }
-    } catch (e) {
-      alert(e);
-    }
+    const fioList = fullName.split(' ');
+    let phoneNumber = `+${phone.replace(/\D/g, '')}`;
+    const data = {
+      surname: fioList[0],
+      name: fioList[1],
+      patronymic: fioList[2],
+      phone: phoneNumber,
+      role: 'PARENT',
+      parentId: parentData.id,
+      imageUrl: null,
+      username: login !== '' ? login : null,
+      password: password !== '' ? password : null,
+      children: childList.map((child) => child.id),
+    };
+    await updateParent(parentData.id, data)
+      .then((data) => {
+        console.log(data);
+        alert(data.message);
+        navigate(ADMIN_WORK_WITH_PROFILE_ROUTE);
+      })
+      .catch((e) => alert(e.response.data.message));
   };
 
   useEffect(() => {
@@ -120,6 +103,7 @@ const EditParentPage = observer(() => {
       `${parentData.surname} ${parentData.name} ${parentData.patronymic}`
     );
     setPhone(parentData.phone);
+    formatPhoneNumber(parentData.phone);
     let qparametr = `?parentId=${parentData.id}`;
     getChildren(qparametr).then((data) => {
       setChildList(data);

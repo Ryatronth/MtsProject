@@ -7,12 +7,12 @@ import { PARENT_ROUTE } from '../../../utils/consts';
 const PdfOrder = () => {
   const location = useLocation();
   const { state } = location;
-  const data = state?.data;
+  const { data, child } = state;
   const navigate = useNavigate();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: `Заказ ребёнка: ${data.child.surname} ${data.child.name[0]} ${data.child.patronymic[0]}`,
+    documentTitle: `Заказ ребёнка: ${child.surname} ${child.name[0]} ${child.patronymic[0]}`,
     pageStyle: `
       @page {
         size: A4;
@@ -41,13 +41,13 @@ const PdfOrder = () => {
         className={`d-flex flex-column justify-content-center align-items-center`}
       >
         <h2 className={`${styles.pdfTitle}`}>
-          {data.child.surname} {data.child.name[0]} {data.child.patronymic[0]}
+          {child.surname} {child.name[0]} {child.patronymic[0]}
         </h2>
         <div className={`${styles.tableWrapper}`}>
           <table className={`${styles.flTable}`}>
             <thead>
               <tr>
-                <th>БЛЮДО</th>
+                <th>ДАТА</th>
                 <th>СУММА</th>
               </tr>
             </thead>
