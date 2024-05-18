@@ -1,8 +1,7 @@
 import React from 'react';
-import exit from '../../../assets/exit.png';
-import { Image } from 'react-bootstrap';
-import styles from './ModalWindowAdd.module.css';
 import ShowChildToSelect from '../Show/ShowChildToSelect/ShowChildToSelect';
+import styles from './ModalWindowAdd.module.css';
+import CloseWindow from '../../buttons/CloseWindow/CloseWindow';
 
 const ModalWindowAdd = ({
   childData,
@@ -17,16 +16,9 @@ const ModalWindowAdd = ({
       <div
         className={`${styles.mainInfo} d-flex flex-column align-items-center`}
       >
-        <Image
-          className={`${styles.exit}`}
-          src={exit}
-          onClick={() => {
-            setModuleFlag(false);
-            document.body.style.overflow = '';
-          }}
-        />
+        <CloseWindow func={setModuleFlag} />
         <p className={`text-center ${styles.descr}`}>Выберите ребёнка</p>
-        <div style={{ width: '1007px' }}>
+        <div className={`${styles.infoBlock}`}>
           <ShowChildToSelect
             childData={childData}
             setAllChild={setAllChild}

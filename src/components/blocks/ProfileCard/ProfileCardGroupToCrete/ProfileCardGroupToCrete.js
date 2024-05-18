@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ico from '../../../../assets/admin/ico-groupList.png';
-import styles from './ProfileCardGroupToCrete.module.css';
 import { Image } from 'react-bootstrap';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
 import { createGroup } from '../../../../http/userAPI';
+import ico from '../../../../assets/admin/ico-groupList.png';
+import styles from './ProfileCardGroupToCrete.module.css';
 
 const ProfileCardGroupToCrete = ({ setModuleFlag, listData, setListData }) => {
   const [groupName, setGroupName] = useState('');
@@ -15,10 +15,8 @@ const ProfileCardGroupToCrete = ({ setModuleFlag, listData, setListData }) => {
         groupNameRef.current.focus();
         alert('Введите название группы');
       } else {
-        console.log(groupName);
         const data = await createGroup(groupName);
         setListData([data.object, ...listData]);
-        console.log(data.object);
         setModuleFlag(false);
       }
     } catch (e) {
@@ -44,12 +42,11 @@ const ProfileCardGroupToCrete = ({ setModuleFlag, listData, setListData }) => {
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}
           placeholder="Введите название группы"
-        ></input>
+        />
       </div>
       <div className={`d-flex justify-content-start`}>
         <ManagementButton
           mainFunc={creGroup}
-          // secondFunc={setModuleFlag}
           variant="success"
           text="Сохранить"
         />

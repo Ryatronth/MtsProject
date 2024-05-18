@@ -1,12 +1,33 @@
-.mainInfoTitle {
+.container {
+  padding: 0 65px;
+  margin: 0 auto;
+}
+.blockInfo {
+  margin: 40px 40px 0;
+}
+.image {
+  width: 195px;
+  height: 195px;
+  border-radius: 50%;
+}
+.title {
   font-weight: 500;
   font-size: 22px;
   color: #414141;
 }
-.mainInfoDescr {
+.descr {
   border-radius: 100px;
   border: 2px solid #f5af61;
   font-weight: 400;
   font-size: 16px;
   color: #414141;
+
+  &:first-of-type {
+    max-width: 579px;
+    min-width: 479px;
+  }
+  &:last-of-type {
+    max-width: 230px;
+    min-width: 200px;
+  }
 }

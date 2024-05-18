@@ -1,3 +1,10 @@
+.header {
+  padding: 0 65px;
+  margin: 0 auto;
+}
+.infoBlock {
+  margin: 40px 40px 0;
+}
 .inputTitle {
   margin-bottom: 21px;
   font-weight: 500;
@@ -25,10 +32,8 @@
   color: #414141;
 }
 .adminBody {
-  border-radius: 70px 70px 0 0;
   height: 690px;
-}
-.admiContainer {
-  padding-top: 110px;
-  row-gap: 90px;
+  padding: '0 67px';
+  border-radius: 70px 70px 0 0;
+  background: url('../../../assets/bgProfile.png') no-repeat center center;
 }

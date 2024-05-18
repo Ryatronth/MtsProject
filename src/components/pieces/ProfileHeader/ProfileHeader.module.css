@@ -1,0 +1,24 @@
+.container {
+  padding: 15px 59px;
+  border-bottom: 1px solid #afafaf;
+}
+.logo {
+  width: 106px;
+  height: 75px;
+}
+.avatar {
+  width: 69px;
+  height: 69px;
+  border-radius: 50%;
+}
+.descr {
+  font-weight: 500;
+
+  &:first-of-type {
+    font-size: 20px;
+  }
+  &:last-of-type {
+    font-size: 14px;
+    color: #f48104;
+  }
+}

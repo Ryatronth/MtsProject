@@ -1,14 +1,66 @@
+.mainBtnStyle {
+  border-radius: 35px;
+  border: none;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}
+
 .mainBtnSuccess {
   height: 46px;
   width: 200px;
   margin-right: 45px;
+  background-color: #87c631;
   font-weight: 400;
   font-size: 20px;
 }
-.mainBtnCancel {
+.mainBtnDelete {
   height: 46px;
   width: 200px;
   background-color: #f48104;
   font-weight: 400;
   font-size: 20px;
+}
+.mainBtnCreate {
+  width: 309px;
+  height: 32px;
+  padding: 3px 40px;
+  margin-right: 45px;
+  background-color: #87c631;
+  font-weight: 400;
+  font-size: 14px;
+}
+.mainBtnDeleteOnWin {
+  align-self: flex-end;
+  padding: 10px 60px;
+  margin-top: 30px;
+  background-color: #f48104;
+  font-weight: 500;
+  font-size: 24px;
+}
+.mainBtnDeleteOnCard {
+  box-sizing: border-box;
+  width: 155px;
+  height: 35px;
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 15px;
+}
+.mainBtnSelectOnCard {
+  width: 155px;
+  height: 35px;
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.mainBtnSaveProfile {
+  width: 396px;
+  background-color: #87c631;
+  font-weight: 500;
+  font-size: 24px;
+}
+.mainBtnCencelProfile {
+  width: 396px;
+  background-color: #f48104;
+  font-weight: 500;
+  font-size: 24px;
 }

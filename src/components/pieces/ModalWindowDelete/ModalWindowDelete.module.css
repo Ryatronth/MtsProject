@@ -11,9 +11,6 @@
   z-index: 2;
   color: #414141;
 }
-/* .mainInfo.mainInfo:last-child {
-  align-items: flex-end;
-} */
 .blur::before {
   content: '';
   position: fixed;
@@ -30,12 +27,6 @@
 .descr {
   font-weight: 700;
   font-size: 26px;
-}
-.exit {
-  cursor: pointer;
-  position: absolute;
-  top: 19px;
-  right: 31px;
 }
 .modalDeleteCard {
   column-gap: 40px;

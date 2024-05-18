@@ -1,8 +1,8 @@
 import React from 'react';
-import styles from './ProfileCardChildToShow.module.css';
-import ico from '../../../../assets/admin/ico-childAva-182.png';
-import minus from '../../../../assets/admin/minus.png';
 import { Button, Image } from 'react-bootstrap';
+import minus from '../../../../assets/admin/minus.png';
+import ico from '../../../../assets/admin/ico-childAva-182.png';
+import styles from './ProfileCardChildToShow.module.css';
 
 const ProfileCardChildToShow = ({
   data,

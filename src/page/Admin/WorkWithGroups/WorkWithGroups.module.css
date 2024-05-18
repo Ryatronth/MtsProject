@@ -1,11 +1,14 @@
-.workGroupsTitle {
+.container {
+  padding: 0 65px;
+  margin: 0 auto;
+}
+.previewSection {
+  position: relative;
+  width: 100%;
+}
+.title {
   margin: 47px 0 43px 0;
 }
-.exit {
-  height: 46px;
-  width: 200px;
-  margin-right: 575px;
-  background-color: #f48104;
-  font-weight: 400;
-  font-size: 20px;
+.mainBlock {
+  width: 1400px;
 }

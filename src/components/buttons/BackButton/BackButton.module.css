@@ -1,0 +1,14 @@
+.exit {
+  position: absolute;
+  left: 0;
+  height: 46px;
+  width: 200px;
+  background-color: #f48104;
+  font-weight: 400;
+  font-size: 20px;
+
+  /*Из глобального*/
+  border-radius: 35px;
+  border: 0px;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+}

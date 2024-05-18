@@ -1,38 +1,32 @@
 import React from 'react';
-import exit from '../../../assets/exit.png';
-import { Button, Image } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
+import CloseWindow from '../../buttons/CloseWindow/CloseWindow';
+import ManagementButton from '../../buttons/ManagementButton/ManagementButton';
 import styles from './ModalWindowDelete.module.css';
 
 const ModalWindowDelete = ({ img, text, mainFunc, setFlag, info }) => {
+  const func = () => {
+    mainFunc();
+    setFlag(false);
+    document.body.style.overflow = '';
+  };
+
   return (
     <div className={`${styles.blur}`}>
       <div
         className={`${styles.mainInfo} d-flex flex-column align-items-center`}
       >
-        <Image
-          className={`${styles.exit}`}
-          src={exit}
-          onClick={() => {
-            setFlag(false);
-            document.body.style.overflow = '';
-          }}
-        />
+        <CloseWindow func={setFlag} />
         <p className={`text-center ${styles.descr}`}>{text}</p>
         <div className={`${styles.modalDeleteCard} d-flex align-items-center`}>
           <Image src={img || null} />
           <p>{info}</p>
         </div>
-        <Button
-          variant="danger"
-          className={`${styles.modalDeleteBtn}`}
-          onClick={() => {
-            mainFunc();
-            setFlag(false);
-            document.body.style.overflow = '';
-          }}
-        >
-          Удалить
-        </Button>
+        <ManagementButton
+          text="Удалить"
+          variant="dangerDeleteOnWindow"
+          mainFunc={func}
+        />
       </div>
     </div>
   );

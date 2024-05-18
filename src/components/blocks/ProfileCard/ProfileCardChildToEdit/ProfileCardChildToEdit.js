@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import ico from '../../../../assets/admin/ico-childCard-79.png';
-import { Image } from 'react-bootstrap';
-import { deleteChild } from '../../../../http/userAPI';
 import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
 import ModalWindowDelete from '../../../pieces/ModalWindowDelete/ModalWindowDelete';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
-import styles from './ProfileCardChildToEdit.module.css';
-import { useNavigate } from 'react-router-dom';
 import { ADMIN_EDIT_CHILD_PROFILE_ROUTE } from '../../../../utils/consts';
+import { deleteChild } from '../../../../http/userAPI';
+import ico from '../../../../assets/admin/ico-childCard-79.png';
+import styles from './ProfileCardChildToEdit.module.css';
 
 const ProfileCardChildToEdit = observer(
   ({ mainData, childList, setChildList }) => {
@@ -27,12 +27,10 @@ const ProfileCardChildToEdit = observer(
 
     const delChild = async () => {
       try {
-        const data = await deleteChild(mainData.id);
+        await deleteChild(mainData.id);
         setChildList(childList.filter((child) => child.id !== mainData.id));
-        console.log(data);
       } catch (e) {
-        console.log(e);
-        alert(e);
+        alert(e.response.data.message);
       }
     };
 

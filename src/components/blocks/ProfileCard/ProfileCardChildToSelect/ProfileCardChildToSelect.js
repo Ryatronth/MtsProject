@@ -1,8 +1,8 @@
 import React from 'react';
+import { Image } from 'react-bootstrap';
 import ico from '../../../../assets/admin/ico-childCard.png';
-import { Button, Image } from 'react-bootstrap';
 import styles from './ProfileCardChildToSelect.module.css';
-import { all } from 'axios';
+import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
 
 const ProfileCardChildToSelect = ({
   allChild,
@@ -12,27 +12,27 @@ const ProfileCardChildToSelect = ({
   setListChild,
   setModuleFlag,
 }) => {
+  const select = () => {
+    let newList = allChild.filter((child) => child.id !== mainData.id);
+    setAllChild([...newList]);
+    setListChild([...listChild, mainData]);
+    setModuleFlag(false);
+    document.body.style.overflow = '';
+  };
+
   return (
     <div
       className={`${styles.profileCard} d-flex justify-content-start align-items-center`}
     >
-      <Image style={{ marginRight: '53px' }} src={ico} />
-      <p style={{ marginRight: '110px', width: '380px' }}>
+      <Image src={ico} className={`${styles.image}`} />
+      <p className={`${styles.descr}`}>
         {mainData.surname} {mainData.name} {mainData.patronymic}
       </p>
-      <Button
-        variant="success"
-        className={`reset-btn ${styles.mainBtnCancel}`}
-        onClick={() => {
-          let newList = allChild.filter((child) => child.id !== mainData.id);
-          setAllChild([...newList]);
-          setListChild([...listChild, mainData]);
-          setModuleFlag(false);
-          document.body.style.overflow = '';
-        }}
-      >
-        Выбрать
-      </Button>
+      <ManagementButton
+        text="Выбрать"
+        variant="successSelectOnCard"
+        mainFunc={select}
+      />
     </div>
   );
 };

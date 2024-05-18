@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import SpinnerMain from '../../../loaders/SpinnerMain';
-import { getGroups } from '../../../../http/userAPI';
-import InputSearch from '../../../inputs/InputSearch/InputSearch';
-import { Button } from 'react-bootstrap';
-import styles from './ShowGroupToEdit.module.css';
 import { observer } from 'mobx-react-lite';
+import { Button } from 'react-bootstrap';
+import SpinnerMain from '../../../loaders/SpinnerMain';
+import InputSearch from '../../../inputs/InputSearch/InputSearch';
 import ProfileCardGroupToEdit from '../../../blocks/ProfileCard/ProfileCardGroupToEdit/ProfileCardGroupToEdit';
 import ProfileCardGroupToCrete from '../../../blocks/ProfileCard/ProfileCardGroupToCrete/ProfileCardGroupToCrete';
+import { getGroups } from '../../../../http/userAPI';
+import styles from './ShowGroupToEdit.module.css';
 
 const ShowGroupToEdit = observer(({ groupId }) => {
   const [listData, setListData] = useState([]);
@@ -15,7 +15,6 @@ const ShowGroupToEdit = observer(({ groupId }) => {
   const [searchValue, setSearchValue] = useState('');
 
   const filteredListData = listData.filter((data) => {
-    console.log(data);
     const searchMatch = `${data.id}`
       .toLowerCase()
       .includes(searchValue.toLowerCase());
@@ -25,12 +24,9 @@ const ShowGroupToEdit = observer(({ groupId }) => {
   useEffect(() => {
     getGroups()
       .then((data) => {
-        if (data) {
-          console.log(data);
-          setListData(data);
-          return data;
-        }
+        setListData(data);
       })
+      .catch((e) => console.log(e))
       .finally(() => setLoading(false));
   }, []);
 
@@ -43,25 +39,18 @@ const ShowGroupToEdit = observer(({ groupId }) => {
   }
 
   return (
-    <div className={`${styles.mainInfo}`}>
+    <div className={`${styles.container}`}>
       <div className="d-flex align-items-center column-gap-5 mb-2">
-        <InputSearch
-          customWidth="638px"
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-        />
+        <InputSearch customWidth="638px" setSearchValue={setSearchValue} />
         <Button
           variant="success"
-          className={`${styles.showListBtn}`}
+          className={`${styles.createGroupBtn}`}
           onClick={() => setNewGroup(true)}
         >
           Создать группу
         </Button>
       </div>
-      <div
-        style={{ height: '939px' }}
-        className={`${styles.section} d-flex flex-column`}
-      >
+      <div className={`${styles.section} d-flex flex-column`}>
         {newGroup && (
           <ProfileCardGroupToCrete
             setModuleFlag={setNewGroup}

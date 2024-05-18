@@ -6,11 +6,10 @@
   background-color: #f7f7f5;
   box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.2);
 }
-.mainBtnCancel {
-  box-sizing: border-box;
-  height: 35px;
-  width: 155px;
-  background-color: #f48104;
-  font-weight: 400;
-  font-size: 15px;
+.image {
+  margin-right: 53px;
+}
+.descr {
+  margin-right: 110px;
+  width: 380px;
 }

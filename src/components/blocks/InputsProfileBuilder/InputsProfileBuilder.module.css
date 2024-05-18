@@ -1,0 +1,33 @@
+.inputTitle {
+  margin-bottom: 21px;
+  font-weight: 500;
+  font-size: 22px;
+  color: #414141;
+}
+.inputText {
+  width: 579px;
+  height: 46px;
+  padding: 2px 10px;
+  margin-bottom: 29px;
+  border-radius: 100px;
+  border: 2px solid #f5af61;
+  font-weight: 400;
+  font-size: 16px;
+  color: #414141;
+}
+.fio {
+  max-width: 420px;
+  min-width: 350px;
+}
+.phone {
+  max-width: 230px;
+  min-width: 200px;
+}
+.login {
+  max-width: 300px;
+  min-width: 270px;
+}
+.password {
+  max-width: 300px;
+  min-width: 270px;
+}

@@ -16,6 +16,7 @@
 }
 .section {
   row-gap: 17px;
+  height: 407px;
   padding-top: 20px;
   overflow-y: auto;
 

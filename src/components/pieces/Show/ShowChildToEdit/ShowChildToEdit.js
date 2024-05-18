@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import SpinnerMain from '../../../loaders/SpinnerMain';
-import { getChildren, getGroups } from '../../../../http/userAPI';
-import InputSearch from '../../../inputs/InputSearch/InputSearch';
-import { Dropdown } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
-import styles from './ShowChildToEdit.module.css';
+import SpinnerMain from '../../../loaders/SpinnerMain';
+import InputSearch from '../../../inputs/InputSearch/InputSearch';
 import ProfileCardChildToEdit from '../../../blocks/ProfileCard/ProfileCardChildToEdit/ProfileCardChildToEdit';
+import { getChildren, getGroups } from '../../../../http/userAPI';
+import styles from './ShowChildToEdit.module.css';
+import InputDropdown from '../../../inputs/InputDropdown/InputDropdown';
 
 const ShowChildToEdit = observer(() => {
   const [childList, setChildList] = useState([]);
@@ -27,13 +27,12 @@ const ShowChildToEdit = observer(() => {
     const qparametr = ``;
     getChildren(qparametr)
       .then((data) => {
-        if (data) {
-          console.log(data);
-          setChildList(data);
-          getGroups().then((dataG) => setGroupList(dataG));
-          return data;
-        }
+        setChildList(data);
+        getGroups()
+          .then((dataG) => setGroupList(dataG))
+          .catch((e) => console.log(e.response.data.message));
       })
+      .catch((e) => console.log(e.response.data.message))
       .finally(() => setLoading(false));
   }, []);
 
@@ -53,35 +52,14 @@ const ShowChildToEdit = observer(() => {
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        <div>
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="secondary"
-              className="children-card__dropdown-groups"
-            >
-              {selectedGroup || 'Выберите группу'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu style={{ width: '263px' }}>
-              <Dropdown.Item onClick={() => setSelectedGroup(null)}>
-                Выберите группу
-              </Dropdown.Item>
-              {!!groupList.length &&
-                groupList.map(({ id }) => (
-                  <Dropdown.Item key={id} onClick={() => setSelectedGroup(id)}>
-                    {id}
-                  </Dropdown.Item>
-                ))}
-              {!groupList.length && (
-                <Dropdown.Item>Групп пока нет!</Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+        <InputDropdown
+          variant="chooseChild"
+          selectedGroup={selectedGroup}
+          func={setSelectedGroup}
+          list={groupList}
+        />
       </div>
-      <div
-        style={{ height: '1015px' }}
-        className={`${styles.section} d-flex flex-column`}
-      >
+      <div className={`${styles.section} d-flex flex-column`}>
         {filteredListData.map((data) => (
           <ProfileCardChildToEdit
             key={data.id}

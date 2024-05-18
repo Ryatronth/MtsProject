@@ -1,57 +1,34 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
-import { Context } from '../../..';
-import ShowGroupToEdit from '../../../components/pieces/Show/ShowGroupToEdit/ShowGroupToEdit';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { ADMIN_ROUTE } from '../../../utils/consts';
-import styles from './WorkWithProfile.module.css';
 import ShowChildToEdit from '../../../components/pieces/Show/ShowChildToEdit/ShowChildToEdit';
 import ShowParentToEdit from '../../../components/pieces/Show/ShowParentToEdit/ShowParentToEdit';
+import BackButton from '../../../components/buttons/BackButton/BackButton';
+import InformationSwitch from '../../../components/buttons/InformationSwitch/InformationSwitch';
+import { ADMIN_ROUTE } from '../../../utils/consts';
+import styles from './WorkWithProfile.module.css';
 
 const WorkWithProfile = () => {
-  const { user } = useContext(Context);
-  const navigate = useNavigate();
   const [profile, setProfile] = useState('Ребёнок');
+  const listSwitch = ['Ребёнок', 'Родитель'];
 
   return (
-    <div className="reset-container">
-      <ProfileHeader info={user.user} />
+    <div className={`${styles.container}`}>
+      <ProfileHeader />
       <div className={`d-flex flex-column align-items-center`}>
         <div
-          style={{ width: '100%' }}
-          className={`d-flex justify-content- align-items-center`}
+          className={`${styles.previewSection} d-flex justify-content-center align-items-center`}
         >
-          <Button
-            variant="danger"
-            className={`reset-btn ${styles.exit}`}
-            onClick={() => navigate(ADMIN_ROUTE)}
-          >
-            Назад
-          </Button>
+          <BackButton route={ADMIN_ROUTE} />
           <h1 className={`${styles.workGroupsTitle}`}>Редактировать профиль</h1>
         </div>
         <div
           className={`d-flex justify-content-center align-items-center column-gap-3 mb-5`}
         >
-          <Button
-            variant="outline-success"
-            active={profile === 'Ребёнок'}
-            className={`${styles.mainBtn}`}
-            onClick={() => setProfile('Ребёнок')}
-          >
-            Ребёнок
-          </Button>
-          <Button
-            variant="outline-success"
-            active={profile === 'Родитель'}
-            className={`${styles.mainBtn}`}
-            onClick={() => setProfile('Родитель')}
-          >
-            Родитель
-          </Button>
+          {listSwitch.map((el) => (
+            <InformationSwitch setFunc={setProfile} text={el} info={profile} />
+          ))}
         </div>
-        <div style={{ width: '1400px' }}>
+        <div className={`${styles.infoBlock}`}>
           {profile === 'Ребёнок' && <ShowChildToEdit />}
           {profile === 'Родитель' && <ShowParentToEdit />}
         </div>

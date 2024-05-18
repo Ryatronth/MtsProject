@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
-import ico from '../../../../assets/admin/ico-groupList.png';
-import { Image } from 'react-bootstrap';
-import { deleteGroup } from '../../../../http/userAPI';
 import { observer } from 'mobx-react-lite';
-import styles from './ProfileCardGroupToEdit.module.css';
+import { Image } from 'react-bootstrap';
 import ModalWindowDelete from '../../../pieces/ModalWindowDelete/ModalWindowDelete';
 import ModalWindowEdit from '../../../pieces/ModalWindowEdit/ModalWindowEdit';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
+import { deleteGroup } from '../../../../http/userAPI';
+import ico from '../../../../assets/admin/ico-groupList.png';
+import styles from './ProfileCardGroupToEdit.module.css';
 
 const ProfileCardGroupToEdit = observer(
   ({ mainData, listData, setListData, groupId }) => {
     const [flag, setFlag] = useState(false);
     const [flagEdit, setFlagEdit] = useState(groupId ? true : false);
 
-    const showModalWindowDelete = () => {
-      setFlag(true);
-      document.body.style.overflow = 'hidden';
-    };
-
-    const showModalWindowEdit = () => {
-      setFlagEdit(true);
+    const showModalWindow = (func) => {
+      func(true);
       document.body.style.overflow = 'hidden';
     };
 
     const delGroup = async () => {
       try {
-        const data = await deleteGroup(mainData.id);
+        await deleteGroup(mainData.id);
         setListData(listData.filter((group) => group.id !== mainData.id));
-        console.log(data);
       } catch (e) {
         console.log(e);
-        alert(e);
+        alert(e.response.data.message);
       }
     };
 
@@ -44,12 +38,12 @@ const ProfileCardGroupToEdit = observer(
         </div>
         <div className={`d-flex justify-content-start`}>
           <ManagementButton
-            mainFunc={showModalWindowEdit}
+            mainFunc={() => showModalWindow(setFlagEdit)}
             variant="success"
             text="Редактировать"
           />
           <ManagementButton
-            mainFunc={showModalWindowDelete}
+            mainFunc={() => showModalWindow(setFlag)}
             variant="danger"
             text="Удалить"
           />

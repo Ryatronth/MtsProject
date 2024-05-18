@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SpinnerMain from '../../../loaders/SpinnerMain';
-import styles from './ShowChildByGroup.module.css';
-import { getChildren } from '../../../../http/userAPI';
 import InputSearch from '../../../inputs/InputSearch/InputSearch';
 import ProfileCardChildToDelete from '../../../blocks/ProfileCard/ProfileCardChildToDelete/ProfileCardChildToDelete';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import { ADMIN_CREATE_CHILD_ROUTE } from '../../../../utils/consts';
+import { getChildren } from '../../../../http/userAPI';
+import styles from './ShowChildByGroup.module.css';
+import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
 
 const ShowChildByGroup = ({ groupId }) => {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ const ShowChildByGroup = ({ groupId }) => {
   });
 
   const handleCreateChild = () => {
+    document.body.style.overflow = '';
     navigate(ADMIN_CREATE_CHILD_ROUTE, {
       state: { groupId: groupId },
     });
@@ -32,12 +33,9 @@ const ShowChildByGroup = ({ groupId }) => {
     const qparametr = `?groupId=${groupId}`;
     getChildren(qparametr)
       .then((data) => {
-        if (data) {
-          console.log(data);
-          setListData(data);
-          return data;
-        }
+        setListData(data);
       })
+      .catch((e) => console.log(e))
       .finally(() => setLoading(false));
   }, []);
 
@@ -55,25 +53,13 @@ const ShowChildByGroup = ({ groupId }) => {
         <InputSearch
           customWidth="432px"
           customHeight="35px"
-          searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        <Button
-          style={{
-            fontSize: '14px',
-            padding: '3px 40px',
-            width: '309px',
-            height: '32px',
-          }}
-          className={`reset-btn ${styles.mainBtnSuccess}`}
-          variant="success"
-          onClick={() => {
-            document.body.style.overflow = '';
-            handleCreateChild();
-          }}
-        >
-          Создать ребёнка
-        </Button>
+        <ManagementButton
+          text="Создать ребёнка"
+          variant="successCreate"
+          mainFunc={handleCreateChild}
+        />
       </div>
       <div
         style={{ height: '430px' }}

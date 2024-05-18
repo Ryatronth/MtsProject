@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styles from './ShowChildToSelect.module.css';
 import InputSearch from '../../../inputs/InputSearch/InputSearch';
-import { Dropdown } from 'react-bootstrap';
 import ProfileCardChildToSelect from '../../../blocks/ProfileCard/ProfileCardChildToSelect/ProfileCardChildToSelect';
+import InputDropdown from '../../../inputs/InputDropdown/InputDropdown';
+import styles from './ShowChildToSelect.module.css';
 
 const ShowChildToSelect = ({
   childData,
@@ -28,39 +28,18 @@ const ShowChildToSelect = ({
     <div className={`${styles.mainInfo}`}>
       <div className="d-flex align-items-center column-gap-5 mb-2">
         <InputSearch
-          customWidth="638px"
+          customWidth="450px"
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        <div>
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="secondary"
-              className="children-card__dropdown-groups"
-            >
-              {selectedGroup || 'Выберите группу'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu style={{ width: '263px' }}>
-              <Dropdown.Item onClick={() => setSelectedGroup(null)}>
-                Выберите группу
-              </Dropdown.Item>
-              {!!groupData.length &&
-                groupData.map(({ id }) => (
-                  <Dropdown.Item key={id} onClick={() => setSelectedGroup(id)}>
-                    {id}
-                  </Dropdown.Item>
-                ))}
-              {!groupData.length && (
-                <Dropdown.Item>Групп пока нет!</Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+        <InputDropdown
+          func={setSelectedGroup}
+          list={groupData}
+          variant="chooseChild"
+          selectedGroup={selectedGroup}
+        />
       </div>
-      <div
-        style={{ height: '407px' }}
-        className={`${styles.section} d-flex flex-column`}
-      >
+      <div className={`${styles.section} d-flex flex-column`}>
         {filteredListData.map((data) => (
           <ProfileCardChildToSelect
             key={data.id}
