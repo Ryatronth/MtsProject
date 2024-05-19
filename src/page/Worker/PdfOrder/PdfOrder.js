@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
-import { WORKER_VIEW_MENU_ROUTE } from '../../utils/consts';
-import styles from './PDFPage.module.css';
+import { WORKER_VIEW_MENU_ROUTE } from '../../../utils/consts';
+import styles from './PdfOrder.module.css';
 
-const PDFPage = () => {
+const PdfOrder = () => {
   const location = useLocation();
   const { state } = location;
   const data = state?.data;
@@ -30,7 +30,6 @@ const PDFPage = () => {
 
   useEffect(() => {
     handlePrint();
-    console.log(data);
   }, []);
   return (
     <>
@@ -62,4 +61,4 @@ const PDFPage = () => {
   );
 };
 
-export default PDFPage;
+export default PdfOrder;

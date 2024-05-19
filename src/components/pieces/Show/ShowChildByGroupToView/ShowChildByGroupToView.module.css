@@ -18,3 +18,6 @@
   background-color: #f7f7f5;
   box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
 }
+.mainInf {
+  column-gap: 70px;
+}

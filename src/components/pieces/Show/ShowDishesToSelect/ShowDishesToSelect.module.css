@@ -1,23 +1,14 @@
 .mainInfo {
   width: 100%;
   padding: 37px 35px 0 30px;
+  margin-bottom: 134px;
   border-radius: 35px;
   background-color: rgba(217, 217, 217, 0.2);
 }
 
-.showListBtn {
-  width: 444px;
-  padding: 7px 12px;
-  border-radius: 35px;
-  border: 0;
-  background-color: #87c631;
-  color: #fdfdfb;
-  font-weight: 400;
-  font-size: 20px;
-}
-
 .section {
   gap: 30px;
+  max-height: 745px;
   padding-top: 20px;
   padding-bottom: 25px;
   overflow-y: auto;

@@ -1,34 +1,27 @@
 import React, { useState } from 'react';
-import { deleteDish } from '../../../../http/userAPI';
 import { observer } from 'mobx-react-lite';
 import ModalWindowDelete from '../../../pieces/ModalWindowDelete/ModalWindowDelete';
 import ManagementButton from '../../../buttons/ManagementButton/ManagementButton';
-import styles from './ProfileCardDishToEdit.module.css';
 import ModalWindowEditDish from '../../../pieces/ModalWindowEditDish/ModalWindowEditDish';
+import { deleteDish } from '../../../../http/userAPI';
+import styles from './ProfileCardDishToEdit.module.css';
 
 const ProfileCardDishToEdit = observer(
   ({ mainData, dishesList, setDishesList }) => {
     const [flag, setFlag] = useState(false);
     const [flagEdit, setFlagEdit] = useState(false);
 
-    const showModalWindowDelete = () => {
-      setFlag(true);
-      document.body.style.overflow = 'hidden';
-    };
-
-    const showModalWindowEdit = () => {
-      setFlagEdit(true);
+    const showModalWindow = (func) => {
+      func(true);
       document.body.style.overflow = 'hidden';
     };
 
     const clickDeleteDish = async () => {
       try {
-        const data = await deleteDish(mainData.id);
+        await deleteDish(mainData.id);
         setDishesList(dishesList.filter((dish) => dish.id !== mainData.id));
-        console.log(data);
       } catch (e) {
-        console.log(e);
-        alert(e);
+        alert(e.response.data.message);
       }
     };
 
@@ -41,12 +34,12 @@ const ProfileCardDishToEdit = observer(
         </div>
         <div className={`d-flex justify-content-start`}>
           <ManagementButton
-            mainFunc={showModalWindowEdit}
+            mainFunc={() => showModalWindow(setFlagEdit)}
             variant="success"
             text="Редактировать"
           />
           <ManagementButton
-            mainFunc={showModalWindowDelete}
+            mainFunc={() => showModalWindow(setFlag)}
             variant="danger"
             text="Удалить"
           />

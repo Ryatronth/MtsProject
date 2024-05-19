@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
-import { Context } from '../../..';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { WORKER_WORK_WITH_MENU } from '../../../utils/consts';
-import { Button } from 'react-bootstrap';
-import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
-import { createCurrentMenu, getDishes } from '../../../http/userAPI';
-import SpinnerMain from '../../../components/loaders/SpinnerMain';
 import { observer } from 'mobx-react-lite';
+import TempEditCreateMenu from '../../../components/pieces/TempEditCreateMenu/TempEditCreateMenu';
+import SpinnerMain from '../../../components/loaders/SpinnerMain';
+import { createCurrentMenu, getDishes } from '../../../http/userAPI';
+import { dateToString } from '../../../utils/functions';
+import { WORKER_WORK_WITH_MENU } from '../../../utils/consts';
 import icoSub from '../../../assets/worker/ico-sub.png';
 import icoPlus from '../../../assets/worker/ico-addDish.png';
-import styles from './CreateMenu.module.css';
 
 const CreateMenu = observer(() => {
-  const { user } = useContext(Context);
   const location = useLocation();
   const { state } = location;
   const startDate = state?.startDate;
@@ -22,17 +18,41 @@ const CreateMenu = observer(() => {
   const [loading, setLoading] = useState(true);
   const [allDishesList, setAllDishesList] = useState([]);
   const [selectedDishesList, setSelectedDishesList] = useState([]);
-  const [selectedTime, setSelectedTime] = useState('BREAKFAST');
+  const [selectedTime, setSelectedTime] = useState('Завтрак');
+
+  const btnList = ['Завтрак', 'Обед', 'Полдник', 'Все'];
+  const format = {
+    Завтрак: 'BREAKFAST',
+    Обед: 'LUNCH',
+    Полдник: 'SNACK',
+    Все: 'ALL',
+  };
+  const containerList = [
+    {
+      title: 'Выбранные блюда',
+      selectedTime: format[selectedTime],
+      dishesList: selectedDishesList,
+      exDishesList: allDishesList,
+      funcAddSet: setAllDishesList,
+      funcSubSet: setSelectedDishesList,
+      ico: icoSub,
+    },
+    {
+      title: 'Выберите блюда',
+      selectedTime: format[selectedTime],
+      dishesList: allDishesList,
+      exDishesList: selectedDishesList,
+      funcAddSet: setSelectedDishesList,
+      funcSubSet: setAllDishesList,
+      ico: icoPlus,
+    },
+  ];
 
   const clickSaveCurrentMenu = async () => {
     const dishes = {
       dishes: selectedDishesList.map((data) => data.dish.id),
-      endDate: `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}`,
-      startDate: `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`, //YYYY-MM-DD
+      endDate: dateToString(endDate),
+      startDate: dateToString(startDate),
     };
     createCurrentMenu(dishes)
       .then((data) => {
@@ -41,7 +61,6 @@ const CreateMenu = observer(() => {
       })
       .catch((e) => {
         alert(e.response.data.message);
-        // navigate(WORKER_WORK_WITH_MENU);
       });
   };
 
@@ -53,7 +72,6 @@ const CreateMenu = observer(() => {
           return { id: index, dish: o };
         });
         setAllDishesList(newList);
-        console.log(newList);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -66,95 +84,14 @@ const CreateMenu = observer(() => {
     );
   }
 
-  console.log(allDishesList);
-
   return (
-    <div className="reset-container">
-      <ProfileHeader info={user.user} />
-      <div className={`d-flex flex-column align-items-center`}>
-        <div
-          style={{ width: '100%' }}
-          className={`d-flex justify-content- align-items-center`}
-        >
-          <Button
-            variant="danger"
-            className={`reset-btn ${styles.exit}`}
-            onClick={() => navigate(WORKER_WORK_WITH_MENU)}
-          >
-            Назад
-          </Button>
-        </div>
-        <div className={`d-flex column-gap-3 mb-4`}>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'BREAKFAST'}
-            onClick={() => setSelectedTime('BREAKFAST')}
-          >
-            Завтрак
-          </Button>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'LUNCH'}
-            onClick={() => setSelectedTime('LUNCH')}
-          >
-            Обед
-          </Button>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'SNACK'}
-            onClick={() => setSelectedTime('SNACK')}
-          >
-            Полдник
-          </Button>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'ALL'}
-            onClick={() => setSelectedTime('ALL')}
-          >
-            Все
-          </Button>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            onClick={() => clickSaveCurrentMenu()}
-          >
-            Сохранить
-          </Button>
-        </div>
-        <div
-          className={`d-flex flex-column justify-content-center align-items-center`}
-        >
-          <h2 className={`${styles.menuTitle}`}>Выбранные блюда</h2>
-          <div style={{ width: '1657px' }}>
-            <ShowDishesToSelect
-              selectedTime={selectedTime}
-              dishesList={selectedDishesList}
-              exDishesList={allDishesList}
-              funcAddSet={setAllDishesList}
-              funcSubSet={setSelectedDishesList}
-              ico={icoSub}
-            />
-          </div>
-          <h2 style={{ marginTop: '25px' }} className={`${styles.menuTitle}`}>
-            Выберите блюда
-          </h2>
-          <div style={{ width: '1657px' }}>
-            <ShowDishesToSelect
-              selectedTime={selectedTime}
-              dishesList={allDishesList}
-              exDishesList={selectedDishesList}
-              funcAddSet={setSelectedDishesList}
-              funcSubSet={setAllDishesList}
-              ico={icoPlus}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <TempEditCreateMenu
+      btnList={btnList}
+      containerList={containerList}
+      setSelectedTime={setSelectedTime}
+      selectedTime={selectedTime}
+      func={clickSaveCurrentMenu}
+    />
   );
 });
 

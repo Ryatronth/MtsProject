@@ -1,7 +1,7 @@
-import { observer } from 'mobx-react-lite';
 import React from 'react';
-import styles from './ShowDishesToSelect.module.css';
+import { observer } from 'mobx-react-lite';
 import ProfileCardDishToSelect from '../../../blocks/ProfileCard/ProfileCardDishToSelect/ProfileCardDishToSelect';
+import styles from './ShowDishesToSelect.module.css';
 
 const ShowDishesToSelect = observer(
   ({ selectedTime, dishesList, funcAddSet, funcSubSet, exDishesList, ico }) => {
@@ -12,9 +12,8 @@ const ShowDishesToSelect = observer(
     });
 
     return (
-      <div style={{ marginBottom: '134px' }} className={`${styles.mainInfo}`}>
+      <div className={`${styles.mainInfo}`}>
         <div
-          style={{ maxHeight: '745px' }}
           className={`${styles.section} d-flex ${
             filteredListData.length % 5 > 2 || filteredListData.length % 5 === 0
               ? 'justify-content-center'

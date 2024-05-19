@@ -23,7 +23,7 @@ const ProfileCardDishToSelect = ({
       className={`${styles.profileCard} d-flex flex-column align-items-center justify-content-between row-gap-4`}
     >
       <div className={`${styles.imgContainer}`}>
-        <Image src={dishData.dish.imageUrl} className={`${styles.img}`}></Image>
+        <Image src={dishData.dish.imageUrl} className={`${styles.img}`} />
       </div>
       <h2 className={`${styles.titleCard}`}>{dishData.dish.name}</h2>
       <div
@@ -35,7 +35,7 @@ const ProfileCardDishToSelect = ({
           className={`${styles.btnCard} d-flex justify-content-center align-items-center`}
           onClick={() => exchange()}
         >
-          <Image src={ico}></Image>
+          <Image src={ico} />
         </Button>
       </div>
     </div>

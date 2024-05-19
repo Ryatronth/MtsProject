@@ -4,7 +4,6 @@
   border-radius: 35px;
   background-color: rgba(217, 217, 217, 0.2);
 }
-
 .showListBtn {
   width: 444px;
   padding: 7px 12px;
@@ -15,9 +14,9 @@
   font-weight: 400;
   font-size: 20px;
 }
-
 .section {
   row-gap: 35px;
+  height: 785px;
   padding-top: 20px;
   padding-bottom: 22px;
   overflow-y: auto;

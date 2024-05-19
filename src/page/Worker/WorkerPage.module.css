@@ -1,8 +1,10 @@
 .workerBody {
-  border-radius: 70px 70px 0 0;
   height: 690px;
-}
-.workerContainer {
   padding-top: 110px;
-  row-gap: 90px;
+  border-radius: 70px 70px 0 0;
+  background: url('../../assets/bgProfile.png') no-repeat center center;
+}
+.mainBtn {
+  width: 100%;
+  flex-wrap: wrap;
 }

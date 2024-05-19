@@ -18,27 +18,17 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* padding: 0 0 24px 0; */
   border-radius: 20px;
-  /* background-color: #fdfdfb; */
   background-image: url('../../../assets/worker/bg-childCard.png');
   background-size: cover;
   z-index: 2;
   color: #414141;
-}
-.exit {
-  cursor: pointer;
-  position: absolute;
-  top: 19px;
-  right: 31px;
 }
 .mainInfo {
   column-gap: 55px;
   width: 100%;
   padding: 20px 54px;
   border-radius: 20px;
-  /* border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px; */
   background-color: #fdfdfb;
 }
 .mainInfoTitle {
@@ -54,9 +44,7 @@
   color: #414141;
 }
 .descr {
-  /* margin-top: 10px; */
   margin-left: 35px;
-  /* margin-bottom: 15px; */
   font-weight: 700;
   font-size: 26px;
 }

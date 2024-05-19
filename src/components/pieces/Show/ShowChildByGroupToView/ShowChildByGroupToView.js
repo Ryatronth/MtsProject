@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { Image } from 'react-bootstrap';
+import ModalWindowPreview from '../../ModalWindowPreview/ModalWindowPreview';
 import ico from '../../../../assets/prewChild.png';
 import styles from './ShowChildByGroupToView.module.css';
-import ModalWindowPreview from '../../ModalWindowPreview/ModalWindowPreview';
 
 const ShowChildByGroupToView = ({ mainData, date, group }) => {
-  // console.log(mainData);
   const [modalWindowFlag, setModalWindowFlag] = useState(false);
   const [modalWindowInfo, setModalWindowInfo] = useState(false);
-
-  // console.log(mainData, group);
 
   if (!mainData) {
     return <div>Ни одной группы нет</div>;
@@ -18,9 +15,9 @@ const ShowChildByGroupToView = ({ mainData, date, group }) => {
   if (!mainData.length) {
     return <div>У группы нет блюд</div>;
   }
-  const viewModal = (ob) => {
+  const viewModal = (obj) => {
     setModalWindowFlag(!modalWindowFlag);
-    setModalWindowInfo(ob);
+    setModalWindowInfo(obj);
     document.body.style.overflow = 'hidden';
   };
 
@@ -30,22 +27,19 @@ const ShowChildByGroupToView = ({ mainData, date, group }) => {
     >
       <h2>Группа:&nbsp;&nbsp;{group}</h2>
       <div className={`${styles.listContainer} d-flex flex-column`}>
-        {mainData.map((ob) => (
+        {mainData.map((obj) => (
           <div
-            key={ob.id}
+            key={obj.id}
             className={`${styles.profileCard} d-flex justify-content-between align-items-center`}
-            onClick={() => viewModal(ob)}
+            onClick={() => viewModal(obj)}
           >
-            <div
-              style={{ columnGap: '70px' }}
-              className={`d-flex align-items-center`}
-            >
-              <Image src={ob?.child?.imageUrl || ico} />
+            <div className={`${styles.mainInf} d-flex align-items-center`}>
+              <Image src={obj?.child?.imageUrl || ico} />
               <p>
-                {ob.surname} {ob.name} {ob.patronymic}
+                {obj.surname} {obj.name} {obj.patronymic}
               </p>
             </div>
-            <p>ID&nbsp;:&nbsp;{ob.id}</p>
+            <p>ID&nbsp;:&nbsp;{obj.id}</p>
           </div>
         ))}
       </div>

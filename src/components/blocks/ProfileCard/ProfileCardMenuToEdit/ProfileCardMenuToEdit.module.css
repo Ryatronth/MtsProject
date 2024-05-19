@@ -6,6 +6,9 @@
   background-color: #f7f7f5;
   box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.2);
 }
+.dateContainer {
+  column-gap: 65px;
+}
 .groupInfoImg {
   margin-right: 67px;
 }

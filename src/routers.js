@@ -38,8 +38,8 @@ import CreateOrder from './page/Parent/CreateOrder/CreateOrder';
 import CreateMenu from './page/Worker/CreateMenu/CreateMenu';
 import EditMenu from './page/Worker/EditMenu/EditMenu';
 import ViewMenu from './page/Worker/ViewMenu/ViewMenu';
-import PDFPage from './page/PDFPage/PDFPage';
-import PdfOrder from './page/Parent/PdfOrder/PdfOrder';
+import PdfWorker from './page/Worker/PdfOrder/PdfOrder';
+import PdfParent from './page/Parent/PdfOrder/PdfOrder';
 
 export const publicRoutes = [
   {
@@ -110,7 +110,7 @@ export const workerRoutes = [
   },
   {
     path: PDF_ROUTE,
-    Component: PDFPage,
+    Component: PdfWorker,
   },
 ];
 
@@ -129,6 +129,6 @@ export const parentRoutes = [
   },
   {
     path: PARENT_PDF_ORDER_ROUTE,
-    Component: PdfOrder,
+    Component: PdfParent,
   },
 ];

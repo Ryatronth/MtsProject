@@ -1,4 +1,4 @@
-// Форматировщики
+// Форматировщики инпутов
 
 export const formatNumberPhone = (srting) => {
   let res = srting.replace(/\D/g, '');
@@ -34,5 +34,26 @@ export const formatFullName = (string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
+  return res;
+};
+
+// Загрузка картинки
+export const loadImage = async (ico, func) => {
+  const response = await fetch(ico);
+  const blob = await response.blob();
+  const list = response.url.split('/');
+  const file = new File([blob], `${list[list.length - 1]}`, {
+    type: `${blob.type}`,
+  });
+
+  func(file);
+};
+
+// Date --> string (YYYY-MM-DD)
+
+export const dateToString = (date) => {
+  const res = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   return res;
 };

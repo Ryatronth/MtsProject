@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { Button } from 'react-bootstrap';
 import InputSearch from '../../../inputs/InputSearch/InputSearch';
 import ModalWindowCreateDish from '../../ModalWindowCreateDish/ModalWindowCreateDish';
-import { Button } from 'react-bootstrap';
-import { observer } from 'mobx-react-lite';
-import styles from './ShowDishesToEdit.module.css';
 import ProfileCardDishToEdit from '../../../blocks/ProfileCard/ProfileCardDishToEdit/ProfileCardDishToEdit';
+import styles from './ShowDishesToEdit.module.css';
 
 const ShowDishesToEdit = observer(
   ({ selectedTime, dishesList, setDishesList }) => {
@@ -24,10 +24,8 @@ const ShowDishesToEdit = observer(
       document.body.style.overflow = 'hidden';
     };
 
-    console.log(filteredListData);
-
     return (
-      <div style={{ marginBottom: '134px' }} className={`${styles.mainInfo}`}>
+      <div className={`${styles.mainInfo}`}>
         <div className="d-flex align-items-center column-gap-5 mb-3">
           <InputSearch
             customWidth="638px"
@@ -37,15 +35,12 @@ const ShowDishesToEdit = observer(
           <Button
             variant="success"
             className={`${styles.showListBtn}`}
-            onClick={() => showModalWindowToCreate()}
+            onClick={showModalWindowToCreate}
           >
             Создать блюдо
           </Button>
         </div>
-        <div
-          style={{ maxHeight: '1057px' }}
-          className={`${styles.section} d-flex flex-column`}
-        >
+        <div className={`${styles.section} d-flex flex-column`}>
           {filteredListData.map((data) => (
             <ProfileCardDishToEdit
               key={data.id}
