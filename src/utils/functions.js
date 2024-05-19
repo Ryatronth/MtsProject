@@ -37,6 +37,12 @@ export const formatFullName = (string) => {
   return res;
 };
 
+export const formatCategory = (category) => {
+  const format = { BREAKFAST: 'Завтрак', LUNCH: 'Обед', SNACK: 'Полдник' };
+  const res = format[category];
+  return res;
+};
+
 // Загрузка картинки
 export const loadImage = async (ico, func) => {
   const response = await fetch(ico);

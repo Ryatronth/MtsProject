@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import InputDishPicture from '../../inputs/InputDishPicture/InputDishPicture';
 import CloseWindow from '../../buttons/CloseWindow/CloseWindow';
 import InputsDishBuilder from '../../blocks/InputsDishBuilder/InputsDishBuilder';
-import styles from './TempWindow.module.css';
+import { formatCategory, loadImage } from '../../../utils/functions';
+import styles from './ModalWindowDish.module.css';
 
-const TempWindow = ({
+const ModalWindowDish = ({
+  ico,
   setFlag,
   setImage,
   setImageSrc,
@@ -18,8 +20,11 @@ const TempWindow = ({
   setDescription,
   category,
   setCategory,
-  clickCreateDish,
+  mianFunc,
 }) => {
+  useEffect(() => {
+    loadImage(ico, setImage);
+  }, []);
   return (
     <div className={`${styles.blur}`}>
       <div className={`${styles.mainInfo} d-flex flex-column`}>
@@ -49,16 +54,16 @@ const TempWindow = ({
                   variant="success"
                   className="children-card__dropdown-groups"
                 >
-                  {category || 'Выберите категорию'}
+                  {formatCategory(category) || 'Выберите категорию'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{ width: '263px' }}>
-                  <Dropdown.Item onClick={() => setCategory('breakfast')}>
+                  <Dropdown.Item onClick={() => setCategory('BREAKFAST')}>
                     Завтрак
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setCategory('lunch')}>
+                  <Dropdown.Item onClick={() => setCategory('LUNCH')}>
                     Обед
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setCategory('snack')}>
+                  <Dropdown.Item onClick={() => setCategory('SNACK')}>
                     Полдник
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -66,7 +71,7 @@ const TempWindow = ({
               <Button
                 variant="success"
                 className={`${styles.saveBtn}`}
-                onClick={() => clickCreateDish()}
+                onClick={mianFunc}
               >
                 Сохранить
               </Button>
@@ -78,4 +83,4 @@ const TempWindow = ({
   );
 };
 
-export default TempWindow;
+export default ModalWindowDish;
