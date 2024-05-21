@@ -99,7 +99,7 @@ public class ParentService implements EntityCreator<Parent, ParentDTO>, EntityFi
 
     @Transactional
     @Override
-    public ModificationResponse modify(Long id, ParentDTO data) {
+    public ModificationResponse update(Long id, ParentDTO data) {
         try {
             Parent parent = parentRepository.findById(id).orElseThrow(() -> new ModificationException("Родитель не найден"));
             User user = parent.getUser();

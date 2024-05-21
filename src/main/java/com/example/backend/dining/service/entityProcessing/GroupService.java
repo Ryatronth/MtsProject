@@ -5,7 +5,6 @@ import com.example.backend.dining.entity.user.repository.GroupRepository;
 import com.example.backend.dining.payload.dto.GroupDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.dining.payload.response.DeleteResponse;
-import com.example.backend.dining.payload.response.ModificationResponse;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class GroupService implements EntityCreator<ChildGroup, GroupDTO>, EntityFilter<ChildGroup>, EntityModifier<String, GroupDTO>, EntityEraser<String> {
+public class GroupService implements EntityCreator<ChildGroup, GroupDTO>, EntityFilter<ChildGroup>, EntityEraser<String> {
     private final GroupRepository groupRepository;
 
     @Override
@@ -32,11 +31,6 @@ public class GroupService implements EntityCreator<ChildGroup, GroupDTO>, Entity
     @Override
     public List<ChildGroup> filtrate(Object... values) {
         return groupRepository.findAll(FilterProcessor.createSpec((key, value, root, builder) -> builder.equal(root.get(key), value), values));
-    }
-
-    @Override
-    public ModificationResponse modify(String string, GroupDTO data) {
-        return null;
     }
 
     @Override

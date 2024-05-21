@@ -73,23 +73,23 @@ public class AdminController {
 
     @PostMapping("/create/child/csv")
     public ResponseEntity<?> createChildFromCsv(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(csvService.processChildCsv(file));
+        return ResponseEntity.ok(csvService.createChildren(file));
     }
 
     @PostMapping("/create/parents/csv")
     public ResponseEntity<?> createParentsFromCsv(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(csvService.processParentCsv(file));
+        return ResponseEntity.ok(csvService.createParents(file));
     }
 
     // Изменение -------------------------------------------------------------------------------------------------------
     @PutMapping("/update/parent/{parentId}")
     public ResponseEntity<?> updateParent(@PathVariable Long parentId, @RequestBody @Validated(ValidForUpdate.class) ParentDTO data) {
-        return ResponseEntity.ok(parentService.modify(parentId, data));
+        return ResponseEntity.ok(parentService.update(parentId, data));
     }
 
     @PutMapping("/update/child/{childId}")
     public ResponseEntity<?> updateChild(@PathVariable Long childId, @RequestBody @Validated(ValidForUpdate.class) ChildDTO data) {
-        return ResponseEntity.ok(childService.modify(childId, data));
+        return ResponseEntity.ok(childService.update(childId, data));
     }
 
     // Удаление --------------------------------------------------------------------------------------------------------

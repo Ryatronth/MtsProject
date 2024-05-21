@@ -29,7 +29,7 @@ public class PaymentService {
 
     public PaymentResponse pay(Long childId) {
         List<Order> orders = orderService.filtrate("isPaid", false, "toDate", LocalDate.now().minusDays(1), "child", childId);
-        orders.forEach(o -> orderService.modify(o.getId(), UpdateOrderDTO.builder()
+        orders.forEach(o -> orderService.update(o.getId(), UpdateOrderDTO.builder()
                     .toAdd(new HashSet<>())
                             .toDelete(new HashSet<>())
                             .isPaid(true)

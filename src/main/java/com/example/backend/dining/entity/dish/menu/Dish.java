@@ -29,6 +29,7 @@ public class Dish {
 
     private Double price;
 
+    @Getter
     private String imageUrl;
 
     @JsonIgnore
@@ -40,7 +41,7 @@ public class Dish {
     private Set<MenuDish> menuDishes;
 
     @JsonGetter("imageUrl")
-    public String getImageUrl() {
+    public String getImageUrlJson() {
         if (imageUrl != null) {
             return "http://localhost:8080" + imageUrl.substring(2);
         }

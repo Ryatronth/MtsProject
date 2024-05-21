@@ -69,12 +69,12 @@ public class WorkerController {
     // Изменение -------------------------------------------------------------------------------------------------------
     @PutMapping("/update/dish/{dishId}")
     public ResponseEntity<?> updateDish(@PathVariable Long dishId, @ModelAttribute @Validated(ValidForUpdate.class) DishDTO data) {
-        return ResponseEntity.ok(dishService.modify(dishId, data));
+        return ResponseEntity.ok(dishService.update(dishId, data));
     }
 
     @PutMapping("/update/menu/{menuId}")
     public ResponseEntity<?> updateMenu(@PathVariable Long menuId, @RequestBody @Validated UpdateMenuDTO data) {
-        return ResponseEntity.ok(menuService.modify(menuId, data));
+        return ResponseEntity.ok(menuService.update(menuId, data));
     }
 
     // Удаление --------------------------------------------------------------------------------------------------------

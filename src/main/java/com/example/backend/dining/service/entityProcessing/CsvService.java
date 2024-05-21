@@ -4,6 +4,7 @@ import com.example.backend.dining.controller.exception.customException.CreationE
 import com.example.backend.dining.entity.user.Child;
 import com.example.backend.dining.entity.user.Parent;
 import com.example.backend.dining.payload.dto.ChildDTO;
+import com.example.backend.dining.payload.dto.GroupDTO;
 import com.example.backend.dining.payload.dto.ParentDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.security.entity.RoleName;
@@ -22,35 +23,46 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class CsvService {
     private final ParentService parentService;
     private final ChildService childService;
+    private final GroupService groupService;
 
     private final CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build();
 
-    private CSVParser readFile(MultipartFile file) {
+    public List<CreationResponse<Parent>> createParents(MultipartFile file) {
+        return processFile(file, this::processParentCsv);
+    }
+
+    public List<CreationResponse<Child>> createChildren(MultipartFile file) {
+        return processFile(file, this::processChildCsv);
+    }
+
+    private <T> List<CreationResponse<T>> processFile(MultipartFile file, Function<CSVParser, List<CreationResponse<T>>> processFunction) {
         if (file.isEmpty()) {
             throw new CreationException("Файл пуст");
         }
 
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            return csvFormat.parse(reader);
+            return processFunction.apply(csvFormat.parse(reader));
         } catch (IOException ex) {
             throw new CreationException(ex.getMessage());
         }
     }
 
-    public List<CreationResponse<Parent>> processParentCsv(MultipartFile file) {
-        CSVParser csvParser = readFile(file);
-
+    private List<CreationResponse<Parent>> processParentCsv(CSVParser csvParser) {
         List<CreationResponse<Parent>> responses = new ArrayList<>();
 
         long index = 1;
         for (CSVRecord csvRecord : csvParser) {
             try {
+                List<Long> childIds = csvRecord.get("children").isEmpty() ? new ArrayList<>() :
+                        Arrays.stream(csvRecord.get("children").split(",")).map(o -> Long.parseLong(o.trim())).toList();
+
                 ParentDTO dto = ParentDTO.builder()
                         .username(csvRecord.get("username"))
                         .password(csvRecord.get("password"))
@@ -59,7 +71,7 @@ public class CsvService {
                         .patronymic(csvRecord.get("patronymic"))
                         .phone(csvRecord.get("phone"))
                         .role(RoleName.PARENT)
-                        .children(Arrays.stream(csvRecord.get("children").split(",")).map(Long::parseLong).toList())
+                        .children(childIds)
                         .build();
 
                 responses.add(parentService.create(dto));
@@ -76,14 +88,16 @@ public class CsvService {
         return responses;
     }
 
-    public List<CreationResponse<Child>> processChildCsv(MultipartFile file) {
-        CSVParser csvParser = readFile(file);
-
+    private List<CreationResponse<Child>> processChildCsv(CSVParser csvParser) {
         List<CreationResponse<Child>> responses = new ArrayList<>();
 
         long index = 1;
         for (CSVRecord csvRecord : csvParser) {
             try {
+                try {
+                    groupService.create(GroupDTO.builder().groupId(csvRecord.get("group")).build());
+                } catch (Exception ignored) {}
+
                 ChildDTO dto = ChildDTO.builder()
                         .name(csvRecord.get("name"))
                         .surname(csvRecord.get("surname"))

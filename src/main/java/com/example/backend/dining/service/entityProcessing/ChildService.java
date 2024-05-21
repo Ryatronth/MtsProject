@@ -61,7 +61,7 @@ public class ChildService implements EntityCreator<Child, ChildDTO>, EntityFilte
     }
 
     @Override
-    public ModificationResponse modify(Long id, ChildDTO data) {
+    public ModificationResponse update(Long id, ChildDTO data) {
         try {
             Child child = childRepository.findById(id).orElseThrow(() -> new ModificationException("Ребенок не найден"));
 

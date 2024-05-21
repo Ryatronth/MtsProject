@@ -3,7 +3,10 @@ package com.example.backend.dining.service.entityProcessing;
 import com.example.backend.dining.controller.exception.customException.ModificationException;
 import com.example.backend.dining.entity.dish.menu.CurrentMenu;
 import com.example.backend.dining.entity.dish.menu.Dish;
+import com.example.backend.dining.entity.dish.menu.MenuDish;
+import com.example.backend.dining.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.dining.entity.dish.menu.repository.DishRepository;
+import com.example.backend.dining.entity.dish.menu.repository.MenuDishRepository;
 import com.example.backend.dining.payload.dto.DishDTO;
 import com.example.backend.dining.payload.dto.UpdateMenuDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
@@ -13,6 +16,7 @@ import com.example.backend.dining.service.ImageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +30,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<Dish>, EntityModifier<Long, DishDTO>, EntityEraser<Long> {
     private final DishRepository dishRepository;
+    private final MenuDishRepository menuDishRepository;
+    private final CurrentMenuRepository currentMenuRepository;
 
     private final ImageService imageService;
     private final MenuService menuService;
@@ -43,7 +49,22 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
                         .imageUrl(pathToImage)
                         .isRemoved(false)
                         .build(),
-                condition -> dishRepository.findByName(data.getName()).isPresent(),
+                condition -> dishRepository.findAllByName(data.getName()).stream().anyMatch(o -> !o.isRemoved()),
+                "Блюдо успешно создано",
+                "Данное блюдо уже существует");
+    }
+
+    private CreationResponse<Dish> create(Dish data, String name) {
+        return EntityBuilder.createEntity(data, dishRepository,
+                dto -> Dish.builder()
+                        .name(name)
+                        .composition(data.getComposition())
+                        .category(data.getCategory())
+                        .price(data.getPrice())
+                        .imageUrl(data.getImageUrl())
+                        .isRemoved(false)
+                        .build(),
+                condition -> dishRepository.findAllByName(name).stream().anyMatch(o -> !o.isRemoved()),
                 "Блюдо успешно создано",
                 "Данное блюдо уже существует");
     }
@@ -66,37 +87,50 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
         );
     }
 
+    // Дикая костылина, надо поправить
+    @Transactional
     @Override
-    public ModificationResponse modify(Long id, DishDTO data) {
+    public ModificationResponse update(Long id, DishDTO data) {
         try {
             Dish dish = dishRepository.findById(id).orElseThrow(() -> new ModificationException("Блюдо не найдено"));
 
-            if (data.getImage() != null) {
-                changeImage(dish, data);
-            }
+            List<MenuDish> dishes = menuDishRepository.findAllByDish(dish, LocalDate.now());
+            List<Long> menuIds = dishes.stream().map(o -> o.getCurrentMenu().getId()).toList();
 
-            if (data.getName() != null) {
-                dish.setName(data.getName());
+            dish.setRemoved(true);
+            dishRepository.save(dish);
+
+            Dish newDish = create(dish, data.getName() == null ? dish.getName() : data.getName()).getObject();
+
+            if (data.getImage() != null) {
+                changeImage(newDish, data);
             }
 
             if (data.getComposition() != null) {
-                dish.setComposition(data.getComposition());
+                newDish.setComposition(data.getComposition());
             }
 
             if (data.getCategory() != null) {
-                dish.setCategory(data.getCategory());
+                newDish.setCategory(data.getCategory());
             }
 
             if (data.getPrice() != null) {
-                dish.setPrice(data.getPrice());
+                newDish.setPrice(data.getPrice());
             }
 
-            dishRepository.save(dish);
+            if (!dishes.isEmpty()) {
+                for (int i = 0; i < dishes.size(); i++) {
+                    MenuDish menuDish = dishes.get(i);
+                    menuDish.setDish(newDish);
+                    menuDish.setCurrentMenu(currentMenuRepository.findById(menuIds.get(i)).orElseThrow(() -> new ModificationException("Ошибка сервера")));
+                }
+                menuDishRepository.saveAll(dishes);
+            }
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)
                     .message("Блюдо изменено успешно")
-                    .object(dish)
+                    .object(newDish)
                     .build();
         } catch (Exception ex) {
             throw new ModificationException(ex.getMessage());
@@ -125,7 +159,7 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
             for (CurrentMenu menu : menus) {
                 long menuId = menu.getId();
                 menu.getDishes().stream().filter(o -> o.getDish().equals(dish)).findFirst()
-                        .ifPresent(o -> menuService.modify(menuId, UpdateMenuDTO.builder()
+                        .ifPresent(o -> menuService.update(menuId, UpdateMenuDTO.builder()
                                 .toDelete(Set.of(o.getDish().getId()))
                                 .toAdd(new HashSet<>())
                                 .build()));

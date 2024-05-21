@@ -79,7 +79,7 @@ public class ParentController {
     // Изменение -------------------------------------------------------------------------------------------------------
     @PutMapping("/child/order/{orderId}/update")
     public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody @Validated UpdateOrderDTO data) {
-        return ResponseEntity.ok(orderService.modify(orderId, data));
+        return ResponseEntity.ok(orderService.update(orderId, data));
     }
 
     @PutMapping("/child/{childId}/orders/pay")

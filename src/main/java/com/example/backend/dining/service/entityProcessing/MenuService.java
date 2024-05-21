@@ -99,7 +99,7 @@ public class MenuService implements EntityCreator<CurrentMenu, MenuDTO>, EntityF
 
     @Transactional
     @Override
-    public ModificationResponse modify(Long id, UpdateMenuDTO data) {
+    public ModificationResponse update(Long id, UpdateMenuDTO data) {
         try {
             CurrentMenu currentMenu = currentMenuRepository.findById(id).orElseThrow(() -> new ModificationException("Меню не найдено"));
             LocalDate currDate = LocalDate.now();

@@ -119,7 +119,7 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
 
     @Transactional
     @Override
-    public ModificationResponse modify(Long id, UpdateOrderDTO data) {
+    public ModificationResponse update(Long id, UpdateOrderDTO data) {
         try {
             Order order = orderRepository.findById(id).orElseThrow(() -> new ModificationException("Заказ не найден"));
             if (data.isPaid()) {
