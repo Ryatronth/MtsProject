@@ -110,7 +110,7 @@ public class CsvService {
                 responses.add(CreationResponse
                         .<Child>builder()
                         .status(ResponseStatus.ERROR)
-                        .message("Ошибка при создании сущности в строке: " + index + ". " + ex.getMessage())
+                        .message("Ошибка при создании сущности в строке: " + index + ". Ошибка: " + ex.getMessage())
                         .build());
             }
             index++;

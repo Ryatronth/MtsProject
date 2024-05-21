@@ -69,6 +69,12 @@ public class NotificationService {
         });
     }
 
+    @RabbitListener(queues = "worker.menu.change")
+    public void handleMenuChangeEventToWorker(String message) {
+        User worker = userRepository.findByUsername("worker").orElseThrow(() -> new AmqpRejectAndDontRequeueException("Работник не найден"));
+        createNotification(worker, message);
+    }
+
     @Scheduled(cron = "0 0 9 * * *")
     public void sendMenuNotify() {
         LocalDate currentDate = LocalDate.now();

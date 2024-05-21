@@ -20,4 +20,8 @@ public class RabbitMessageService {
     public void sendDeleteOrders(CurrentMenu currentMenu) {
         rabbitTemplate.convertAndSend("application", "orders.delete", currentMenu);
     }
+
+    public void sendUpdateMenu(String message) {
+        rabbitTemplate.convertAndSend("application", "worker.menu.change", message);
+    }
 }
