@@ -4,7 +4,6 @@ import com.example.backend.dining.controller.exception.customException.Modificat
 import com.example.backend.dining.entity.dish.menu.CurrentMenu;
 import com.example.backend.dining.entity.dish.menu.Dish;
 import com.example.backend.dining.entity.dish.menu.MenuDish;
-import com.example.backend.dining.entity.dish.menu.repository.CurrentMenuRepository;
 import com.example.backend.dining.entity.dish.menu.repository.DishRepository;
 import com.example.backend.dining.entity.dish.menu.repository.MenuDishRepository;
 import com.example.backend.dining.payload.dto.DishDTO;
@@ -31,7 +30,6 @@ import java.util.Set;
 public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<Dish>, EntityModifier<Long, DishDTO>, EntityEraser<Long> {
     private final DishRepository dishRepository;
     private final MenuDishRepository menuDishRepository;
-    private final CurrentMenuRepository currentMenuRepository;
 
     private final ImageService imageService;
     private final MenuService menuService;
@@ -87,18 +85,15 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
         );
     }
 
-    // Дикая костылина, надо поправить
     @Transactional
     @Override
     public ModificationResponse update(Long id, DishDTO data) {
         try {
             Dish dish = dishRepository.findById(id).orElseThrow(() -> new ModificationException("Блюдо не найдено"));
-
-            List<MenuDish> dishes = menuDishRepository.findAllByDish(dish, LocalDate.now());
-            List<Long> menuIds = dishes.stream().map(o -> o.getCurrentMenu().getId()).toList();
-
             dish.setRemoved(true);
             dishRepository.save(dish);
+
+            List<MenuDish> dishes = menuDishRepository.findAllByDish(dish, LocalDate.now());
 
             Dish newDish = create(dish, data.getName() == null ? dish.getName() : data.getName()).getObject();
 
@@ -119,13 +114,11 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
             }
 
             if (!dishes.isEmpty()) {
-                for (int i = 0; i < dishes.size(); i++) {
-                    MenuDish menuDish = dishes.get(i);
-                    menuDish.setDish(newDish);
-                    menuDish.setCurrentMenu(currentMenuRepository.findById(menuIds.get(i)).orElseThrow(() -> new ModificationException("Ошибка сервера")));
-                }
+                dishes.forEach(menuDish -> menuDish.setDish(newDish));
                 menuDishRepository.saveAll(dishes);
             }
+
+            changeMenu(newDish);
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)
@@ -152,9 +145,16 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
         dish.setRemoved(true);
         dishRepository.save(dish);
 
-        LocalDate currDate = LocalDate.now();
+        changeMenu(dish);
 
-        List<CurrentMenu> menus = menuService.filtrate("fromDate", currDate);
+        return DeleteResponse.builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Блюдо удалено")
+                .build();
+    }
+
+    private void changeMenu(Dish dish) {
+        List<CurrentMenu> menus = menuService.filtrate("fromDate", LocalDate.now());
         if (!menus.isEmpty()) {
             for (CurrentMenu menu : menus) {
                 long menuId = menu.getId();
@@ -165,10 +165,5 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
                                 .build()));
             }
         }
-
-        return DeleteResponse.builder()
-                .status(ResponseStatus.SUCCESS)
-                .message("Блюдо удалено")
-                .build();
     }
 }
