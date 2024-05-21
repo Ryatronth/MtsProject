@@ -12,6 +12,7 @@ import com.example.backend.dining.payload.response.CreationResponse;
 import com.example.backend.dining.payload.response.DeleteResponse;
 import com.example.backend.dining.payload.response.ModificationResponse;
 import com.example.backend.dining.service.ImageService;
+import com.example.backend.dining.service.RabbitMessageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,6 +34,7 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
 
     private final ImageService imageService;
     private final MenuService menuService;
+    private final RabbitMessageService rabbitMessageService;
 
     @Override
     public CreationResponse<Dish> create(DishDTO data) {
@@ -159,10 +161,14 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
             for (CurrentMenu menu : menus) {
                 long menuId = menu.getId();
                 menu.getDishes().stream().filter(o -> o.getDish().equals(dish)).findFirst()
-                        .ifPresent(o -> menuService.update(menuId, UpdateMenuDTO.builder()
-                                .toDelete(Set.of(o.getDish().getId()))
-                                .toAdd(new HashSet<>())
-                                .build()));
+                        .ifPresent(o -> {
+                            menuService.update(menuId, UpdateMenuDTO.builder()
+                                    .toDelete(Set.of(o.getDish().getId()))
+                                    .toAdd(new HashSet<>())
+                                    .build());
+
+                            rabbitMessageService.sendUpdateMenu("Блюдо '" + dish.getName() + "' было удалено из меню.");
+                        });
             }
         }
     }

@@ -12,6 +12,7 @@ import com.example.backend.dining.service.entityProcessing.MenuService;
 import com.example.backend.dining.service.entityProcessing.ParentService;
 import com.example.backend.security.entity.RoleName;
 import com.example.backend.totalPayload.enums.ResponseStatus;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -67,6 +68,12 @@ public class NotificationService {
             if (user == null) throw new AmqpRejectAndDontRequeueException("У ребенка должен быть определен родитель");
             createNotification(user, "Меню было изменено. Пожалуйста, составьте меню для своих детей заново.");
         });
+    }
+
+    @RabbitListener(queues = "worker.menu.change")
+    public void handleMenuChangeEventToWorker(String message) {
+        User worker = userRepository.findByUsername("worker").orElseThrow(() -> new EntityNotFoundException("Работник не найден"));
+        createNotification(worker, message);
     }
 
     @Scheduled(cron = "0 0 9 * * *")
