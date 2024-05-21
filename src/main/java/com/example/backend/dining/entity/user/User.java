@@ -2,6 +2,7 @@ package com.example.backend.dining.entity.user;
 
 import com.example.backend.dining.entity.notification.Notification;
 import com.example.backend.security.entity.RoleName;
+import com.example.backend.security.entity.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,6 +52,10 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<Notification> notifications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<Token> token;
 
     @JsonIgnore
     @Override
