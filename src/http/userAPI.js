@@ -128,6 +128,22 @@ export const createChild = async ({
   return data;
 };
 
+export const createChildCsv = async (fileFormData) => {
+  const { data } = await $authHost.post(
+    'api/user/admin/create/child/csv',
+    fileFormData
+  );
+  return data;
+};
+
+export const createParentCsv = async (fileFormData) => {
+  const { data } = await $authHost.post(
+    'api/user/admin/create/parents/csv',
+    fileFormData
+  );
+  return data;
+};
+
 export const createParent = async (user) => {
   const { data } = await $authHost.post('api/user/admin/create/parent', user);
   return data;

@@ -13,7 +13,13 @@ const ShowChildByGroupToView = ({ mainData, date, group }) => {
   }
 
   if (!mainData.length) {
-    return <div>У группы нет блюд</div>;
+    return (
+      <div
+        className={`${styles.basicContainer} d-flex flex-column justifu-content-center align-items-center`}
+      >
+        У группы нет блюд
+      </div>
+    );
   }
   const viewModal = (obj) => {
     setModalWindowFlag(!modalWindowFlag);

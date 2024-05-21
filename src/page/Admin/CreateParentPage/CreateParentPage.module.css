@@ -27,3 +27,14 @@
   gap: 60px;
   flex-wrap: wrap;
 }
+
+.specialBtn {
+  width: 396px;
+  height: 46px;
+  border-radius: 35px;
+  border: none;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+  background-color: #87c631;
+  font-weight: 500;
+  font-size: 24px;
+}

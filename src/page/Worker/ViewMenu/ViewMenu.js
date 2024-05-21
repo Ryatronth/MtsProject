@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
 import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
 import ShowChildByGroupToView from '../../../components/pieces/Show/ShowChildByGroupToView/ShowChildByGroupToView';
 import SpinnerMain from '../../../components/loaders/SpinnerMain';
+import BackButton from '../../../components/buttons/BackButton/BackButton';
 import { getOrdersForWorker } from '../../../http/userAPI';
 import { dateToString } from '../../../utils/functions';
 import { PDF_ROUTE, WORKER_ROUTE } from '../../../utils/consts';
 import ico from '../../../assets/parent/ico-calendar.png';
 import styles from './ViewMenu.module.css';
-import BackButton from '../../../components/buttons/BackButton/BackButton';
 
-const ViewMenu = () => {
+const ViewMenu = observer(() => {
   const navigate = useNavigate();
   const [allData, setAllData] = useState([]);
   const [dataByGroup, setDataByGroup] = useState([]);
@@ -58,18 +59,23 @@ const ViewMenu = () => {
 
   const onChange = async (dates) => {
     setSelectDate(dates);
-    let date = `${dates.getFullYear()}-${(dates.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${dates.getDate().toString().padStart(2, '0')}`;
+    let date = dateToString(dates);
+
     await getOrdersForWorker(date).then((data) => {
       if (Object.keys(data).length === 0) {
         alert('Групп нет!');
       } else {
+        let groupList = Object.keys(data);
+        const group = groupList.includes(selectGroup)
+          ? selectGroup
+          : groupList[0];
+        setAllGroupList(groupList);
+        setSelectGroup(group);
         setAllData(data);
-        setDataByGroup(data[selectGroup]?.details || []);
+        setDataByGroup(data[group]?.details || []);
         const dishCounts = {};
-        if (data[selectGroup]) {
-          data[selectGroup].details.forEach((order) => {
+        if (data[group]) {
+          data[group].details.forEach((order) => {
             order.dishes.forEach((dish) => {
               if (dishCounts[dish.id]) {
                 dishCounts[dish.id].count++;
@@ -94,7 +100,7 @@ const ViewMenu = () => {
     getOrdersForWorker(date)
       .then((data) => {
         if (Object.keys(data).length === 0) {
-          alert('Групп нет');
+          // alert('Групп нет');
         } else {
           let groupList = Object.keys(data);
           setAllGroupList(groupList);
@@ -204,6 +210,6 @@ const ViewMenu = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ViewMenu;
