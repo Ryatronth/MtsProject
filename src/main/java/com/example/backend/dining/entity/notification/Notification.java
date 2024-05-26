@@ -1,6 +1,7 @@
 package com.example.backend.dining.entity.notification;
 
 import com.example.backend.dining.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Notification {
     @Temporal(TemporalType.TIME)
     private LocalTime time;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

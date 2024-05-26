@@ -205,7 +205,7 @@ public class OrderService implements EntityCreator<Order, OrderDTO>, EntityFilte
 
     @RabbitListener(queues = "orders.delete")
     public void deleteInvalidOrders(CurrentMenu menu) {
-        Set<Order> orders = orderRepository.findOverlappingOrders(LocalDate.now(), menu.getEndDate());
+        Set<Order> orders = orderRepository.findOverlappingOrders(LocalDate.now().plusDays(1), menu.getEndDate());
         if (orders.isEmpty()) return;
 
         rabbitMessageService.sendRefreshOrders(orders.stream().map(o -> o.getChild().getParent().getUser()).toList());

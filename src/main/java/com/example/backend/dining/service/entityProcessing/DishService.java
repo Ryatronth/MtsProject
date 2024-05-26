@@ -3,9 +3,7 @@ package com.example.backend.dining.service.entityProcessing;
 import com.example.backend.dining.controller.exception.customException.ModificationException;
 import com.example.backend.dining.entity.dish.menu.CurrentMenu;
 import com.example.backend.dining.entity.dish.menu.Dish;
-import com.example.backend.dining.entity.dish.menu.MenuDish;
 import com.example.backend.dining.entity.dish.menu.repository.DishRepository;
-import com.example.backend.dining.entity.dish.menu.repository.MenuDishRepository;
 import com.example.backend.dining.payload.dto.DishDTO;
 import com.example.backend.dining.payload.dto.UpdateMenuDTO;
 import com.example.backend.dining.payload.response.CreationResponse;
@@ -16,9 +14,9 @@ import com.example.backend.dining.service.RabbitMessageService;
 import com.example.backend.dining.service.util.*;
 import com.example.backend.totalPayload.enums.ResponseStatus;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -30,7 +28,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<Dish>, EntityModifier<Long, DishDTO>, EntityEraser<Long> {
     private final DishRepository dishRepository;
-    private final MenuDishRepository menuDishRepository;
 
     private final ImageService imageService;
     private final MenuService menuService;
@@ -95,8 +92,6 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
             dish.setRemoved(true);
             dishRepository.save(dish);
 
-            List<MenuDish> dishes = menuDishRepository.findAllByDish(dish, LocalDate.now());
-
             Dish newDish = create(dish, data.getName() == null ? dish.getName() : data.getName()).getObject();
 
             if (data.getImage() != null) {
@@ -115,12 +110,7 @@ public class DishService implements EntityCreator<Dish, DishDTO>, EntityFilter<D
                 newDish.setPrice(data.getPrice());
             }
 
-            if (!dishes.isEmpty()) {
-                dishes.forEach(menuDish -> menuDish.setDish(newDish));
-                menuDishRepository.saveAll(dishes);
-            }
-
-            changeMenu(newDish);
+            changeMenu(dish);
 
             return ModificationResponse.builder()
                     .status(ResponseStatus.SUCCESS)

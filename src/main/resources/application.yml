@@ -7,7 +7,7 @@ spring:
       max-file-size: 10MB
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB}
+    url: jdbc:postgresql://${DBHost}:5432/${DB}
     username: ${DBUser}
     password: ${DBPassword}
 

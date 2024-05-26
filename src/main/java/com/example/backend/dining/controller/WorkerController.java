@@ -3,6 +3,7 @@ package com.example.backend.dining.controller;
 import com.example.backend.dining.payload.dto.DishDTO;
 import com.example.backend.dining.payload.dto.MenuDTO;
 import com.example.backend.dining.payload.dto.UpdateMenuDTO;
+import com.example.backend.dining.service.NotificationService;
 import com.example.backend.dining.service.entityProcessing.DishService;
 import com.example.backend.dining.service.entityProcessing.MenuService;
 import com.example.backend.dining.service.entityProcessing.OrderService;
@@ -23,6 +24,8 @@ public class WorkerController {
     private final DishService dishService;
     private final MenuService menuService;
     private final OrderService orderService;
+
+    private final NotificationService notificationService;
 
     // Получение -------------------------------------------------------------------------------------------------------
     @GetMapping("/get/dishes")
@@ -55,6 +58,11 @@ public class WorkerController {
         return ResponseEntity.ok(orderService.getOrdersToWorker(date));
     }
 
+    @GetMapping("/get/notifications/{userId}")
+    public ResponseEntity<?> getNotifications(@PathVariable Long userId) {
+        return ResponseEntity.ok(notificationService.getUserNotification(userId));
+    }
+
     // Создание --------------------------------------------------------------------------------------------------------
     @PostMapping("/create/dish")
     public ResponseEntity<?> createDish(@ModelAttribute @Validated(ValidForCreate.class) DishDTO data) {
@@ -81,5 +89,10 @@ public class WorkerController {
     @DeleteMapping("/delete/dish/{dishId}")
     public ResponseEntity<?> deleteDish(@PathVariable Long dishId) {
         return ResponseEntity.ok(dishService.delete(dishId));
+    }
+
+    @DeleteMapping("/delete/notification/{notificationId}")
+    public ResponseEntity<?> deleteNotification(@PathVariable Long notificationId) {
+        return ResponseEntity.ok(notificationService.deleteNotification(notificationId));
     }
 }

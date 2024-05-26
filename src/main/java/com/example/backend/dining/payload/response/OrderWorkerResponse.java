@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderWorkerResponse {
+    @Builder.Default
     private List<ChildToWorkerDTO> details = new ArrayList<>();
 
     @Getter
