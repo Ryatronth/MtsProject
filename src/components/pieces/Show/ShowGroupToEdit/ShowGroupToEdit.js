@@ -5,7 +5,7 @@ import SpinnerMain from '../../../loaders/SpinnerMain';
 import InputSearch from '../../../inputs/InputSearch/InputSearch';
 import ProfileCardGroupToEdit from '../../../blocks/ProfileCard/ProfileCardGroupToEdit/ProfileCardGroupToEdit';
 import ProfileCardGroupToCrete from '../../../blocks/ProfileCard/ProfileCardGroupToCrete/ProfileCardGroupToCrete';
-import { createChildCsv, getGroups } from '../../../../http/userAPI';
+import { getGroups } from '../../../../http/userAPI';
 import styles from './ShowGroupToEdit.module.css';
 
 const ShowGroupToEdit = observer(({ groupId }) => {
@@ -20,16 +20,6 @@ const ShowGroupToEdit = observer(({ groupId }) => {
       .includes(searchValue.toLowerCase());
     return searchMatch;
   });
-
-  const createCSV = async (eve) => {
-    const choosedFile = eve.target.files[0];
-    const formData = new FormData();
-    formData.append('file', choosedFile);
-    await createChildCsv(formData)
-      .then((data) => console.log(data))
-      .catch((e) => console.log(e));
-    eve.target.value = '';
-  };
 
   useEffect(() => {
     getGroups()
@@ -59,22 +49,6 @@ const ShowGroupToEdit = observer(({ groupId }) => {
         >
           Создать группу
         </Button>
-        <input
-          id="filexx"
-          type="file"
-          accept=".csv"
-          className={`input__file`}
-          onChange={createCSV}
-        />
-        <label htmlFor="filexx">
-          <Button
-            as="span"
-            variant="success"
-            className={`${styles.createGroupBtn}`}
-          >
-            Загрузить CSV
-          </Button>
-        </label>
       </div>
       <div className={`${styles.section} d-flex flex-column`}>
         {newGroup && (

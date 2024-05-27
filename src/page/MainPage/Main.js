@@ -29,16 +29,17 @@ const Main = () => {
         </div>
       </header>
       <div
-        className={`${styles.mainBody} d-flex flex-column justify-content-start align-items-start row-gap-4`}
+        className={`${styles.mainBody} d-flex flex-column justify-content-start align-items-start row-gap-5`}
       >
         <h1 className={`${styles.bodyTitle}`}>
           <span style={{ color: '#F48104' }}>Индивидуальный</span> рацион для
           вашего малыша
         </h1>
-        <p className={`${styles.bodyDescr}`}>
+
+        {/* <p className={`${styles.bodyDescr}`}>
           Жёсткое описаниеЖёсткое описаниеЖёсткое описаниеЖёсткое описание
           Жёсткое описание Жёсткое описание Жёсткое описание
-        </p>
+        </p> */}
         <Button
           variant="success"
           className={`reset-btn ${styles.bodyBtn}`}

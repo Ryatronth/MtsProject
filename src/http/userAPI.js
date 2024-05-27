@@ -240,6 +240,27 @@ export const updateCurrentMenu = async (menuId, dishes) => {
   return data;
 };
 
+export const pay = async (childId) => {
+  const { data } = await $authHost.put(
+    `api/user/parent/child/${childId}/orders/pay`
+  );
+  return data;
+};
+
+export const getNotif = async (userId, role) => {
+  const { data } = await $authHost.get(
+    `api/user/${role}/get/notifications/${userId}`
+  );
+  return data;
+};
+
+export const deleteNotification = async (notificationId, role) => {
+  const { data } = await $authHost.delete(
+    `api/user/${role}/delete/notification/${notificationId}`
+  );
+  return data;
+};
+
 export const check = async () => {
   const token = localStorage.getItem('token');
   return token ? token : null;

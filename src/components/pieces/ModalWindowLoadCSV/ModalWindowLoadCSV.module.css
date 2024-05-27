@@ -1,0 +1,33 @@
+.blur::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.mainInfo {
+  row-gap: 46px;
+  width: 1060px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 33px 24px 20px;
+  border-radius: 20px;
+  background-color: #fdfdfb;
+  z-index: 2;
+  color: #414141;
+}
+.descr {
+  font-weight: 700;
+  font-size: 26px;
+}
+.infoBlock {
+  height: 150px;
+}

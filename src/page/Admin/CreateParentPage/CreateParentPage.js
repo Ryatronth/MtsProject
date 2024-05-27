@@ -6,12 +6,7 @@ import InputPicture from '../../../components/inputs/InputPicture/InputPicture';
 import ModalWindowAdd from '../../../components/pieces/ModalWindowAdd/ModalWindowAdd';
 import SpinnerMain from '../../../components/loaders/SpinnerMain';
 import ProfileCardChildToShow from '../../../components/blocks/ProfileCard/ProfileCardChildToShow/ProfileCardChildToShow';
-import {
-  createParent,
-  createParentCsv,
-  getChildren,
-  getGroups,
-} from '../../../http/userAPI';
+import { createParent, getChildren, getGroups } from '../../../http/userAPI';
 import { ADMIN_ROUTE } from '../../../utils/consts';
 import { formatNumberPhone, formatFullName } from '../../../utils/functions';
 import ico from '../../../assets/admin/ico-parentAva.png';
@@ -19,8 +14,6 @@ import styles from './CreateParentPage.module.css';
 import InputsProfileBuilder from '../../../components/blocks/InputsProfileBuilder/InputsProfileBuilder';
 import SaveCancelButtons from '../../../components/blocks/SaveCancelButtons/SaveCancelButtons';
 import AddChildButton from '../../../components/buttons/AddChildButton/AddChildButton';
-import { Button } from 'react-bootstrap';
-import ManagementButton from '../../../components/buttons/ManagementButton/ManagementButton';
 
 const CreateParentPage = observer(() => {
   const navigate = useNavigate();
@@ -73,7 +66,7 @@ const CreateParentPage = observer(() => {
     const fioList = fullName.split(' ');
     if (fioList.length < 3 || fioList[2] === '') {
       fullNameInputRef.current.focus();
-      alert('Введите полное ФИО ребёнка');
+      alert('Введите полное ФИО родителя');
     } else {
       let phone = `+${phoneNumber.replace(/\D/g, '')}`;
       const user = {
@@ -95,16 +88,6 @@ const CreateParentPage = observer(() => {
         })
         .catch((e) => alert(e.response.data.message));
     }
-  };
-
-  const createCSV = async (eve) => {
-    const choosedFile = eve.target.files[0];
-    const formData = new FormData();
-    formData.append('file', choosedFile);
-    await createParentCsv(formData)
-      .then((data) => console.log(data))
-      .catch((e) => console.log(e));
-    eve.target.value = '';
   };
 
   useEffect(() => {
@@ -140,31 +123,10 @@ const CreateParentPage = observer(() => {
             <InputsProfileBuilder list={inputList.slice(2, 4)} />
           </div>
         </div>
-        <div
-          style={{ rowGap: '41px' }}
-          className={`d-flex flex-column align-items-`}
-        >
-          <SaveCancelButtons
-            funcSave={clickCreateParent}
-            funcCencel={() => navigate(ADMIN_ROUTE)}
-          />
-          <input
-            id="filexx"
-            type="file"
-            accept=".csv"
-            className={`input__file`}
-            onChange={createCSV}
-          />
-          <label htmlFor="filexx">
-            <Button
-              as="span"
-              variant="success"
-              className={`${styles.specialBtn}`}
-            >
-              Загрузить CSV
-            </Button>
-          </label>
-        </div>
+        <SaveCancelButtons
+          funcSave={clickCreateParent}
+          funcCencel={() => navigate(ADMIN_ROUTE)}
+        />
       </div>
       <div className={`${styles.adminBody} mt-5 admin-body`}>
         <div

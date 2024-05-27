@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Image } from 'react-bootstrap';
 import exit from '../../../assets/exit.png';
 import styles from './ModalWindowPay.module.css';
-import {
-  getChildrenForParent,
-  getOrderIdForParent,
-  getPayment,
-} from '../../../http/userAPI';
+import { getChildrenForParent, getPayment, pay } from '../../../http/userAPI';
 import { jwtDecode } from 'jwt-decode';
 import ShowOrderByChild from '../Show/ShowOrderByChild/ShowOrderByChild';
 import { observer } from 'mobx-react-lite';
@@ -15,7 +11,16 @@ const ModalWindowPay = observer(({ setFlag }) => {
   const [mainData, setMainData] = useState([]);
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [childrenList, setChildrenList] = useState(true);
+
+  const onPay = () => {
+    const xx = mainData.reduce((acc, obj) => acc + obj.data.totalPrice, 0);
+    if (xx) {
+      children.forEach((child) => {
+        pay(child.id).then((data) => console.log(data));
+      });
+    }
+    setFlag(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,61 +47,6 @@ const ModalWindowPay = observer(({ setFlag }) => {
     };
 
     fetchData();
-    // const addLeadingZero = (number) => (number < 10 ? '0' + number : number);
-    // const currentDate = new Date();
-    // const firstDayOfMonth = new Date(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth(),
-    //   1
-    // );
-    // const lastDayOfMonth = new Date(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth() + 1,
-    //   0
-    // );
-    // const datesArray = [];
-    // for (
-    //   let i = firstDayOfMonth.getDate();
-    //   i <= lastDayOfMonth.getDate();
-    //   i++
-    // ) {
-    //   const formattedDate = `${currentDate.getFullYear()}-${addLeadingZero(
-    //     currentDate.getMonth() + 1
-    //   )}-${addLeadingZero(i)}`;
-    //   datesArray.push(formattedDate);
-    // }
-    // const func = async () => {
-    //   let qparametr = `?parentId=${
-    //     jwtDecode(localStorage.getItem('token')).id
-    //   }`;
-    //   await getChildrenForParent(qparametr).then((childrenList) => {
-    //     setChildren(childrenList);
-    //     let resArr = [];
-    //     childrenList.forEach((child, i) => {
-    //       let arr = [];
-    //       const promises = [];
-    //       datesArray.forEach((date) => {
-    //         qparametr = `?date=${date}&childId=${child.id}`;
-    //         promises.push(
-    //           getOrderIdForParent(qparametr).then((data) => {
-    //             arr.push(...data);
-    //           })
-    //         );
-    //       });
-    //       Promise.all(promises).then(() => {
-    //         const totalPriceSum = arr.reduce((acc, o) => acc + o.totalPrice, 0);
-    //         resArr.push({
-    //           child: child,
-    //           orders: arr,
-    //           price: totalPriceSum,
-    //         });
-    //         setLoading(childrenList.length !== i + 1);
-    //       });
-    //     });
-    //     setMainData(resArr);
-    //   });
-    // };
-    // func();
   }, []);
 
   return (
@@ -130,7 +80,11 @@ const ModalWindowPay = observer(({ setFlag }) => {
               {mainData.reduce((acc, obj) => acc + obj.data.totalPrice, 0)}
             </span>
           </p>
-          <Button variant="success" className={`${styles.resBtn}`}>
+          <Button
+            variant="success"
+            className={`${styles.resBtn}`}
+            onClick={onPay}
+          >
             Оплатить
           </Button>
         </div>

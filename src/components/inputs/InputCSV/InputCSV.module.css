@@ -1,0 +1,24 @@
+.csvBtn {
+  width: 244px;
+  padding: 7px 12px;
+  border-radius: 35px;
+  border: 0;
+  background-color: #87c631;
+  color: #fdfdfb;
+  font-weight: 400;
+  font-size: 20px;
+}
+.descr {
+  font-weight: 400;
+  font-size: 11px;
+}
+.ico {
+  height: 25px;
+  width: 25px;
+  padding: 6px 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background-color: rgba(173, 172, 172, 0.8);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.6);
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ADMIN_CREATE_PARENT_ROUTE as newParent,
   ADMIN_WORK_WITH_GROUPS_ROUTE as workGroup,
@@ -6,13 +6,22 @@ import {
 } from '../../utils/consts';
 import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
 import MainButton from '../../components/buttons/MainButton/MainButton';
+import ModalWindowLoadCSV from '../../components/pieces/ModalWindowLoadCSV/ModalWindowLoadCSV';
 import ico from '../../assets/admin/ico-adminBtn.png';
 import styles from './AdminPage.module.css';
 
 const AdminPage = () => {
+  const [flag, setFlag] = useState(false);
   const basicList = [
     { text: 'Работа с группами', route: workGroup },
     { text: 'Создать профиль родителя', route: newParent },
+    {
+      text: 'Загрузить CSV файл',
+      func: () => {
+        setFlag(true);
+        document.body.style.overflow = 'hidden';
+      },
+    },
     { text: 'Редактировать профиль', route: workProfile },
   ];
 
@@ -28,14 +37,16 @@ const AdminPage = () => {
           >
             {basicList.map((el) => (
               <MainButton
-                key={el.route}
+                key={el.text}
                 value={el.text}
                 route={el.route}
+                func={el.func}
                 ico={ico}
               />
             ))}
           </div>
         </div>
+        {flag && <ModalWindowLoadCSV setFlag={setFlag} />}
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Image } from 'react-bootstrap';
 import styles from './MainButton.module.css';
 
-const MainButton = ({ value, route, ico }) => {
+const MainButton = ({ value, route, ico, func }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -13,7 +13,7 @@ const MainButton = ({ value, route, ico }) => {
       <Button
         variant="success"
         className={`${styles.mainBtn}`}
-        onClick={() => navigate(route)}
+        onClick={route ? () => navigate(route) : func}
       >
         {value}
       </Button>
