@@ -1,7 +1,19 @@
+.container {
+  /* display: flex;
+  align-items: center; */
+  width: 1920px;
+  /* height: 100%; */
+  margin: 0 auto;
+  background: url('../../assets/auth/bgAuth.png') no-repeat center center;
+  background-color: #f48104;
+}
 .authBody {
   width: 794px;
+  padding: 101px 104px 100px;
   background-color: #fff;
-  padding: 99px 104px 90px;
+  border-radius: 0px;
+  border: none;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
 }
 .authImg {
   border-radius: 50%;

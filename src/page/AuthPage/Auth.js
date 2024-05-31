@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import backgr from '../../assets/auth/bgAuth.png';
 import logo from '../../assets/auth/logo.png';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
@@ -45,12 +44,7 @@ const Auth = observer(() => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: '#F48104',
-        background: `url(${backgr}) no-repeat center center`,
-      }}
-    >
+    <div className={`${styles.container}`}>
       <Card
         className={`${styles.authBody} d-flex flex-column justify-content-center align-items-center`}
       >

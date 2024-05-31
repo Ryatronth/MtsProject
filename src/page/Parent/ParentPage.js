@@ -73,7 +73,7 @@ const ParentPage = observer(() => {
           >
             <ChildrenOfParenat orientation={orientation} />
             <div
-              style={{ rowGap: '41px' }}
+              style={{ rowGap: '41px', width: '25%' }}
               className="d-flex flex-column justify-content-evenly align-items-center"
             >
               <Button

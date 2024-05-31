@@ -1,7 +1,7 @@
 .mainContainerChoco {
   position: relative;
   column-gap: 26px;
-  width: 550px;
+  width: calc(50% - 62px);
   height: 215px;
   padding: 16px 50px 16px 26px;
   border-radius: 20px;
@@ -18,7 +18,7 @@
 .mainContainerBurger {
   position: relative;
   column-gap: 26px;
-  width: 1200px;
+  width: calc(100% - 50px);
   height: 105px;
   padding: 13px 82px 13px 45px;
   border-radius: 20px;

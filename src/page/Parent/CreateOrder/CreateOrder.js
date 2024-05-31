@@ -25,8 +25,6 @@ const CreateOrder = () => {
   const [selectedchildrenList, setSelectedChildrenList] = useState([]);
   const [allDishesList, setAllDishesList] = useState([]);
   const [selectedDishesList, setSelectedDishesList] = useState([]);
-  // const [selectedID, setSelectedID] = useState([]);
-  // const [allID, setAllID] = useState([]);
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
   const [startDate, setStartDate] = useState(
     new Date(new Date().getTime() + 86400000)

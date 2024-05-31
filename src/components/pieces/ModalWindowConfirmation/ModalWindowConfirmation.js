@@ -4,6 +4,7 @@ import { Button, Image } from 'react-bootstrap';
 import styles from './ModalWindowConfirmation.module.css';
 import ShowDishToCreateOrder from '../Show/ShowDishToCreateOrder/ShowDishToCreateOrder';
 import { createOrders } from '../../../http/userAPI';
+import { countDay, countWeekendDays } from '../../../utils/functions';
 
 const ModalWindowConfirmation = ({
   setFlag,
@@ -16,62 +17,46 @@ const ModalWindowConfirmation = ({
   endDate,
   xxxId,
 }) => {
-  console.log(selectedDishesList);
   const [resPrice, setResPrice] = useState();
 
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
-
-  const countWeekendDays = (startDate, endDate) => {
-    let count = 0;
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-      if (isWeekend(currentDate)) {
-        count++;
-      }
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return count;
-  };
-
   const clickCreateOrder = async () => {
-    const orders = selectedchildrenList.flatMap((child) => {
-      const objList = [];
-      let tempStartDate = new Date(startDate);
-      // console.log(1234);
+    if (!selectedDishesList.length) alert('Заказ пустой');
+    else {
+      const orders = selectedchildrenList.flatMap((child) => {
+        const objList = [];
+        let tempStartDate = new Date(startDate);
 
-      while (tempStartDate <= endDate || !endDate) {
-        console.log(tempStartDate.getDay());
-        if (tempStartDate.getDay() !== 0 && tempStartDate.getDay() !== 6) {
-          objList.push({
-            childId: child.id,
-            date: `${tempStartDate.getFullYear()}-${(
-              tempStartDate.getMonth() + 1
-            )
-              .toString()
-              .padStart(2, '0')}-${tempStartDate
-              .getDate()
-              .toString()
-              .padStart(2, '0')}`,
-            dishes: selectedDishesList.map((dish) => dish.dish.id),
-            menuId: xxxId,
-          });
-          if (!endDate) break;
+        while (tempStartDate <= endDate || !endDate) {
+          console.log(tempStartDate.getDay());
+          if (tempStartDate.getDay() !== 0 && tempStartDate.getDay() !== 6) {
+            objList.push({
+              childId: child.id,
+              date: `${tempStartDate.getFullYear()}-${(
+                tempStartDate.getMonth() + 1
+              )
+                .toString()
+                .padStart(2, '0')}-${tempStartDate
+                .getDate()
+                .toString()
+                .padStart(2, '0')}`,
+              dishes: selectedDishesList.map((dish) => dish.dish.id),
+              menuId: xxxId,
+            });
+            if (!endDate) break;
+          }
+          tempStartDate.setDate(tempStartDate.getDate() + 1);
         }
-        tempStartDate.setDate(tempStartDate.getDate() + 1);
-      }
-      return objList;
-    });
-    await createOrders(orders)
-      .then((data) => console.log(data))
-      .catch((e) => {
-        setFlag(false);
-        alert(e.response.data.message);
-        document.body.style.overflow = '';
+        return objList;
       });
+
+      await createOrders(orders)
+        .then((data) => console.log(data))
+        .catch((e) => {
+          setFlag(false);
+          alert(e.response.data.message);
+          document.body.style.overflow = '';
+        });
+    }
     setFlag(false);
     document.body.style.overflow = '';
   };
@@ -83,10 +68,7 @@ const ModalWindowConfirmation = ({
     setResPrice(
       price *
         selectedchildrenList.length *
-        (endDate.getDate() -
-          startDate.getDate() +
-          1 -
-          countWeekendDays(startDate, endDate))
+        (countDay(startDate, endDate) - countWeekendDays(startDate, endDate))
     );
   }, []);
 
@@ -113,6 +95,8 @@ const ModalWindowConfirmation = ({
             allDishesList={allDishesList}
             resPrice={resPrice}
             setResPrice={setResPrice}
+            startDate={startDate}
+            endDate={endDate}
           />
         </div>
         <div

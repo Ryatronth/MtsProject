@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import styles from './ShowDishToCreateOrder.module.css';
 import { observer } from 'mobx-react-lite';
+import { countDay, countWeekendDays } from '../../../../utils/functions';
+import styles from './ShowDishToCreateOrder.module.css';
 
 const ShowDishToCreateOrder = observer(
   ({
@@ -12,46 +13,53 @@ const ShowDishToCreateOrder = observer(
     allDishesList,
     resPrice,
     setResPrice,
+    startDate,
+    endDate,
   }) => {
+    const names = selectedchildrenList
+      .map((child) => `${child.surname} ${child.name} ${child.patronymic}`)
+      .join(', ');
+
     const subDish = (data) => {
-      console.log(data);
       setAllDishesList([...allDishesList, data]);
       setSelectedDishesList(
         selectedDishesList.filter((o) => o.dish.id !== data.dish.id)
       );
-      setResPrice(resPrice - data.dish.price * selectedchildrenList.length);
+      setResPrice(
+        resPrice -
+          data.dish.price *
+            selectedchildrenList.length *
+            (countDay(startDate, endDate) -
+              countWeekendDays(startDate, endDate))
+      );
     };
+
     return (
       <div
         style={{ maxHeight: '430px' }}
         className={`${styles.section} d-flex flex-column`}
       >
-        {selectedchildrenList.map((child) => (
-          <div key={child.id} className={`${styles.containerChild}`}>
-            <p className={`${styles.childName}`}>
-              Список позиций для: {child.surname} {child.name}{' '}
-              {child.patronymic}
-            </p>
-            <div className={`${styles.containerDish} d-flex flex-column`}>
-              {selectedDishesList.map((data) => (
-                <div
-                  key={data.dish.id}
-                  className={`${styles.dishInfo} d-flex justify-content-between align-items-center`}
+        <div className={`${styles.containerChild}`}>
+          <p className={`${styles.childName}`}>Список позиций для: {names}</p>
+          <div className={`${styles.containerDish} d-flex flex-column`}>
+            {selectedDishesList.map((data) => (
+              <div
+                key={data.dish.id}
+                className={`${styles.dishInfo} d-flex justify-content-between align-items-center`}
+              >
+                <p className={`${styles.dishName}`}>{data.dish.name}</p>
+                <p style={{ color: '#F48104' }}>₽&nbsp;{data.dish.price}</p>
+                <Button
+                  variant="danger"
+                  className={`${styles.deleteDish}`}
+                  onClick={() => subDish(data)}
                 >
-                  <p className={`${styles.dishName}`}>{data.dish.name}</p>
-                  <p style={{ color: '#F48104' }}>₽&nbsp;{data.dish.price}</p>
-                  <Button
-                    variant="danger"
-                    className={`${styles.deleteDish}`}
-                    onClick={() => subDish(data)}
-                  >
-                    Удалить
-                  </Button>
-                </div>
-              ))}
-            </div>
+                  Удалить
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     );
   }

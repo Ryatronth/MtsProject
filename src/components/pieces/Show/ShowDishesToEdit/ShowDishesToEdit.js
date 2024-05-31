@@ -31,6 +31,15 @@ const ShowDishesToEdit = observer(
       document.body.style.overflow = 'hidden';
     };
 
+    const closeModalWindowToCreate = () => {
+      setName('');
+      setDescription('');
+      setPrice(0);
+      setImage(null);
+      setCategory(selectedTime);
+      setFlagModalWindow(false);
+    };
+
     const clickCreateDish = async () => {
       if (!price) {
         alert('Введите цену блюда');
@@ -81,7 +90,7 @@ const ShowDishesToEdit = observer(
         {flagModalWindow && (
           <ModalWindowDish
             ico={ico}
-            setFlag={setFlagModalWindow}
+            setFlag={closeModalWindowToCreate}
             setImage={setImage}
             imageSrc={ico}
             name={name}

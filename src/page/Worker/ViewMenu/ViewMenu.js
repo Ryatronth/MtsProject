@@ -64,33 +64,32 @@ const ViewMenu = observer(() => {
     await getOrdersForWorker(date).then((data) => {
       if (Object.keys(data).length === 0) {
         alert('Групп нет!');
-      } else {
-        let groupList = Object.keys(data);
-        const group = groupList.includes(selectGroup)
-          ? selectGroup
-          : groupList[0];
-        setAllGroupList(groupList);
-        setSelectGroup(group);
-        setAllData(data);
-        setDataByGroup(data[group]?.details || []);
-        const dishCounts = {};
-        if (data[group]) {
-          data[group].details.forEach((order) => {
-            order.dishes.forEach((dish) => {
-              if (dishCounts[dish.id]) {
-                dishCounts[dish.id].count++;
-              } else {
-                dishCounts[dish.id] = {
-                  id: dish.id,
-                  name: dish.name,
-                  count: 1,
-                };
-              }
-            });
-          });
-        }
-        setDishCount(Object.values(dishCounts));
       }
+      let groupList = Object.keys(data);
+      const group = groupList.includes(selectGroup)
+        ? selectGroup
+        : groupList[0];
+      setAllGroupList(groupList);
+      setSelectGroup(group);
+      setAllData(data);
+      setDataByGroup(data[group]?.details || []);
+      const dishCounts = {};
+      if (data[group]) {
+        data[group].details.forEach((order) => {
+          order.dishes.forEach((dish) => {
+            if (dishCounts[dish.id]) {
+              dishCounts[dish.id].count++;
+            } else {
+              dishCounts[dish.id] = {
+                id: dish.id,
+                name: dish.name,
+                count: 1,
+              };
+            }
+          });
+        });
+      }
+      setDishCount(Object.values(dishCounts));
     });
   };
 
