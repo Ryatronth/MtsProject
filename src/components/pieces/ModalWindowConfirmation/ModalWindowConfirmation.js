@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import exit from '../../../assets/exit.png';
-import { Button, Image } from 'react-bootstrap';
-import styles from './ModalWindowConfirmation.module.css';
+import { Button } from 'react-bootstrap';
 import ShowDishToCreateOrder from '../Show/ShowDishToCreateOrder/ShowDishToCreateOrder';
 import { createOrders } from '../../../http/userAPI';
-import { countDay, countWeekendDays } from '../../../utils/functions';
+import {
+  countDay,
+  countWeekendDays,
+  isWeekend,
+} from '../../../utils/functions';
+import styles from './ModalWindowConfirmation.module.css';
+import CloseWindow from '../../buttons/CloseWindow/CloseWindow';
 
 const ModalWindowConfirmation = ({
   setFlag,
@@ -20,7 +24,9 @@ const ModalWindowConfirmation = ({
   const [resPrice, setResPrice] = useState();
 
   const clickCreateOrder = async () => {
-    if (!selectedDishesList.length) alert('Заказ пустой');
+    if (isWeekend(startDate) || isWeekend(endDate))
+      alert('Выберите будний день');
+    else if (!selectedDishesList.length) alert('Заказ пустой');
     else {
       const orders = selectedchildrenList.flatMap((child) => {
         const objList = [];
@@ -77,16 +83,9 @@ const ModalWindowConfirmation = ({
       <div
         className={`${styles.mainInfo} d-flex flex-column align-items-center`}
       >
-        <Image
-          className={`${styles.exit}`}
-          src={exit}
-          onClick={() => {
-            setFlag(false);
-            document.body.style.overflow = '';
-          }}
-        />
+        <CloseWindow func={setFlag} />
         <p className={`text-center ${styles.descr}`}>Подтверждение рациона</p>
-        <div style={{ width: '995px' }}>
+        <div className={`${styles.infoBlock}`}>
           <ShowDishToCreateOrder
             selectedDishesList={selectedDishesList}
             selectedchildrenList={selectedchildrenList}
@@ -109,7 +108,7 @@ const ModalWindowConfirmation = ({
           <Button
             variant="success"
             className={`${styles.confirmationBtn}`}
-            onClick={() => clickCreateOrder()}
+            onClick={clickCreateOrder}
           >
             Подтвердить
           </Button>

@@ -28,11 +28,8 @@
   font-weight: 700;
   font-size: 26px;
 }
-.exit {
-  cursor: pointer;
-  position: absolute;
-  top: 19px;
-  right: 31px;
+.infoBlock {
+  width: 995px;
 }
 .blockConfirmation {
   width: 100%;

@@ -1,6 +1,7 @@
 .parentBody {
-  border-radius: 70px 70px 0 0;
   height: 690px;
+  border-radius: 70px 70px 0 0;
+  background: url('../../assets/bgProfile.png') no-repeat center center;
 }
 .parentContainer {
   padding: 36px 127px 15px 105px;
@@ -14,7 +15,6 @@
   font-weight: 500;
   font-size: 32px;
 }
-
 .childBtn {
   display: flex;
   flex-direction: column;
@@ -28,20 +28,25 @@
   background-color: transparent;
   cursor: pointer;
 }
-
 .mainSpan {
   display: flex;
   justify-content: space-between;
   width: 100%;
   height: 4px;
 }
-
 .mainSpan span {
   width: 4px;
   height: 3px;
   background-color: #fdfdfb;
 }
-
+.mainContainer {
+  width: 100%;
+  flex-wrap: wrap;
+}
+.mainBtnContainer {
+  row-gap: 41px;
+  width: 25%;
+}
 .mainBtn {
   width: 396px;
   height: 54px;

@@ -1,0 +1,22 @@
+.container {
+  position: relative;
+  column-gap: 26px;
+  width: calc(100% - 50px);
+  height: 105px;
+  padding: 13px 82px 13px 45px;
+  border-radius: 20px;
+  background-color: #f7f7f5;
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.25);
+
+  & img {
+    max-width: 84px;
+  }
+}
+.infoBlock {
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 70px 17px 18px;
+}
+.info {
+}

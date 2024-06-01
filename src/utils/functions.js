@@ -77,11 +77,6 @@ export const countWeekendDays = (startDate, endDate) => {
   let count = 0;
   let currentDate = new Date(startDate);
 
-  const isWeekend = (date) => {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
-
   while (currentDate <= endDate) {
     if (isWeekend(currentDate)) {
       count++;
@@ -89,4 +84,10 @@ export const countWeekendDays = (startDate, endDate) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
   return count;
+};
+
+// проверка на выходной
+export const isWeekend = (date) => {
+  const day = date.getDay();
+  return day === 0 || day === 6;
 };

@@ -1,6 +1,7 @@
 .parentBody {
-  border-radius: 70px 70px 0 0;
   height: 690px;
+  border-radius: 70px 70px 0 0;
+  background: url('../../../assets/bgProfile.png') no-repeat center center;
 }
 .parentContainer {
   row-gap: 45px;
@@ -80,11 +81,11 @@
 /* calendar */
 .calendarContainer {
   position: relative;
-  width: 44px;
-  height: 43px;
+  width: 22%;
+  height: 48px;
   padding: 0 0 3px 0;
-  margin-top: 15px;
-  margin-right: 277px;
+  /* margin-top: 15px;
+  margin-right: 277px; */
   border-radius: 8px;
   border: none;
 }
@@ -114,12 +115,12 @@
 .customCalendar {
   position: absolute !important;
   top: 50px;
-  left: -94px;
+  /* left: -94px; */
 }
 /* -------- */
 
 .dishesContainer {
-  width: 1175px;
+  width: 73%;
   height: 520px;
   padding: 0 60px 0 52px;
   border-radius: 20px;

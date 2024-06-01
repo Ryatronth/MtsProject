@@ -1,13 +1,12 @@
 import React from 'react';
-import styles from './ShowOrderByChild.module.css';
-import { Button } from 'react-bootstrap';
-import { observer } from 'mobx-react-lite';
-import SpinnerMain from '../../../loaders/SpinnerMain';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { Button } from 'react-bootstrap';
+import SpinnerMain from '../../../loaders/SpinnerMain';
 import { PARENT_PDF_ORDER_ROUTE } from '../../../../utils/consts';
+import styles from './ShowOrderByChild.module.css';
 
 const ShowOrderByChild = observer(({ loading, mainData, childrenList }) => {
-  console.log(childrenList);
   const navigate = useNavigate();
   if (loading) {
     return (
@@ -25,10 +24,7 @@ const ShowOrderByChild = observer(({ loading, mainData, childrenList }) => {
 
   return (
     <div className={`${styles.mainInfo}`}>
-      <div
-        style={{ maxHeight: '450px' }}
-        className={`${styles.section} d-flex flex-column`}
-      >
+      <div className={`${styles.section} d-flex flex-column`}>
         {mainData.map((data) => {
           const child = childrenList.find((child) => child.id === data.id);
           return (
@@ -49,7 +45,7 @@ const ShowOrderByChild = observer(({ loading, mainData, childrenList }) => {
                 <Button
                   variant="secondary"
                   className={`${styles.cardPdf}`}
-                  onClick={async () => handlePDF(child, data.data)}
+                  onClick={() => handlePDF(child, data.data)}
                 >
                   Сформировать отчёт
                 </Button>

@@ -1,25 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react';
-import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
-import { Context } from '../../../index';
+import React, { useEffect, useState } from 'react';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import ProfileHeader from '../../../components/pieces/ProfileHeader/ProfileHeader';
+import SpinnerMain from '../../../components/loaders/SpinnerMain';
+import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
+import ModalWindowConfirmation from '../../../components/pieces/ModalWindowConfirmation/ModalWindowConfirmation';
 import {
   getChildrenForParent,
   getCurrentMenuForParent,
   getMenuIdForParent,
 } from '../../../http/userAPI';
-import SpinnerMain from '../../../components/loaders/SpinnerMain';
+import { dateToString } from '../../../utils/functions';
 import ico from '../../../assets/parent/ico-calendar.png';
 import icoSub from '../../../assets/worker/ico-sub.png';
 import icoPlus from '../../../assets/worker/ico-addDish.png';
 import styles from './CreateOrder.module.css';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import ShowDishesToSelect from '../../../components/pieces/Show/ShowDishesToSelect/ShowDishesToSelect';
-import ModalWindowConfirmation from '../../../components/pieces/ModalWindowConfirmation/ModalWindowConfirmation';
 
 const CreateOrder = () => {
-  const { user } = useContext(Context);
   const [xxxId, setXxxId] = useState(-1);
   const [childrenList, setChildrenList] = useState([]);
   const [selectedchildrenList, setSelectedChildrenList] = useState([]);
@@ -43,15 +42,36 @@ const CreateOrder = () => {
     return day !== 0 && day !== 6;
   };
 
+  const basicListTime = [
+    { text: 'Завтрак', time: 'BREAKFAST' },
+    { text: 'Обед', time: 'LUNCH' },
+    { text: 'Полдник', time: 'SNACK' },
+  ];
+  const basicListDishes = [
+    {
+      text: 'Выбранные блюда',
+      dishesList: selectedDishesList,
+      exDishesList: allDishesList,
+      funcAddSet: setAllDishesList,
+      funcSubSet: setSelectedDishesList,
+      ico: icoSub,
+    },
+    {
+      text: 'Выберите блюда',
+      dishesList: allDishesList,
+      exDishesList: selectedDishesList,
+      funcAddSet: setSelectedDishesList,
+      funcSubSet: setAllDishesList,
+      ico: icoPlus,
+    },
+  ];
+
   const onChange = async (dates) => {
     const [start, end] = dates;
     if (maxDate < start) {
       setSelectedDishesList([]);
-      let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
+      let qparametr = `?date=${dateToString(start)}`;
       await getMenuIdForParent(qparametr).then((data) => {
-        console.log(data);
         if (data.length === 0) {
           alert('На данную дату меню не готово');
         } else {
@@ -72,13 +92,10 @@ const CreateOrder = () => {
           });
         }
       });
-      console.log(start);
     }
     if (minDate > start) {
       setSelectedDishesList([]);
-      let qparametr = `?date=${start.getFullYear()}-${(start.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${start.getDate().toString().padStart(2, '0')}`;
+      let qparametr = `?date=${dateToString(start)}`;
       await getMenuIdForParent(qparametr).then((data) => {
         const tempEndDate = data[0].endDate.split('-');
         const tempStartDate = data[0].startDate.split('-');
@@ -96,7 +113,6 @@ const CreateOrder = () => {
           setAllDishesList(menu);
         });
       });
-      console.log(start);
     }
     setStartDate(start);
     setEndDate(end);
@@ -116,11 +132,7 @@ const CreateOrder = () => {
   };
 
   useEffect(() => {
-    let qparametr = `?date=${startDate.getFullYear()}-${(
-      startDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
+    let qparametr = `?date=${dateToString(startDate)}`;
     getMenuIdForParent(qparametr).then((data) => {
       const tempEndDate = data[0].endDate.split('-');
       const tempStartDate = data[0].startDate.split('-');
@@ -151,12 +163,11 @@ const CreateOrder = () => {
   }
 
   return (
-    <div className={`reset-container`}>
-      <ProfileHeader info={user.user} />
+    <div className={`${styles.container}`}>
+      <ProfileHeader />
       <div className={`d-flex flex-column align-items-center`}>
         <div
-          style={{ width: '100%' }}
-          className={`d-flex justify-content-center align-items-center mt-5`}
+          className={`${styles.previewSection} d-flex justify-content-center align-items-center mt-5`}
         >
           <Dropdown
             onSelect={(eventKey) => {
@@ -190,36 +201,22 @@ const CreateOrder = () => {
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'BREAKFAST'}
-            onClick={() => setSelectedTime('BREAKFAST')}
-          >
-            Завтрак
-          </Button>
-          <Button
-            variant="outline-success"
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'LUNCH'}
-            onClick={() => setSelectedTime('LUNCH')}
-          >
-            Обед
-          </Button>
-          <Button
-            variant="outline-success"
-            style={{ marginRight: '50px' }}
-            className={`${styles.mainBtn}`}
-            active={selectedTime === 'SNACK'}
-            onClick={() => setSelectedTime('SNACK')}
-          >
-            Полдник
-          </Button>
+          {basicListTime.map((obj) => (
+            <Button
+              key={obj.time}
+              variant="outline-success"
+              className={`${styles.mainBtn}`}
+              active={selectedTime === obj.time}
+              onClick={() => setSelectedTime(obj.time)}
+            >
+              {obj.text}
+            </Button>
+          ))}
           <div className={`${styles.calendarContainer}`}>
             <Button
               variant="outline-success"
               className={`${styles.calendarBtn}`}
-              onClick={() => setCalendarFlag(calendarFlag ? false : true)}
+              onClick={() => setCalendarFlag(!calendarFlag)}
             >
               <Image src={ico} className={`${styles.calendarBtnImage}`} />
             </Button>
@@ -237,7 +234,6 @@ const CreateOrder = () => {
                 showDisabledMonthNavigation
                 onClick={(e) => e.stopPropagation()}
                 filterDate={isWeekday}
-                // locale="ru"
               />
             )}
           </div>
@@ -261,31 +257,23 @@ const CreateOrder = () => {
           </Button>
         </div>
         <div
-          style={{ marginTop: '45px' }}
-          className={`d-flex flex-column justify-content-center align-items-center`}
+          className={`${styles.dishesContainer} d-flex flex-column justify-content-center align-items-center`}
         >
-          <h2 className={`${styles.menuTitle}`}>Выбранные блюда</h2>
-          <div style={{ width: '1657px' }}>
-            <ShowDishesToSelect
-              selectedTime={selectedTime}
-              dishesList={selectedDishesList}
-              exDishesList={allDishesList}
-              funcAddSet={setAllDishesList}
-              funcSubSet={setSelectedDishesList}
-              ico={icoSub}
-            />
-          </div>
-          <h2 className={`${styles.menuTitle}`}>Выберите блюда</h2>
-          <div style={{ width: '1657px' }}>
-            <ShowDishesToSelect
-              selectedTime={selectedTime}
-              dishesList={allDishesList}
-              exDishesList={selectedDishesList}
-              funcAddSet={setSelectedDishesList}
-              funcSubSet={setAllDishesList}
-              ico={icoPlus}
-            />
-          </div>
+          {basicListDishes.map((obj) => (
+            <>
+              <h2 className={`${styles.menuTitle}`}>{obj.text}</h2>
+              <div className={`${styles.dishes}`}>
+                <ShowDishesToSelect
+                  selectedTime={selectedTime}
+                  dishesList={obj.dishesList}
+                  exDishesList={obj.exDishesList}
+                  funcAddSet={obj.funcAddSet}
+                  funcSubSet={obj.funcSubSet}
+                  ico={obj.ico}
+                />
+              </div>
+            </>
+          ))}
         </div>
       </div>
       {modalWindowFlag && (

@@ -1,41 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import ProfileMainInfo from '../../../components/pieces/ProfileMainInfo/ProfileMainInfo';
-import backgr from '../../../assets/bgProfile.png';
+import { observer } from 'mobx-react-lite';
+import { jwtDecode } from 'jwt-decode';
 import { Button, Dropdown, Image } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
-import ico from '../../../assets/parent/ico-calendarWite.png';
-import styles from './ViewOrder.module.css';
+import ProfileMainInfo from '../../../components/pieces/ProfileMainInfo/ProfileMainInfo';
 import SpinnerMain from '../../../components/loaders/SpinnerMain';
-import { observer } from 'mobx-react-lite';
 import {
   getChildrenForParent,
   getOrderForParent,
   getOrderIdForParent,
 } from '../../../http/userAPI';
-import { jwtDecode } from 'jwt-decode';
+import ico from '../../../assets/parent/ico-calendarWite.png';
+import styles from './ViewOrder.module.css';
+import { dateToString } from '../../../utils/functions';
 
 const ViewOrder = observer(() => {
   const [selectedTime, setSelectedTime] = useState('BREAKFAST');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  // const [calendarFlag, setCalendarFlag] = useState(false);
   const [dishesList, setDiahesList] = useState([]);
   const [childrenList, setChildrenList] = useState([]);
   const [selectedchildrenList, setSelectedchildrenList] = useState([]);
   const [orderBe, setOrderBe] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const basicListTime = [
+    { text: 'Завтрак', main: 'BREAKFAST' },
+    { text: 'Обед', main: 'LUNCH' },
+    { text: 'Ужин', main: 'SNACK' },
+  ];
+
   const getter = async (dates, child) => {
-    let qparametr = `?date=${dates.getFullYear()}-${(dates.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${dates
-      .getDate()
-      .toString()
-      .padStart(2, '0')}&childId=${child[0].id}`;
+    let qparametr = `?date=${dateToString(dates)}&childId=${child[0].id}`;
     await getOrderIdForParent(qparametr).then((dataId) => {
       if (dataId[0]) {
         const orderId = dataId[0].id;
         getOrderForParent(orderId).then((data) => {
-          console.log(data);
           setDiahesList(data);
         });
         setOrderBe(true);
@@ -85,19 +84,13 @@ const ViewOrder = observer(() => {
         } else {
           setChildrenList(dataChild);
           setSelectedchildrenList([dataChild[0]]);
-          qparametr = `?date=${selectedDate.getFullYear()}-${(
-            selectedDate.getMonth() + 1
-          )
-            .toString()
-            .padStart(2, '0')}-${selectedDate
-            .getDate()
-            .toString()
-            .padStart(2, '0')}&childId=${dataChild[0].id}`;
+          qparametr = `?date=${dateToString(selectedDate)}&childId=${
+            dataChild[0].id
+          }`;
           getOrderIdForParent(qparametr).then((dataId) => {
             if (dataId[0]) {
               const orderId = dataId[0].id;
               getOrderForParent(orderId).then((data) => {
-                console.log(data);
                 setDiahesList(data);
                 setOrderBe(true);
               });
@@ -114,17 +107,10 @@ const ViewOrder = observer(() => {
     return <SpinnerMain />;
   }
 
-  console.log(selectedchildrenList);
-
   return (
     <>
       <ProfileMainInfo />
-      <div
-        className={`mt-5 ${styles.parentBody}`}
-        style={{
-          background: `url(${backgr}) no-repeat center center`,
-        }}
-      >
+      <div className={`${styles.parentBody} mt-5`}>
         <div
           className={`${styles.parentContainer} d-flex flex-column align-items-start`}
         >
@@ -169,42 +155,28 @@ const ViewOrder = observer(() => {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                active={selectedTime === 'BREAKFAST'}
-                onClick={() => setSelectedTime('BREAKFAST')}
-              >
-                Завтрак
-              </Button>
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                active={selectedTime === 'LUNCH'}
-                onClick={() => setSelectedTime('LUNCH')}
-              >
-                Обед
-              </Button>
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                active={selectedTime === 'SNACK'}
-                onClick={() => setSelectedTime('SNACK')}
-              >
-                Полдник
-              </Button>
+              {basicListTime.map((obj) => (
+                <Button
+                  variant="success"
+                  className={`${styles.mainBtn}`}
+                  active={selectedTime === obj.main}
+                  onClick={() => setSelectedTime(obj.main)}
+                >
+                  {obj.text}
+                </Button>
+              ))}
             </div>
             <h1 className={`${styles.mainTitle}`}>Рацион</h1>
           </div>
           <div
-            className={`${styles.orderContainer} d-flex justify-content-end align-items-start`}
+            className={`${styles.orderContainer} d-flex justify-content-between align-items-start`}
           >
-            <div className={`${styles.calendarContainer}`}>
+            <div
+              className={`${styles.calendarContainer} d-flex flex-column align-items-center`}
+            >
               <Button
                 variant="outline-success"
                 className={`${styles.calendarBtn}`}
-                // onClick={() => setCalendarFlag(calendarFlag ? false : true)}
               >
                 <Image src={ico} className={`${styles.calendarBtnImage}`} />
               </Button>
@@ -216,7 +188,6 @@ const ViewOrder = observer(() => {
                 inline
                 showDisabledMonthNavigation
                 onClick={(e) => e.stopPropagation()}
-                // locale="ru"
               />
             </div>
             <div className={`${styles.dishesContainer}`}>
@@ -227,7 +198,7 @@ const ViewOrder = observer(() => {
                         dish.category === selectedTime && (
                           <div
                             key={dish.id}
-                            className={`${styles.cardDish}  d-flex flex-column align-items-center justify-content-start`}
+                            className={`${styles.cardDish} d-flex flex-column align-items-center justify-content-start`}
                           >
                             <Image
                               src={dish.imageUrl}

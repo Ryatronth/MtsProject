@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Image } from 'react-bootstrap';
-import exit from '../../../assets/exit.png';
-import styles from './ModalWindowPay.module.css';
-import { getChildrenForParent, getPayment, pay } from '../../../http/userAPI';
+import { observer } from 'mobx-react-lite';
+import { Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import ShowOrderByChild from '../Show/ShowOrderByChild/ShowOrderByChild';
-import { observer } from 'mobx-react-lite';
+import CloseWindow from '../../buttons/CloseWindow/CloseWindow';
+import { getChildrenForParent, getPayment, pay } from '../../../http/userAPI';
+import styles from './ModalWindowPay.module.css';
 
 const ModalWindowPay = observer(({ setFlag }) => {
   const [mainData, setMainData] = useState([]);
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
 
   const onPay = () => {
-    const xx = mainData.reduce((acc, obj) => acc + obj.data.totalPrice, 0);
-    if (xx) {
+    if (total) {
       children.forEach((child) => {
         pay(child.id).then((data) => console.log(data));
       });
@@ -39,6 +39,7 @@ const ModalWindowPay = observer(({ setFlag }) => {
         );
         setChildren(childrenList);
         setMainData(resData);
+        setTotal(resData.reduce((acc, obj) => acc + obj.data.totalPrice, 0));
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
       } finally {
@@ -54,16 +55,9 @@ const ModalWindowPay = observer(({ setFlag }) => {
       <div
         className={`${styles.mainInfo} d-flex flex-column align-items-center`}
       >
-        <Image
-          className={`${styles.exit}`}
-          src={exit}
-          onClick={() => {
-            setFlag(false);
-            document.body.style.overflow = '';
-          }}
-        />
-        <p className={`text-center ${styles.descr}`}>Оплата</p>
-        <div style={{ width: '990px' }}>
+        <CloseWindow func={setFlag} />
+        <p className={`${styles.descr} text-center`}>Оплата</p>
+        <div className={`${styles.childrenBlock}`}>
           <ShowOrderByChild
             childrenList={children}
             mainData={mainData}
@@ -75,10 +69,7 @@ const ModalWindowPay = observer(({ setFlag }) => {
         >
           <p className={`${styles.resDescr}`}>
             Итого:&nbsp;&nbsp;
-            <span>
-              ₽&nbsp;
-              {mainData.reduce((acc, obj) => acc + obj.data.totalPrice, 0)}
-            </span>
+            <span>₽&nbsp;{total}</span>
           </p>
           <Button
             variant="success"

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getChildrenForParent } from '../../../http/userAPI';
-import SpinnerMain from '../../loaders/SpinnerMain';
 import { jwtDecode } from 'jwt-decode';
-import styles from './ChildrenOfParenat.module.css';
+import SpinnerMain from '../../loaders/SpinnerMain';
 import ProfileCardChildForParent from '../../blocks/ProfileCard/ProfileCardChildForParent/ProfileCardChildForParent';
+import { getChildrenForParent } from '../../../http/userAPI';
+import styles from './ChildrenOfParenat.module.css';
 
 const ChildrenOfParenat = ({ orientation }) => {
   const [loading, setLoading] = useState(true);
-  const [childrenList, setChildrenList] = useState(true);
+  const [childrenList, setChildrenList] = useState([]);
+
+  const styleOrient = orientation === 'burger' ? styles.burg : styles.choco
 
   useEffect(() => {
     let qparametr = `?parentId=${jwtDecode(localStorage.getItem('token')).id}`;
@@ -28,8 +30,7 @@ const ChildrenOfParenat = ({ orientation }) => {
 
   return (
     <div
-      style={{ gap: orientation === 'burger' ? '48px' : '' }}
-      className={`d-flex flex-wrap ${styles.mainContainer}`}
+      className={`${styles.mainContainer} ${styleOrient} d-flex flex-wrap`}
     >
       {childrenList.map((child) => (
         <ProfileCardChildForParent

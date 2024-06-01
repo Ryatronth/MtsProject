@@ -35,10 +35,7 @@ const ShowDishToCreateOrder = observer(
     };
 
     return (
-      <div
-        style={{ maxHeight: '430px' }}
-        className={`${styles.section} d-flex flex-column`}
-      >
+      <div className={`${styles.section} d-flex flex-column`}>
         <div className={`${styles.containerChild}`}>
           <p className={`${styles.childName}`}>Список позиций для: {names}</p>
           <div className={`${styles.containerDish} d-flex flex-column`}>
@@ -48,7 +45,9 @@ const ShowDishToCreateOrder = observer(
                 className={`${styles.dishInfo} d-flex justify-content-between align-items-center`}
               >
                 <p className={`${styles.dishName}`}>{data.dish.name}</p>
-                <p style={{ color: '#F48104' }}>₽&nbsp;{data.dish.price}</p>
+                <p className={`${styles.dishPrice}`}>
+                  ₽&nbsp;{data.dish.price}
+                </p>
                 <Button
                   variant="danger"
                   className={`${styles.deleteDish}`}

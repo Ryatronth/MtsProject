@@ -2,11 +2,10 @@
   width: 100%;
   padding: 37px 45px 43px 66px;
   border-radius: 35px;
-  /* background-color: rgba(217, 217, 217, 0.2); */
 }
-
 .section {
   row-gap: 35px;
+  max-height: 450px;
   padding-top: 20px;
   overflow-y: auto;
 

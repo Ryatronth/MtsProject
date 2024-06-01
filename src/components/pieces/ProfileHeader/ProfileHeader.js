@@ -3,12 +3,14 @@ import { Context } from '../../../index';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { Image, Dropdown, DropdownButton, Button } from 'react-bootstrap';
+import { jwtDecode } from 'jwt-decode';
+import { deleteNotification, getNotif } from '../../../http/userAPI';
 import { LOGIN_ROUTE } from '../../../utils/consts';
 import logo from '../../../assets/hdLogo.png';
+import notif from '../../../assets/notifications.png';
+import exit from '../../../assets/exitAcc.png';
 import ico from '../../../assets/ico-headerAva.png';
 import styles from './ProfileHeader.module.css';
-import { deleteNotification, getNotif } from '../../../http/userAPI';
-import { jwtDecode } from 'jwt-decode';
 
 const ProfileHeader = observer(() => {
   const { user } = useContext(Context);
@@ -73,8 +75,12 @@ const ProfileHeader = observer(() => {
             <p className={`${styles.descr}`}>{role[user.user.role]}</p>
           </div>
           {user.user.role !== 'ADMIN' && (
-            <Button variant="outline-success" onClick={notifs}>
-              Уведы
+            <Button
+              variant="outline-success"
+              className={`${styles.notifBtn} d-flex align-items-center`}
+              onClick={notifs}
+            >
+              <Image src={notif} />
             </Button>
           )}
           {flag && (
@@ -101,13 +107,20 @@ const ProfileHeader = observer(() => {
                 : 'Уведомлений нет'}
             </div>
           )}
-          <DropdownButton
+          <Button
+            variant="outline-danger"
+            className={`${styles.exitBtn}`}
+            onClick={() => logOut()}
+          >
+            <Image src={exit} width="24px" />
+          </Button>
+          {/* <DropdownButton
             variant="outline-danger"
             id="dropdown-split-basic"
             title="X"
           >
             <Dropdown.Item onClick={() => logOut()}>Выход</Dropdown.Item>
-          </DropdownButton>
+          </DropdownButton> */}
         </div>
       </div>
     </header>

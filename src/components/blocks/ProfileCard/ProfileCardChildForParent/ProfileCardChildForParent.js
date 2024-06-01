@@ -1,48 +1,26 @@
 import React from 'react';
-import ico from '../../../../assets/admin/ico-childAva-182.png';
 import { Image } from 'react-bootstrap';
-import styles from './ProfileCardChildForParent.module.css';
+import ico from '../../../../assets/admin/ico-childAva-182.png';
+import burgStyles from './ProfileCardChildForParentBurger.module.css';
+import chocoStyles from './ProfileCardChildForParentChoco.module.css';
 
 const ProfileCardChildForParent = ({ data, id, orientation }) => {
-  if (orientation === 'burger') {
-    return (
-      <div
-        id={id}
-        className={`${styles.mainContainerBurger} d-flex justify-content-start align-items-center CARD`}
-      >
-        <Image style={{ maxWidth: '84px' }} src={data.imageUrl || ico} />
-        <div
-          className={`${styles.mianInfoBurger} d-flex align-items-center justify-content-between`}
-        >
-          <p>
-            {data.surname} {data.name} {data.patronymic}
-          </p>
-          {data.childGroup.id}
-        </div>
+  const styles = orientation === 'burger' ? burgStyles : chocoStyles;
+
+  return (
+    <div
+      id={id}
+      className={`${styles.container} d-flex justify-content-start align-items-center CARD`}
+    >
+      <Image src={data.imageUrl || ico} />
+      <div className={`${styles.infoBlock} d-flex`}>
+        <p className={styles.info}>
+          {data.surname} <span>{data.name}</span> {data.patronymic}
+        </p>
+        {data.childGroup.id}
       </div>
-    );
-  } else {
-    return (
-      <div
-        id={id}
-        className={`${styles.mainContainerChoco} d-flex justify-content-start align-items-center CARD`}
-      >
-        <Image src={data.imageUrl || ico} />
-        <div
-          className={`${styles.mianInfoChoco} d-flex flex-column align-items-start justify-content-center`}
-        >
-          <p>
-            {data.surname}
-            <br />
-            {data.name}
-            <br />
-            {data.patronymic}
-          </p>
-          {data.childGroup.id}
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default ProfileCardChildForParent;

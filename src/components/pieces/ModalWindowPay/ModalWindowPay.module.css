@@ -29,11 +29,8 @@
   font-size: 26px;
   line-height: 16px;
 }
-.exit {
-  cursor: pointer;
-  position: absolute;
-  top: 19px;
-  right: 31px;
+.childrenBlock {
+  width: 990px;
 }
 .result {
   width: 100%;

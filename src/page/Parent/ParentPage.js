@@ -1,21 +1,32 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { Button } from 'react-bootstrap';
+import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
+import ChildrenOfParenat from '../../components/pieces/ChildrenOfParenat/ChildrenOfParenat';
+import ModalWindowPay from '../../components/pieces/ModalWindowPay/ModalWindowPay';
 import {
   PARENT_CREATE_ORDER_ROUTE,
   PARENT_VIEW_ORDER_ROUTE,
 } from '../../utils/consts';
-import backgr from '../../assets/bgProfile.png';
-import ProfileMainInfo from '../../components/pieces/ProfileMainInfo/ProfileMainInfo';
 import styles from './ParentPage.module.css';
-import { Button } from 'react-bootstrap';
-import ChildrenOfParenat from '../../components/pieces/ChildrenOfParenat/ChildrenOfParenat';
-import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
-import ModalWindowPay from '../../components/pieces/ModalWindowPay/ModalWindowPay';
 
 const ParentPage = observer(() => {
   const navigate = useNavigate();
   const [orientation, setOrientation] = useState('chocolate');
   const [flag, setFlag] = useState(false);
+  const basicList = [
+    {
+      func: () => navigate(PARENT_VIEW_ORDER_ROUTE),
+      text: 'Посмотреть рацион',
+    },
+    {
+      func: () => navigate(PARENT_CREATE_ORDER_ROUTE),
+      text: 'Сформировать рацион',
+    },
+    { func: () => setFlag(true), text: 'Оплатить' },
+  ];
+
   const toggleMenu = () => {
     const menu = document.querySelector('.childBtn');
     if (menu.classList.contains('burger')) {
@@ -33,12 +44,7 @@ const ParentPage = observer(() => {
   return (
     <>
       <ProfileMainInfo />
-      <div
-        className={`mt-5 ${styles.parentBody}`}
-        style={{
-          background: `url(${backgr}) no-repeat center center`,
-        }}
-      >
+      <div className={`${styles.parentBody} mt-5`}>
         <div
           className={`${styles.parentContainer} d-flex flex-column align-items-start`}
         >
@@ -68,35 +74,22 @@ const ParentPage = observer(() => {
             </button>
           </div>
           <div
-            style={{ width: '100%', flexWrap: 'wrap' }}
-            className={`d-flex justify-content-between align-items-start`}
+            className={`${styles.mainContainer} d-flex justify-content-between align-items-start`}
           >
             <ChildrenOfParenat orientation={orientation} />
             <div
-              style={{ rowGap: '41px', width: '25%' }}
-              className="d-flex flex-column justify-content-evenly align-items-center"
+              className={`${styles.mainBtnContainer} d-flex flex-column justify-content-evenly align-items-center`}
             >
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                onClick={() => navigate(PARENT_VIEW_ORDER_ROUTE)}
-              >
-                Посмотреть рацион
-              </Button>
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                onClick={() => navigate(PARENT_CREATE_ORDER_ROUTE)}
-              >
-                Сформировать рацион
-              </Button>
-              <Button
-                variant="success"
-                className={`${styles.mainBtn}`}
-                onClick={() => setFlag(true)}
-              >
-                Оплатить
-              </Button>
+              {basicList.map((obj) => (
+                <Button
+                  key={obj.text}
+                  variant="success"
+                  className={`${styles.mainBtn}`}
+                  onClick={obj.func}
+                >
+                  {obj.text}
+                </Button>
+              ))}
             </div>
           </div>
         </div>

@@ -1,4 +1,9 @@
 .mainContainer {
-  gap: 62px;
   width: 75%;
+}
+.burg {
+  gap: 48px;
+}
+.choco {
+  gap: 62px;
 }
