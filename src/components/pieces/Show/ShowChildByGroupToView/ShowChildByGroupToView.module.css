@@ -28,3 +28,9 @@
 .mainInf {
   column-gap: 70px;
 }
+
+@media (max-width: 1200px) {
+  .profileCard {
+    padding: 13px 45px 13px 42px;
+  }
+}

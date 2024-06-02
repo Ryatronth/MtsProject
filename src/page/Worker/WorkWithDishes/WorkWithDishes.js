@@ -42,7 +42,7 @@ const WorkWithDishes = observer(() => {
           <BackButton route={WORKER_ROUTE} />
         </div>
         <div
-          className={`d-flex flex-column justify-content-center align-items-center`}
+          className={`${styles.infoBlock} d-flex flex-column justify-content-center align-items-center`}
         >
           {basicList.map((obj) => (
             <>

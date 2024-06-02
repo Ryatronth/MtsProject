@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../../../index';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
-import { Image, Dropdown, DropdownButton, Button } from 'react-bootstrap';
+import { Image, Button } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import { deleteNotification, getNotif } from '../../../http/userAPI';
 import { LOGIN_ROUTE } from '../../../utils/consts';

@@ -40,3 +40,10 @@
     background-color: #fdfdfb;
   }
 }
+
+@media (max-width: 1200px) {
+  .showListBtn {
+    width: 300px;
+    padding: 7px 12px;
+  }
+}

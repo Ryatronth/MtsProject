@@ -195,3 +195,11 @@ p {
   right: 12px;
 }
 /*----------------*/
+
+@media (max-width: 1080px) {
+  .children-card__dropdown-groups {
+    width: 250px;
+    height: 35px;
+    font-size: 14px;
+  }
+}

@@ -18,11 +18,13 @@
   object-fit: cover;
 }
 .titleCard {
+  max-width: calc(100% - 10px);
   text-align: center;
-  padding-left: 20px;
+  padding: 0 10px;
   color: #414141;
   font-weight: 700;
   font-size: 18px;
+  overflow-x: hidden;
 }
 .secContainerCard {
   width: 248px;

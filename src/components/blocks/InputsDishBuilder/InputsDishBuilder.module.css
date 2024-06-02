@@ -67,3 +67,24 @@
     border: none;
   }
 }
+
+@media (max-width: 1200px) {
+  .inputTitle {
+    margin-bottom: 10px;
+  }
+  .imputPrice {
+    margin-bottom: 25px;
+  }
+  .inputDescr {
+    max-height: 90px;
+  }
+}
+@media (max-width: 1080px) {
+  .inputTitle {
+    width: 350px;
+  }
+  .inputDescr,
+  .description {
+    width: 350px;
+  }
+}

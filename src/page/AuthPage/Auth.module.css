@@ -1,8 +1,5 @@
 .container {
-  /* display: flex;
-  align-items: center; */
-  width: 1920px;
-  /* height: 100%; */
+  max-width: 1920px;
   margin: 0 auto;
   background: url('../../assets/auth/bgAuth.png') no-repeat center center;
   background-color: #f48104;
@@ -43,4 +40,26 @@
   padding: 12px 0;
   margin-top: 126px;
   font-size: 32px;
+}
+
+@media (max-width: 1080px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    background-image: url('../../assets/auth/bgAuth_1080.png');
+    background-position: -103px center;
+  }
+  .authBody {
+    width: 85%;
+  }
+}
+
+@media (max-width: 876px) {
+  .container {
+    display: block;
+    background: none;
+  }
+  .authBody {
+    width: 100%;
+  }
 }

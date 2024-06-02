@@ -50,3 +50,23 @@
   font-weight: 500;
   font-size: 24px;
 }
+
+@media (max-width: 1400px) {
+  .mainInfo {
+    row-gap: 30px;
+    width: 920px;
+  }
+}
+@media (max-width: 1200px) {
+  .mainInfo {
+    width: 720px;
+  }
+  .modalDeleteCard {
+    width: 90%;
+  }
+}
+@media (max-width: 986px) {
+  .mainInfo {
+    width: 70%;
+  }
+}

@@ -95,11 +95,51 @@
   border-radius: 20px;
 }
 .cardDescr {
-  width: 100%;
-  padding: 0 12px;
+  width: calc(100% - 12px);
+  margin: 0 12px;
   margin-top: 8px;
   color: #414141;
   font-weight: 600;
   font-size: 17px;
   text-align: center;
+  overflow-x: auto;
+}
+
+@media (max-width: 1400px) {
+  .mainContainer {
+    width: 1000px;
+  }
+  .descr {
+    line-height: 25px;
+    font-weight: 600;
+    font-size: 22px;
+  }
+  .dishesContainer {
+    height: 370px;
+    padding: 7px 30px 10px 30px;
+  }
+  .cardDish {
+    height: 330px;
+  }
+}
+@media (max-width: 1200px) {
+  .mainContainer {
+    width: 850px;
+  }
+  .mainInfo {
+    column-gap: 35px;
+    padding: 10px 24px;
+  }
+  .dishesList {
+    column-gap: 25px;
+  }
+  .cardDish {
+    min-width: 200px;
+    width: 220px;
+    height: 315px;
+  }
+  .cardImg {
+    width: 100%;
+    height: 255px;
+  }
 }

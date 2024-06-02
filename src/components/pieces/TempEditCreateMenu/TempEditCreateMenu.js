@@ -21,7 +21,7 @@ const TempEditCreateMenu = ({
         <div className={`${styles.previewSection} d-flex align-items-center`}>
           <BackButton route={WORKER_WORK_WITH_MENU} />
         </div>
-        <div className={`d-flex column-gap-3 mb-4`}>
+        <div className={`d-flex gap-3 mb-4 flex-wrap`}>
           {btnList.map((el) => (
             <InformationSwitch
               text={el}

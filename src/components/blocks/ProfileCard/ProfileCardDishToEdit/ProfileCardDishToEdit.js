@@ -63,7 +63,9 @@ const ProfileCardDishToEdit = observer(
       <div
         className={`${styles.profileCard} d-flex justify-content-between align-items-center`}
       >
-        <div className={`d-flex justify-content-start align-items-center`}>
+        <div
+          className={`${styles.textContainer} d-flex justify-content-start align-items-center`}
+        >
           <p className={styles.groupInfoText}>{mainData.name}</p>
         </div>
         <div className={`d-flex justify-content-start`}>

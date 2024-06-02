@@ -1,10 +1,20 @@
 .workerBody {
+  max-width: 1920px;
   height: 690px;
   padding-top: 110px;
+  margin: 0 auto;
   border-radius: 70px 70px 0 0;
   background: url('../../assets/bgProfile.png') no-repeat center center;
 }
 .mainBtn {
   width: 100%;
   flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+  .workerBody {
+    height: 520px;
+    padding-top: 60px;
+    margin-top: 35px !important;
+  }
 }

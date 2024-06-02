@@ -1,14 +1,31 @@
+.container {
+  max-width: 1920px;
+  height: 1080px;
+  padding: 0 65px;
+  margin: 0 auto;
+  background: url('../../assets/main/bgMain.png') no-repeat center center;
+}
+.header {
+  padding: 15px 59px;
+  border-bottom: 1px solid #afafaf;
+}
+.infoBlock {
+  width: 100%;
+  height: calc(100% - 106px);
+  padding-left: 65px;
+}
 .mainBody {
-  width: 832px;
-  height: 720px;
-  margin-top: 257px;
-  margin-left: 65px;
-  padding-bottom: 356px;
+  width: 48%;
+  /* width: 832px; */
 }
 .bodyTitle {
   font-weight: 700;
   font-size: 58px;
   color: #414141;
+
+  & span {
+    color: #f48104;
+  }
 }
 .bodyDescr {
   font-weight: 500;

@@ -22,3 +22,12 @@
   font-weight: 500;
   font-size: 16px;
 }
+
+@media (max-width: 1400px) {
+  .textContainer {
+    width: 80%;
+  }
+  .groupInfoText {
+    width: 100%;
+  }
+}

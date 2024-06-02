@@ -15,9 +15,9 @@ const ShowDishesToSelect = observer(
       <div className={`${styles.mainInfo}`}>
         <div
           className={`${styles.section} d-flex ${
-            filteredListData.length % 5 > 2 || filteredListData.length % 5 === 0
-              ? 'justify-content-center'
-              : 'justify-content-start'
+            // filteredListData.length % 5 > 2 || filteredListData.length % 5 === 0
+            'justify-content-center'
+            // : 'justify-content-start'
           }`}
         >
           {filteredListData.map((data) => (

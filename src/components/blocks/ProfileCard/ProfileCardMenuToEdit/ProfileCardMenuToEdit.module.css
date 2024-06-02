@@ -25,3 +25,17 @@
   font-weight: 500;
   font-size: 16px;
 }
+
+@media (max-width: 1200px) {
+  .profileCard {
+    padding: 20px 40px 15px 40px;
+  }
+}
+@media (max-width: 1080px) {
+  .profileCard {
+    padding: 20px 20px 15px 30px;
+  }
+  .dateContainer {
+    column-gap: 35px;
+  }
+}
