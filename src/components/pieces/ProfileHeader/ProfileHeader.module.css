@@ -1,6 +1,3 @@
-.block {
-  position: relative;
-}
 .notifBtn {
   padding: 4px;
   border: none;
@@ -11,8 +8,8 @@
 }
 .notifications {
   position: absolute;
-  top: 100px;
-  left: -63%;
+  top: 120px;
+  right: 0px;
   row-gap: 10px;
   width: 720px;
   min-height: 250px;
@@ -35,6 +32,7 @@
   align-self: flex-end;
 }
 .container {
+  position: relative;
   padding: 15px 59px;
   border-bottom: 1px solid #afafaf;
 }
@@ -62,5 +60,8 @@
 @media (max-width: 1200px) {
   .container {
     padding: 7px 30px;
+  }
+  .notifications {
+    top: 100px;
   }
 }
